@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.RIGHT;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -21,6 +25,13 @@ MAGENTA = Parking Right
         BLUE,
         MAGENTA,
         CYAN
+    }
+
+
+    public enum Location{
+        LEFT,
+        CENTER,
+        RIGHT;
     }
 
 
@@ -75,6 +86,8 @@ MAGENTA = Parking Right
     // Running variable storing the parking position
     private volatile ColorDetected colorLeft = ColorDetected.RED;
     private volatile ColorDetected colorMiddle = ColorDetected.RED;
+
+    private volatile Location location = CENTER;
 
 
 
@@ -209,6 +222,14 @@ MAGENTA = Parking Right
         cyaMat.release();
         magMat.release();
 
+
+        if ((colorLeft == CenterStageDetection.ColorDetected.CYAN) || (colorLeft == CenterStageDetection.ColorDetected.MAGENTA))
+            location = LEFT;
+        else if ((colorMiddle == CenterStageDetection.ColorDetected.CYAN) || (colorMiddle == CenterStageDetection.ColorDetected.MAGENTA))
+            location = CENTER;
+        else
+            location = RIGHT;
+
         return input;
     }
 
@@ -220,5 +241,7 @@ MAGENTA = Parking Right
     public ColorDetected getColorMiddle() {
         return colorMiddle;
     }
+
+    public Location getLocation() {return location;}
 }
 

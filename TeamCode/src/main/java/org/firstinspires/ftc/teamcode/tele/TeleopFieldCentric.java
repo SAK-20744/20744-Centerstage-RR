@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.horizontal;
-import org.firstinspires.ftc.teamcode.subsystems.intake;
 import org.firstinspires.ftc.teamcode.subsystems.lift;
 import org.firstinspires.ftc.teamcode.subsystems.turret;
 
@@ -43,7 +42,6 @@ public class TeleopFieldCentric extends OpMode
 
     double botHeading;
     BNO055IMU imu;
-    intake Intake;
     turret Turret;
     horizontal Horizontal;
     lift Lift;
@@ -77,8 +75,7 @@ public class TeleopFieldCentric extends OpMode
         wrist = hardwareMap.get(Servo.class, "wrist");
 
         Turret = new turret(hardwareMap);
-        Intake = new intake(hardwareMap);
-        Lift = new lift(hardwareMap, Intake);
+        Lift = new lift(hardwareMap);
         Horizontal = new horizontal(hardwareMap);
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

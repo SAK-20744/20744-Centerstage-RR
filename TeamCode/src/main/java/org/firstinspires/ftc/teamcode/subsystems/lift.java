@@ -22,7 +22,6 @@ public class lift {
     private boolean moving = false;
     private double liftPower = 0;
     private boolean liftLimitReset = true;
-    private intake Intake;
     private boolean intaking = false;
     private long startTime;
 
@@ -30,10 +29,9 @@ public class lift {
     private double errorTime = 2000;
 
 
-    public lift(HardwareMap hardwareMap, intake NewIntake) {
+    public lift(HardwareMap hardwareMap) {
         liftmotor = hardwareMap.get(DcMotor.class, "lift");
         liftswitch = hardwareMap.get(DigitalChannel.class, "lift switch");
-        Intake = NewIntake;
 //        liftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "lift"));
         liftmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -66,10 +64,7 @@ public class lift {
         else{
             liftLimitReset = true;
         }
-        if (intaking && Intake.intakeState()){
-            moving = false;
-            intaking = false;
-        }
+
         if (intaking && System.currentTimeMillis()>=startTime+errorTime)
         {
             moving = false;

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,6 +19,8 @@ public class Arm1 {
     private double leftArm1Power = 0;
     private double rightArm1Power = 0;
 
+    private double degreesToTicksFactor = 1000/90;
+
     public Arm1(HardwareMap hardwareMap) {
         left_Arm1 = hardwareMap.get(DcMotor.class, "left_lift");
         right_Arm1 = hardwareMap.get(DcMotor.class, "right_lift");
@@ -32,7 +36,11 @@ public class Arm1 {
         left_Arm1.setPower(leftArm1Power);
         right_Arm1.setPower(rightArm1Power);
     }
-    
+
+    public double getDegreesToTicksFactor(double degrees){
+        return degreesToTicksFactor * degrees;
+    }
+
     public void resetArm1(){
         left_Arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_Arm1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -46,13 +54,42 @@ public class Arm1 {
         right_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void ArmToPos(int pos){
+    public void ArmToPos(int pos, double power){
 
-        left_Arm1.setTargetPosition(-pos);
+        left_Arm1.setTargetPosition(pos);
         right_Arm1.setTargetPosition(pos);
 
         left_Arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right_Arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if(left_Arm1.getCurrentPosition()>=pos) {
+            left_Arm1.setPower(power);
+            right_Arm1.setPower(power);
+        }
+        else {
+            left_Arm1.setPower(-power);
+            right_Arm1.setPower(-power);
+        }
+
+    }
+
+    public void ArmToDeg(int degrees, double power){
+        int pos = (int) (this.getDegreesToTicksFactor(degrees));
+
+        left_Arm1.setTargetPosition(pos);
+        right_Arm1.setTargetPosition(pos);
+
+        left_Arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right_Arm1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if(left_Arm1.getCurrentPosition()>pos) {
+            left_Arm1.setPower(power);
+            right_Arm1.setPower(power);
+        }
+        else {
+            left_Arm1.setPower(-power);
+            right_Arm1.setPower(-power);
+        }
 
     }
 

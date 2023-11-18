@@ -101,12 +101,12 @@ public class AutoCenterStage2 extends LinearOpMode {
 
         if (!isStopRequested()) {
 
-            leftArm.setPower(0.45);
+/*            leftArm.setPower(0.45);
             rightArm.setPower(-0.45);
             sleep(300);
-            arm1.ArmToPos(-1000, 0.3);
+            arm1.ArmToPos(-500, 0.3);
             leftArm.setPower(0);
-            rightArm.setPower(0);
+            rightArm.setPower(0);*/
 
 
             colorLeft = detector.getColorLeft();
@@ -120,19 +120,21 @@ public class AutoCenterStage2 extends LinearOpMode {
 
             TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
                     .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(-3, 25, Math.toRadians(90)), Math.toRadians(105))
+                    .splineToSplineHeading(new Pose2d(-8, 15, Math.toRadians(90)), Math.toRadians(105))
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
             TrajectorySequence centerPurple = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
                     .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(4, 30, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(0, 21.5, Math.toRadians(90)), Math.toRadians(90))
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
             TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
                     .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(10, 25, Math.toRadians(90)), Math.toRadians(75))
+                    .forward(14)
+                    .turn(Math.toRadians(-40))
+                    .forward(6)
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
@@ -141,19 +143,32 @@ public class AutoCenterStage2 extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
                 drive.followTrajectorySequence(leftPurple);
+                wrist.setPosition(0.21);
+                sleep(500);
+                intake.setPower(-0.3);
+                sleep(500);
+                intake.setPower(0);
 
             } else if (detector.getLocation()==CENTER) {
                 // Movements for center spot
                 telemetry.addData("Position", "CENTER");
                 telemetry.update();
-                drive.followTrajectorySequence(centerPurple);
-
+                drive.followTrajectorySequence(rightPurple);
+                wrist.setPosition(0.21);
+                sleep(500);
+                intake.setPower(-0.3);
+                sleep(500);
+                intake.setPower(0);
             } else {
                 // Movements for right spot
                 telemetry.addData("Position", "RIGHT");
                 telemetry.update();
                 drive.followTrajectorySequence(rightPurple);
-
+                wrist.setPosition(0.21);
+                sleep(500);
+                intake.setPower(-0.3);
+                sleep(500);
+                intake.setPower(0);
             }
 
             camera.stopStreaming();

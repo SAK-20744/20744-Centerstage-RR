@@ -36,10 +36,10 @@ MAGENTA = Parking Right
     private static final Scalar
             lower_gray_bounds  = new Scalar(140, 140, 140, 255),
             upper_gray_bounds  = new Scalar(170, 170, 170, 255),
-            lower_cyan_bounds    = new Scalar(0, 65, 150, 255),
+            lower_cyan_bounds    = new Scalar(0, 45, 120, 255),
             upper_cyan_bounds    = new Scalar(100, 255, 255, 255),
-            lower_magenta_bounds = new Scalar(160, 0, 0, 255),
-            upper_magenta_bounds = new Scalar(255, 110, 110, 255);
+            lower_magenta_bounds = new Scalar(140, 0, 0, 255),
+            upper_magenta_bounds = new Scalar(255, 150, 150, 255);
 
     // Color definitions
     private final Scalar
@@ -70,8 +70,8 @@ MAGENTA = Parking Right
     @Override
     public Mat processFrame(Mat input) {
 
-        Rect leftArea = new Rect(new Point(10,90), new Point(70,150));
-        Rect middleArea = new Rect(new Point(165,100), new Point(215,150));
+        Rect leftArea = new Rect(new Point(10,110), new Point(70,150));
+        Rect middleArea = new Rect(new Point(165,130), new Point(215,150));
 
         // Noise reduction
         Imgproc.blur(input, blurredMatLeft, new Size(5, 5));

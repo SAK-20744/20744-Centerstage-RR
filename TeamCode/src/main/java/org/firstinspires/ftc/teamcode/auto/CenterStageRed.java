@@ -1,29 +1,29 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-        import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
-        import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
 
-        import com.acmerobotics.roadrunner.geometry.Pose2d;
-        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.hardware.AnalogInput;
-        import com.qualcomm.robotcore.hardware.CRServo;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.Servo;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-        import org.checkerframework.checker.units.qual.A;
-        import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-        import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-        import org.firstinspires.ftc.teamcode.subsystems.Arm1;
-        import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
-        import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-        import org.openftc.easyopencv.OpenCvCamera;
-        import org.openftc.easyopencv.OpenCvCameraFactory;
-        import org.openftc.easyopencv.OpenCvCameraRotation;
-        import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.checkerframework.checker.units.qual.A;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Arm1;
+import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous
-public class AutoCenterStage2 extends LinearOpMode {
+public class CenterStageRed extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -120,32 +120,27 @@ public class AutoCenterStage2 extends LinearOpMode {
 
             TrajectorySequence leftPurple = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
                     .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(-8, 15, Math.toRadians(90)), Math.toRadians(105))
+                    .strafeRight(4)
+                    .forward(16)
+                    .turn(Math.toRadians(41.00))
+                    .forward(5)
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
             TrajectorySequence centerPurple = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
                     .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(0, 21.5, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(5.5, 24, Math.toRadians(90)), Math.toRadians(90))
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
             TrajectorySequence rightPurple = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
                     .waitSeconds(2)
-                    .forward(14)
-                    .turn(Math.toRadians(-40))
-                    .forward(6)
+                    .strafeRight(13.5)
+                    .forward(13.5)
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
-            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(new Pose2d(0, 21.5, Math.toRadians(90.00)))
-                    .waitSeconds(2)
-                    .turn(Math.toRadians(90))
-                    .forward(26)
-                    .build();
-            drive.setPoseEstimate(leftPurple.start());
-
-            if (detector.getLocation()==LEFT) {
+            if (detector.getLocation() == LEFT) {
                 // Movements for left spot
                 telemetry.addData("Position", "Left");
                 telemetry.update();
@@ -153,10 +148,12 @@ public class AutoCenterStage2 extends LinearOpMode {
                 wrist.setPosition(0.21);
                 sleep(500);
                 intake.setPower(-0.3);
-                sleep(650);
+                sleep(1000);
                 intake.setPower(0);
+                wrist.setPosition(0.21);
+                sleep(1000);
 
-            } else if (detector.getLocation()==CENTER) {
+            } else if (detector.getLocation() == CENTER) {
                 // Movements for center spot
                 telemetry.addData("Position", "CENTER");
                 telemetry.update();
@@ -164,9 +161,10 @@ public class AutoCenterStage2 extends LinearOpMode {
                 wrist.setPosition(0.21);
                 sleep(500);
                 intake.setPower(-0.3);
-                sleep(650);
+                sleep(500);
                 intake.setPower(0);
-                drive.followTrajectorySequence(centerYellow);
+                wrist.setPosition(0.21);
+                sleep(1000);
             } else {
                 // Movements for right spot
                 telemetry.addData("Position", "RIGHT");
@@ -175,8 +173,10 @@ public class AutoCenterStage2 extends LinearOpMode {
                 wrist.setPosition(0.21);
                 sleep(500);
                 intake.setPower(-0.3);
-                sleep(650);
+                sleep(1000);
                 intake.setPower(0);
+                wrist.setPosition(0.21);
+                sleep(1000);
             }
 
             camera.stopStreaming();

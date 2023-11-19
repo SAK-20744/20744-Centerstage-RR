@@ -31,7 +31,7 @@ public class NikeTeleop extends OpMode
     double error;
 
     double botHeading;
-//    BNO055IMU imu;
+    BNO055IMU imu;
 
 
 //    private boolean isClosed = true;
@@ -41,10 +41,10 @@ public class NikeTeleop extends OpMode
     public void init()
     {
         // Retrieve the IMU from the hardware map
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-//        imu.initialize(parameters);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
 
         front_left   = hardwareMap.get(DcMotor.class, "fl");
         front_right  = hardwareMap.get(DcMotor.class, "fr");
@@ -77,7 +77,7 @@ public class NikeTeleop extends OpMode
     @Override
     public void loop()
     {
-//        botHeading = imu.getAngularOrientation().firstAngle;
+        botHeading = imu.getAngularOrientation().firstAngle;
 
 //        telemetry.addData("target angle", target);
 //        telemetry.addData("angle error", error);

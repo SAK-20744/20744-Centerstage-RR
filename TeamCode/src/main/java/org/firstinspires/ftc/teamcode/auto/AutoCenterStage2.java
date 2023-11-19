@@ -175,6 +175,7 @@ public class AutoCenterStage2 extends LinearOpMode {
                 intake.setPower(-0.3);
                 sleep(650);
                 intake.setPower(0);
+                drive.followTrajectorySequence(leftYellow);
 
             } else if (detector.getLocation()==CENTER) {
                 // Movements for center spot
@@ -197,6 +198,7 @@ public class AutoCenterStage2 extends LinearOpMode {
                 intake.setPower(-0.3);
                 sleep(650);
                 intake.setPower(0);
+                drive.followTrajectorySequence(rightYellow);
             }
 
             camera.stopStreaming();

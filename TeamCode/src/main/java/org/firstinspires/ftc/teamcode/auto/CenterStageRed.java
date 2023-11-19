@@ -171,6 +171,7 @@ public class CenterStageRed extends LinearOpMode {
                 intake.setPower(0);
                 wrist.setPosition(0.21);
                 sleep(1000);
+                drive.followTrajectorySequence(leftYellow);
 
             } else if (detector.getLocation() == CENTER) {
                 // Movements for center spot
@@ -184,6 +185,7 @@ public class CenterStageRed extends LinearOpMode {
                 intake.setPower(0);
                 wrist.setPosition(0.21);
                 sleep(1000);
+                drive.followTrajectorySequence(centerYellow);
             } else {
                 // Movements for right spot
                 telemetry.addData("Position", "RIGHT");
@@ -196,7 +198,10 @@ public class CenterStageRed extends LinearOpMode {
                 intake.setPower(0);
                 wrist.setPosition(0.21);
                 sleep(1000);
+                drive.followTrajectorySequence(rightYellow);
             }
+
+
 
             camera.stopStreaming();
         }

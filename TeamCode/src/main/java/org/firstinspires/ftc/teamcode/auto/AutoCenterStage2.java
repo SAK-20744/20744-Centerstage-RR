@@ -138,12 +138,32 @@ public class AutoCenterStage2 extends LinearOpMode {
                     .build();
             drive.setPoseEstimate(leftPurple.start());
 
-            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(new Pose2d(0, 21.5, Math.toRadians(90.00)))
+//            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(new Pose2d(0, 21.5, Math.toRadians(90.00)))
+//                    .waitSeconds(2)
+//                    .turn(Math.toRadians(90))
+//                    .forward(26)
+//                    .build();
+//            drive.setPoseEstimate(leftPurple.start());
+
+            TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
                     .waitSeconds(2)
-                    .turn(Math.toRadians(90))
-                    .forward(26)
+                    .splineToSplineHeading(new Pose2d(-36, 23.5, Math.toRadians(180)), Math.toRadians(180))
                     .build();
-            drive.setPoseEstimate(leftPurple.start());
+            drive.setPoseEstimate(leftYellow.start());
+
+            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(centerPurple.end())
+                    .waitSeconds(2)
+                    .splineToSplineHeading(new Pose2d(-36, 25.5, Math.toRadians(180)), Math.toRadians(180))
+                    .build();
+            drive.setPoseEstimate(centerYellow.start());
+
+            TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
+                    .waitSeconds(2)
+                    .splineToSplineHeading(new Pose2d(-36, 27.5, Math.toRadians(180)), Math.toRadians(180))
+                    .build();
+            drive.setPoseEstimate(rightYellow.start());
+
+
 
             if (detector.getLocation()==LEFT) {
                 // Movements for left spot

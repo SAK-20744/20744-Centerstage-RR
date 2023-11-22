@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.auto;
         import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
 
         import com.acmerobotics.roadrunner.geometry.Pose2d;
+        import com.acmerobotics.roadrunner.trajectory.Trajectory;
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -144,24 +145,32 @@ public class AutoCenterStage2 extends LinearOpMode {
 //                    .forward(26)
 //                    .build();
 //            drive.setPoseEstimate(leftPurple.start());
+//
+//            TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
+//                    .waitSeconds(2)
+//                    .splineToSplineHeading(new Pose2d(-36, 23.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(leftYellow.start());
+//
+//            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(centerPurple.end())
+//                    .waitSeconds(2)
+//                    .splineToSplineHeading(new Pose2d(-36, 25.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(centerYellow.start());
+//
+//            TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
+//                    .waitSeconds(2)
+//                    .back(6)
+//                    .turn(Math.toRadians(40))
+//                    .splineToSplineHeading(new Pose2d(-36, 27.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(rightPurple.end());
 
-            TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
-                    .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(-36, 23.5, Math.toRadians(180)), Math.toRadians(180))
-                    .build();
-            drive.setPoseEstimate(leftYellow.start());
+//            Trajectory rightYellow = drive.trajectoryBuilder(rightPurple.end())
+//                    .splineToSplineHeading(new Pose2d(-36, 27.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(rightPurple.end());
 
-            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(centerPurple.end())
-                    .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(-36, 25.5, Math.toRadians(180)), Math.toRadians(180))
-                    .build();
-            drive.setPoseEstimate(centerYellow.start());
-
-            TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
-                    .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(-36, 27.5, Math.toRadians(180)), Math.toRadians(180))
-                    .build();
-            drive.setPoseEstimate(rightYellow.start());
 
 
 
@@ -175,7 +184,7 @@ public class AutoCenterStage2 extends LinearOpMode {
                 intake.setPower(-0.3);
                 sleep(650);
                 intake.setPower(0);
-                drive.followTrajectorySequence(leftYellow);
+//                drive.followTrajectorySequence(leftYellow);
 
             } else if (detector.getLocation()==CENTER) {
                 // Movements for center spot
@@ -187,7 +196,7 @@ public class AutoCenterStage2 extends LinearOpMode {
                 intake.setPower(-0.3);
                 sleep(650);
                 intake.setPower(0);
-                drive.followTrajectorySequence(centerYellow);
+//                drive.followTrajectorySequence(centerYellow);
             } else {
                 // Movements for right spot
                 telemetry.addData("Position", "RIGHT");
@@ -198,7 +207,8 @@ public class AutoCenterStage2 extends LinearOpMode {
                 intake.setPower(-0.3);
                 sleep(650);
                 intake.setPower(0);
-                drive.followTrajectorySequence(rightYellow);
+//                drive.followTrajectorySequence(rightYellow);
+//                drive.followTrajectory(rightYellow);
             }
 
             camera.stopStreaming();

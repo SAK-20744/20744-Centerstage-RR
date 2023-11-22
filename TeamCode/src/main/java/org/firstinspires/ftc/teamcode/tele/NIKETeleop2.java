@@ -109,6 +109,7 @@ public class NIKETeleop2 extends LinearOpMode {
         rightArm = hardwareMap.get(CRServo.class, "rightArm");
         intake = hardwareMap.get(CRServo.class, "intake");
         door = hardwareMap.get(Servo.class, "door");
+        wrist = hardwareMap.get(Servo.class, "wrist");
         left = hardwareMap.get(AnalogInput.class, "left");
         right = hardwareMap.get(AnalogInput.class, "right");
 

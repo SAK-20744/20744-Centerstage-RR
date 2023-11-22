@@ -108,7 +108,6 @@ public class CenterStageRed extends LinearOpMode {
             leftArm.setPower(0);
             rightArm.setPower(0);
 
-
             colorLeft = detector.getColorLeft();
             colorMiddle = detector.getColorMiddle();
 
@@ -139,25 +138,25 @@ public class CenterStageRed extends LinearOpMode {
                     .forward(13.5)
                     .build();
             drive.setPoseEstimate(rightPurple.start());
-
-            TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
-                    .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(36, 23.5, Math.toRadians(180)), Math.toRadians(180))
-                    .build();
-            drive.setPoseEstimate(leftYellow.start());
-
-            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(centerPurple.end())
-                    .waitSeconds(2)
-                    .splineToSplineHeading(new Pose2d(36, 25.5, Math.toRadians(180)), Math.toRadians(180))
-                    .build();
-            drive.setPoseEstimate(centerYellow.start());
-
-            TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
-                    .waitSeconds(2)
-                    //the last Math.toRadians may need to be changed to -180. for all 3 movements.
-                    .splineToSplineHeading(new Pose2d(36, 27.5, Math.toRadians(180)), Math.toRadians(180))
-                    .build();
-            drive.setPoseEstimate(rightYellow.start());
+//
+//            TrajectorySequence leftYellow = drive.trajectorySequenceBuilder(leftPurple.end())
+//                    .waitSeconds(2)
+//                    .splineToSplineHeading(new Pose2d(36, 23.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(leftYellow.start());
+//
+//            TrajectorySequence centerYellow = drive.trajectorySequenceBuilder(centerPurple.end())
+//                    .waitSeconds(2)
+//                    .splineToSplineHeading(new Pose2d(36, 25.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(centerYellow.start());
+//
+//            TrajectorySequence rightYellow = drive.trajectorySequenceBuilder(rightPurple.end())
+//                    .waitSeconds(2)
+//                    //the last Math.toRadians may need to be changed to -180. for all 3 movements.
+//                    .splineToSplineHeading(new Pose2d(36, 27.5, Math.toRadians(180)), Math.toRadians(180))
+//                    .build();
+//            drive.setPoseEstimate(rightYellow.start());
 
             if (detector.getLocation() == LEFT) {
                 // Movements for left spot
@@ -171,7 +170,7 @@ public class CenterStageRed extends LinearOpMode {
                 intake.setPower(0);
                 wrist.setPosition(0.21);
                 sleep(1000);
-                drive.followTrajectorySequence(leftYellow);
+//                drive.followTrajectorySequence(leftYellow);
 
             } else if (detector.getLocation() == CENTER) {
                 // Movements for center spot
@@ -185,7 +184,7 @@ public class CenterStageRed extends LinearOpMode {
                 intake.setPower(0);
                 wrist.setPosition(0.21);
                 sleep(1000);
-                drive.followTrajectorySequence(centerYellow);
+//                drive.followTrajectorySequence(centerYellow);
             } else {
                 // Movements for right spot
                 telemetry.addData("Position", "RIGHT");
@@ -198,7 +197,7 @@ public class CenterStageRed extends LinearOpMode {
                 intake.setPower(0);
                 wrist.setPosition(0.21);
                 sleep(1000);
-                drive.followTrajectorySequence(rightYellow);
+//                drive.followTrajectorySequence(rightYellow);
             }
 
 

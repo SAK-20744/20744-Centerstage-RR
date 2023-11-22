@@ -2,10 +2,16 @@ package org.firstinspires.ftc.teamcode.tele;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 
 @Config
@@ -22,8 +28,28 @@ public class NikeTeleop extends OpMode
     private DcMotor left_lift;
     private DcMotor right_lift;
 
-    public static double power = 0.5;
-    public static int targetPos = 500;
+    private CRServo leftArm;
+    private CRServo rightArm;
+
+    private CRServo intake;
+    private Servo door;
+    private Servo wrist;
+
+    private AnalogInput leftAnalogInput;
+    private AnalogInput rightAnalogInput;
+
+    private double leftPos;
+    private double rightPos;
+    private double universalArmPos = 0;
+
+    private int counter;
+    private boolean firstTime;
+    private boolean secondTime;
+    private boolean armButtonBlockPositiveDirection;
+    private boolean armButtonBlockNegativeDirection;
+
+    public static double power = 1;
+    public static int targetPos;
 
     private Arm1 arm1;
 
@@ -31,27 +57,38 @@ public class NikeTeleop extends OpMode
     double error;
 
     double botHeading;
-    BNO055IMU imu;
+    IMU imu;
 
 
 //    private boolean isClosed = true;
 //    private boolean buttonblock = false;
 
     @Override
-    public void init()
-    {
-        // Retrieve the IMU from the hardware map
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+    public void init() {
+        imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(
+                new IMU.Parameters(
+//                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
+                        new RevHubOrientationOnRobot(
+                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                        )
+                )
+        );
 
-        front_left   = hardwareMap.get(DcMotor.class, "fl");
-        front_right  = hardwareMap.get(DcMotor.class, "fr");
-        back_left    = hardwareMap.get(DcMotor.class, "bl");
-        back_right   = hardwareMap.get(DcMotor.class, "br");
-        left_lift    = hardwareMap.get(DcMotor.class, "left_lift");
-        right_lift   = hardwareMap.get(DcMotor.class, "right_lift");
+        front_left = hardwareMap.get(DcMotor.class, "fl");
+        front_right = hardwareMap.get(DcMotor.class, "fr");
+        back_left = hardwareMap.get(DcMotor.class, "bl");
+        back_right = hardwareMap.get(DcMotor.class, "br");
+        left_lift = hardwareMap.get(DcMotor.class, "left_lift");
+        right_lift = hardwareMap.get(DcMotor.class, "right_lift");
+        leftAnalogInput = hardwareMap.get(AnalogInput.class, "left");
+        rightAnalogInput = hardwareMap.get(AnalogInput.class, "right");
+        leftArm = hardwareMap.get(CRServo.class, "leftArm");
+        rightArm = hardwareMap.get(CRServo.class, "rightArm");
+        intake = hardwareMap.get(CRServo.class, "intake");
+        door = hardwareMap.get(Servo.class, "door");
+        wrist = hardwareMap.get(Servo.class, "wrist");
 
         arm1 = (new Arm1(hardwareMap));
 
@@ -67,68 +104,139 @@ public class NikeTeleop extends OpMode
 
         arm1.resetArm1();
 
-//        telemetry.addData("target angle", target);
-//        telemetry.addData("angle error", error);
-//        telemetry.addData("IMU", imu.getAngularOrientation().firstAngle);
-//        telemetry.addData("botheading", Math.toDegrees(botHeading));
         telemetry.update();
+
     }
 
     @Override
     public void loop()
     {
-        botHeading = imu.getAngularOrientation().firstAngle;
+        botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        leftPos = leftAnalogInput.getVoltage() / leftAnalogInput.getMaxVoltage() * 360;
+        rightPos = rightAnalogInput.getVoltage() / rightAnalogInput.getMaxVoltage() * 360;
+        
+        if(gamepad2.a){
+            secondTime = false;
+            firstTime = false;
+            armButtonBlockPositiveDirection = false;
+            armButtonBlockNegativeDirection = false;
+        }
 
-//        telemetry.addData("target angle", target);
-//        telemetry.addData("angle error", error);
-//        telemetry.addData("IMU", imu.getAngularOrientation().firstAngle);
-//        telemetry.addData("botheading", Math.toDegrees(botHeading));
-        telemetry.update();
+        if((((leftPos > 238.5) && (leftPos < 250)) && !secondTime&& !firstTime) && !armButtonBlockPositiveDirection)
+        {
+            firstTime = true;
+            armButtonBlockPositiveDirection = true;
+            universalArmPos = rightPos+360;
+        }
+        else if(((leftPos < 238.5) && (leftPos > 230) &&!secondTime && firstTime) && !armButtonBlockNegativeDirection)
+        {
+        firstTime = false;
+        armButtonBlockNegativeDirection = true;
+        universalArmPos = rightPos;
+        }
+        else if((((leftPos > 238.5) && (leftPos < 250)) && firstTime && !secondTime) && !armButtonBlockPositiveDirection)
+        {
+            secondTime = true;
+            armButtonBlockPositiveDirection = true;
+            universalArmPos = rightPos+360+360;
+        }
+        else if(((leftPos < 238.5) && (leftPos > 230) && firstTime && secondTime) && !armButtonBlockNegativeDirection)
+        {
+            secondTime = false;
+            armButtonBlockNegativeDirection = true;
+            universalArmPos = rightPos+360;
+        }
+        if(!firstTime &&!secondTime) {
+            universalArmPos = rightPos;
+        }
+        else if(firstTime&&!secondTime)
+        {
+            universalArmPos = rightPos+360;
+        }
+        else if(firstTime&&secondTime)
+        {
+            universalArmPos = rightPos+720;
+        }
+        if(((leftPos > 238.5) || (leftPos < 230)))
+        {
+            armButtonBlockNegativeDirection = false;
+        }
+        if(((leftPos < 238.5) || (leftPos > 250)))
+        {
+            armButtonBlockPositiveDirection = false;
+        }
 
         double x = -gamepad1.left_stick_y * 1.17; // Correct for imperfect Strafing
         double y = -gamepad1.left_stick_x;
         double rot = gamepad1.right_stick_x;
 
-////        Controls
-//        if(gamepad1.a)
-//        {
-//            target = Math.toDegrees(imu.getAngularOrientation().firstAngle);
-//        }
+//        Controls
+        if(gamepad1.a)
+        {
+            target = Math.toDegrees(botHeading);
+        }
+
+        if (gamepad2.dpad_left) {
+            left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        leftArm.setPower(-gamepad2.left_stick_y);
+        rightArm.setPower(gamepad2.left_stick_y);
 
         // Rotate the movement direction counter to the bot's rotation
-        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+        double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
+        double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
 
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rot), 1);
-        double frontLeftPower = (rotY + rotX + rot) / denominator;
+        double backRightPower = (rotY + rotX + rot) / denominator;
         double backLeftPower = (rotY - rotX + rot) / denominator;
         double frontRightPower = (rotY - rotX - rot) / denominator;
-        double backRightPower = (rotY + rotX - rot) / denominator;
+        double frontLeftPower = (rotY + rotX - rot) / denominator;
 
         front_left.setPower(frontLeftPower);
         back_left.setPower(backLeftPower);
         front_right.setPower(frontRightPower);
         back_right.setPower(backRightPower);
 
-        arm1.ArmToPos(targetPos, power);
+        left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-//        if(gamepad2.right_bumper && !buttonblock)
-//        {
-//            buttonblock = true;
-//            if (!isClosed) {
-//                claw.setPosition(open);
-//                isClosed = true;
-//            }
-//            else {
-//                claw.setPosition(closed);
-//                isClosed = false;
-//            }
+        left_lift.setPower(-gamepad2.right_stick_y);
+        right_lift.setPower(-gamepad2.right_stick_y);
+
+        if(gamepad2.left_bumper)
+            wrist.setPosition(0);
+        else if(gamepad2.right_bumper)
+            wrist.setPosition(0.63);
+        else
+            wrist.setPosition(0.24);
+
+//        if(gamepad2.right_stick_y>0)
+//            targetPos+=20;
+//        else if(gamepad2.right_stick_y<0)
+//            targetPos-=20;
 //
-//        }
-//        else if(!gamepad2.right_bumper)
-//        {
-//            buttonblock = false;
-//        }
+//        arm1.ArmToPos(targetPos, power);
+
+//        telemetry.addData("target angle", target);
+//        telemetry.addData("angle error", error);
+//        telemetry.addData("IMU", botHeading);
+//        telemetry.addData("botheading", Math.toDegrees(botHeading));
+//        telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
+//        telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
+        telemetry.addData("leftServoArm Position: ", leftPos);
+        telemetry.addData("rightServoArm Position: ", rightPos);
+        telemetry.addData("UniversalArmPos", universalArmPos);
+        telemetry.addData("ArmPos", universalArmPos/3);
+        telemetry.addData("First: ", firstTime);
+        telemetry.addData("Second", secondTime);
+        telemetry.addData("Button Pos: ", armButtonBlockPositiveDirection);
+        telemetry.addData("Button Neg", armButtonBlockNegativeDirection);
+
+        telemetry.update();
 
     }
 }

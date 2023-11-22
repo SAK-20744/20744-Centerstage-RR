@@ -26,34 +26,6 @@ public class wrist {
         telemetry.addData("wrist Target", wristTarget);
     }
 
-    public void extendwrist(double extensionDist){
-        double wristTargetPos = (Math.asin((extensionDist) / 25.6) / Math.PI * 180) * 0.66667 * 0.01 + 0.2;
-
-        if (wristTargetPos>=max) {
-            wristTargetPos = max;
-        }
-        if (wristTargetPos<=min) {
-            wristTargetPos = min;
-        }
-
-        if (Double.isNaN(wristTargetPos))
-        {
-          if (extensionDist>25)
-          {
-              wristTargetPos = max;
-          }
-          else
-          {
-              wristTargetPos = min;
-          }
-
-        }
-
-        wristServo.setPosition(wristTargetPos);
-        servoPosition = wristTargetPos;
-
-    }
-
     public void minDist(){
         wristServo.setPosition(min);
     }
@@ -69,6 +41,7 @@ public class wrist {
     public void setPos (double pos) {
         wristServo.setPosition(pos);
     }
+
     public double getPosition (){
         servoPosition = wristServo.getPosition();
         return servoPosition;

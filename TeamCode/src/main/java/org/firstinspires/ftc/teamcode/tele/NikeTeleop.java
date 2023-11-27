@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.tele;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -41,6 +43,8 @@ public class NikeTeleop extends OpMode
     private double leftPos;
     private double rightPos;
     private double universalArmPos = 0;
+    private double uncorrectedArmPos = 0;
+    private double correctedArmPos = 0;
 
     private int counter;
     private boolean firstTime;
@@ -55,6 +59,10 @@ public class NikeTeleop extends OpMode
 
     private double target;
     double error;
+
+    private double currentArmPos = 0;
+    private double lastArmPos = 0;
+    private double deltaArmPos;
 
     double botHeading;
     IMU imu;
@@ -111,64 +119,15 @@ public class NikeTeleop extends OpMode
     @Override
     public void loop()
     {
+        lastArmPos = currentArmPos;
+
         botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         leftPos = leftAnalogInput.getVoltage() / leftAnalogInput.getMaxVoltage() * 360;
         rightPos = rightAnalogInput.getVoltage() / rightAnalogInput.getMaxVoltage() * 360;
-        
-        if(gamepad2.a){
-            secondTime = false;
-            firstTime = false;
-            armButtonBlockPositiveDirection = false;
-            armButtonBlockNegativeDirection = false;
-        }
-
-        if((((leftPos > 238.5) && (leftPos < 250)) && !secondTime&& !firstTime) && !armButtonBlockPositiveDirection)
-        {
-            firstTime = true;
-            armButtonBlockPositiveDirection = true;
-            universalArmPos = rightPos+360;
-        }
-        else if(((leftPos < 238.5) && (leftPos > 230) &&!secondTime && firstTime) && !armButtonBlockNegativeDirection)
-        {
-        firstTime = false;
-        armButtonBlockNegativeDirection = true;
-        universalArmPos = rightPos;
-        }
-        else if((((leftPos > 238.5) && (leftPos < 250)) && firstTime && !secondTime) && !armButtonBlockPositiveDirection)
-        {
-            secondTime = true;
-            armButtonBlockPositiveDirection = true;
-            universalArmPos = rightPos+360+360;
-        }
-        else if(((leftPos < 238.5) && (leftPos > 230) && firstTime && secondTime) && !armButtonBlockNegativeDirection)
-        {
-            secondTime = false;
-            armButtonBlockNegativeDirection = true;
-            universalArmPos = rightPos+360;
-        }
-        if(!firstTime &&!secondTime) {
-            universalArmPos = rightPos;
-        }
-        else if(firstTime&&!secondTime)
-        {
-            universalArmPos = rightPos+360;
-        }
-        else if(firstTime&&secondTime)
-        {
-            universalArmPos = rightPos+720;
-        }
-        if(((leftPos > 238.5) || (leftPos < 230)))
-        {
-            armButtonBlockNegativeDirection = false;
-        }
-        if(((leftPos < 238.5) || (leftPos > 250)))
-        {
-            armButtonBlockPositiveDirection = false;
-        }
 
         double x = -gamepad1.left_stick_y * 1.17; // Correct for imperfect Strafing
         double y = -gamepad1.left_stick_x;
-        double rot = gamepad1.right_stick_x;
+        double rot = -gamepad1.right_stick_x;
 
 //        Controls
         if(gamepad1.a)
@@ -186,15 +145,15 @@ public class NikeTeleop extends OpMode
         leftArm.setPower(-gamepad2.left_stick_y);
         rightArm.setPower(gamepad2.left_stick_y);
 
-        // Rotate the movement direction counter to the bot's rotation
+//         Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(botHeading) - y * Math.sin(botHeading);
         double rotY = x * Math.sin(botHeading) + y * Math.cos(botHeading);
 
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rot), 1);
-        double backRightPower = (rotY + rotX + rot) / denominator;
-        double backLeftPower = (rotY - rotX + rot) / denominator;
-        double frontRightPower = (rotY - rotX - rot) / denominator;
-        double frontLeftPower = (rotY + rotX - rot) / denominator;
+        double backRightPower = ((rotY - rotX) + rot) / denominator;
+        double backLeftPower = ((rotY + rotX) - rot) / denominator;
+        double frontRightPower = ((rotY + rotX) + rot) / denominator;
+        double frontLeftPower = ((rotY - rotX) - rot) / denominator;
 
         front_left.setPower(frontLeftPower);
         back_left.setPower(backLeftPower);
@@ -214,6 +173,23 @@ public class NikeTeleop extends OpMode
         else
             wrist.setPosition(0.24);
 
+        currentArmPos = rightPos;
+        deltaArmPos = lastArmPos - currentArmPos;
+
+        if (Math.abs(deltaArmPos)>90)
+        {
+            if(rightArm.getPower()<0)
+            {
+                universalArmPos-=360;
+            }
+            else
+            {
+                universalArmPos+=360;
+            }
+        }
+        uncorrectedArmPos = universalArmPos + rightPos;
+        correctedArmPos = -1*uncorrectedArmPos/3;
+
 //        if(gamepad2.right_stick_y>0)
 //            targetPos+=20;
 //        else if(gamepad2.right_stick_y<0)
@@ -221,20 +197,20 @@ public class NikeTeleop extends OpMode
 //
 //        arm1.ArmToPos(targetPos, power);
 
-//        telemetry.addData("target angle", target);
-//        telemetry.addData("angle error", error);
-//        telemetry.addData("IMU", botHeading);
-//        telemetry.addData("botheading", Math.toDegrees(botHeading));
-//        telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-//        telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
+        telemetry.addData("target angle", target);
+        telemetry.addData("angle error", error);
+        telemetry.addData("IMU", botHeading);
+        telemetry.addData("botheading", Math.toDegrees(botHeading));
+        telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
+        telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
+        telemetry.addData("Corrected: ", correctedArmPos);
         telemetry.addData("leftServoArm Position: ", leftPos);
         telemetry.addData("rightServoArm Position: ", rightPos);
-        telemetry.addData("UniversalArmPos", universalArmPos);
-        telemetry.addData("ArmPos", universalArmPos/3);
-        telemetry.addData("First: ", firstTime);
-        telemetry.addData("Second", secondTime);
-        telemetry.addData("Button Pos: ", armButtonBlockPositiveDirection);
-        telemetry.addData("Button Neg", armButtonBlockNegativeDirection);
+        telemetry.addData("UniversalArmPos: ", universalArmPos);
+        telemetry.addData("lastArmPos: ", lastArmPos);
+        telemetry.addData("deltaArmPos: ", deltaArmPos);
+        telemetry.addData("rightArmPower: ", rightArm.getPower());
+        telemetry.addData("Uncorrected: ", uncorrectedArmPos);
 
         telemetry.update();
 

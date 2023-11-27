@@ -3,10 +3,16 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 //import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
+import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -23,6 +29,13 @@ public class AutoCenterStage extends LinearOpMode {
         OpenCvCamera camera;
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        CRServo intake = hardwareMap.get(CRServo.class, "intake");
+        Servo door = hardwareMap.get(Servo.class, "door");
+        Servo wrist = hardwareMap.get(Servo.class, "wrist");
+
+        Arm1 arm1 = (new Arm1(hardwareMap));
+        ServoArm arm2 = new ServoArm(hardwareMap);
 
         boolean isLeft = false;
         boolean isMiddle = false;
@@ -57,10 +70,20 @@ public class AutoCenterStage extends LinearOpMode {
             else
                 isRight = true;
 
-            TrajectorySequence ToBackdropCenter = drive.trajectorySequenceBuilder(new Pose2d(0.35, -0.91, Math.toRadians(90.00)))
-                    .splineToSplineHeading(new Pose2d(-36.94, 12.00, Math.toRadians(180.00)), Math.toRadians(180.00))
+            TrajectorySequence ToBackdropLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
+                    .splineToSplineHeading(new Pose2d(-36, 23, Math.toRadians(180.00)), Math.toRadians(180.00))
+                    .build();
+            drive.setPoseEstimate(ToBackdropLeft.start());
+
+            TrajectorySequence ToBackdropCenter = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
+                    .splineToSplineHeading(new Pose2d(-36, 25.5, Math.toRadians(180.00)), Math.toRadians(180.00))
                     .build();
             drive.setPoseEstimate(ToBackdropCenter.start());
+
+            TrajectorySequence ToBackdropRight = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
+                    .splineToSplineHeading(new Pose2d(-36, 28, Math.toRadians(180.00)), Math.toRadians(180.00))
+                    .build();
+            drive.setPoseEstimate(ToBackdropRight.start());
 
 
             telemetry.addData("Detecting Left: ", colorLeft);
@@ -73,22 +96,33 @@ public class AutoCenterStage extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
                 drive.followTrajectorySequence(ToBackdropCenter);
-                sleep(20000);
+                arm1.ArmToDeg(90, 0.5);
+                arm2.runToProfile(45);
+                wrist.setPosition(0.63);
+
             } else if (isMiddle) {
                 // Movements for center spot
                 telemetry.addData("Position", "Right");
                 telemetry.update();
                 drive.followTrajectorySequence(ToBackdropCenter);
-                sleep(20000);
+                arm1.ArmToDeg(90, 0.5);
+                arm2.runToProfile(45);
+                wrist.setPosition(0.63);
+
             } else {
                 // Movements for right spot
                 telemetry.addData("Position", "Middle");
                 telemetry.update();
                 drive.followTrajectorySequence(ToBackdropCenter);
-                sleep(20000);
+                arm1.ArmToDeg(90, 0.5);
+                arm2.runToProfile(45);
+                wrist.setPosition(0.63);
+
             }
 
             camera.stopStreaming();
         }
     }
 }
+
+

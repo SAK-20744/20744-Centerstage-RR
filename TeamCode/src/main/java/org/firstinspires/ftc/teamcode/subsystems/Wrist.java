@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
-public class wrist {
+public class Wrist {
 
     private Servo wristServo;
     private double wristPosition = 0;
@@ -15,10 +15,14 @@ public class wrist {
     private double max = 1;
     private double min = 0;
     private double servoPosition = 0;
+
+    private double driving = 0.63;
+    private double intaking = 0.24;
+
     private ServoController wristController;
 
-    public wrist(HardwareMap hardwareMap) {
-        wristServo = hardwareMap.get(Servo.class, "extension");
+    public Wrist(HardwareMap hardwareMap) {
+        wristServo = hardwareMap.get(Servo.class, "wrist");
     }
 
     public void updatewrist(){
@@ -28,6 +32,14 @@ public class wrist {
 
     public void minDist(){
         wristServo.setPosition(min);
+    }
+
+    public void driving(){
+        wristServo.setPosition(0.63);
+    }
+
+    public void intaking(){
+        wristServo.setPosition(0.24);
     }
 
     public void numDist(double num){
@@ -42,29 +54,14 @@ public class wrist {
         wristServo.setPosition(pos);
     }
 
+    public void setPosDeg (double deg) {
+        wristServo.setPosition((deg-10)/180);
+    }
+
     public double getPosition (){
         servoPosition = wristServo.getPosition();
         return servoPosition;
     }
-//
-//    public double move (double servoMove){
-//
-//        servoPosition = wristServo.getPosition();
-//        servoPosition = servoPosition + servoMove;
-//
-//        if (Double.isNaN(servoPosition))
-//            servoPosition = max;
-//
-//        if (servoPosition>max)
-//            servoPosition = max;
-//
-//        if (servoPosition<min)
-//            servoPosition = min;
-//
-//        wristServo.setPosition(servoPosition);
-//
-//        return servoPosition;
-//    }
 
     public void disable(){
         wristController.pwmDisable();

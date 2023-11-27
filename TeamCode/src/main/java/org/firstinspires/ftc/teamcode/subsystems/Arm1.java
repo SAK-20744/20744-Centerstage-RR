@@ -19,7 +19,7 @@ public class Arm1 {
     private double leftArm1Power = 0;
     private double rightArm1Power = 0;
 
-    private double degreesToTicksFactor = 1000/90;
+    private double degreesToTicksFactor = -1000/90;
 
     public Arm1(HardwareMap hardwareMap) {
         left_Arm1 = hardwareMap.get(DcMotor.class, "left_lift");
@@ -73,7 +73,7 @@ public class Arm1 {
 
     }
 
-    public void ArmToDeg(int degrees, double power){
+    public void ArmToDeg(double degrees, double power){
         int pos = (int) (this.getDegreesToTicksFactor(degrees));
 
         left_Arm1.setTargetPosition(pos);

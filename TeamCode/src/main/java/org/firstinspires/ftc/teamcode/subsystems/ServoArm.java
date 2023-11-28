@@ -11,7 +11,7 @@ public class ServoArm {
     private DcMotor left_lift;
     private DcMotor right_lift;
 
-    private CRServo turretServo;
+    private CRServo servoArmServo;
     private CRServo leftArm;
     private CRServo rightArm;
     private AnalogInput leftAnalogInput;
@@ -35,6 +35,10 @@ public class ServoArm {
     private double d = 0.00014;
     private double f = 0.00065;
 
+    private double servoArmTarget;
+    private double armPower;
+    private boolean moving;
+
     public ServoArm(HardwareMap hardwareMap) {
 
         left_lift = hardwareMap.get(DcMotor.class, "left_lift");
@@ -47,7 +51,7 @@ public class ServoArm {
         controller = new PIDFController(p, i, d, f);
     }
     
-    public void updateServoArm()
+    public boolean updateServoArm()
     {
         lastArmPos = currentArmPos;
 
@@ -71,8 +75,21 @@ public class ServoArm {
         uncorrectedArmPos = universalArmPos + rightPos;
         correctedArmPos = -1*uncorrectedArmPos/3;
 
+        double armPower = controller.calculate(servoArmTarget, correctedArmPos);
+
+        if (moving){
+            if(((servoArmTarget - 5) <= correctedArmPos) && (correctedArmPos <= (servoArmTarget + 5))){
+                armPower = 0;
+                moving = false;
+            }
+        }
+
+        rightArm.setPower(armPower);
+        leftArm.setPower(-armPower);
+
+        return armPower != 0;
     }
-    
+
     public double getLocation()
     {
         return correctedArmPos;
@@ -80,9 +97,17 @@ public class ServoArm {
 
     public void runToProfile(double target)
     {
-        updateServoArm();
+        moving = true;
+        servoArmTarget = target;
         double armPower = controller.calculate(target, correctedArmPos);
         rightArm.setPower(armPower);
         leftArm.setPower(-armPower);
+    }
+
+    public boolean isBusy(){
+        if(moving) {
+            return true;
+        }
+        return false;
     }
 }

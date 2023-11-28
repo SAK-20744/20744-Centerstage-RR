@@ -86,7 +86,6 @@ public class NIKETeleopIVK extends LinearOpMode {
 //        Wrist wrist = new Wrist(hardwareMap);
         arm1 = (new Arm1(hardwareMap));
         arm2 = (new ServoArm(hardwareMap));
-
         Outake outake = new Outake(hardwareMap);
 
         waitForStart();
@@ -183,7 +182,6 @@ public class NIKETeleopIVK extends LinearOpMode {
 //            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
 //            telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
 //            telemetry.addData("Corrected: ", arm2.getLocation());
-
 
             arm2.updateServoArm();
             telemetry.update();

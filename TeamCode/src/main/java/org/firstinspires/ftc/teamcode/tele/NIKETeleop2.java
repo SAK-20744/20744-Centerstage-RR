@@ -162,7 +162,7 @@ public class NIKETeleop2 extends LinearOpMode {
                 if (gamepad2.left_bumper) {
                     door.setPosition(0);
                 } else {
-                    door.setPosition(0.9);
+                    door.setPosition(0.65);
                 }
                 telemetry.addData("LeftLift", left_lift.getCurrentPosition());
                 telemetry.addData("RightLift", right_lift.getCurrentPosition());

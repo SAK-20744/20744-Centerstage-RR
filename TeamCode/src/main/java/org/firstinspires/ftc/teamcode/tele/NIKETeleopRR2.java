@@ -162,7 +162,7 @@ public class NIKETeleopRR2 extends LinearOpMode {
             if (gamepad2.left_bumper)
                 door.setPosition(0);
             else
-                door.setPosition(0.9);
+                door.setPosition(0.65);
 
             if (gamepad2.dpad_right) {
                 plane.setPosition(0.6);

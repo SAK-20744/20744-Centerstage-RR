@@ -4,11 +4,9 @@ import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Loc
 import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,14 +16,13 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous
-public class ArmAutoV1 extends LinearOpMode {
+public class BlueYellowAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {

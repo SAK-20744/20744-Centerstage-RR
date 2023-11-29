@@ -79,7 +79,8 @@ public class ArmAutoV1 extends LinearOpMode {
             leftArm.setPower(-gamepad2.left_stick_y);
             rightArm.setPower(gamepad2.left_stick_y);
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-            telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
+            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
+            telemetry.addData("Servo Arm", arm2.getLocation());
             telemetry.update();
             if (gamepad2.a) {
                 left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -132,23 +133,48 @@ public class ArmAutoV1 extends LinearOpMode {
 //                    .build();
 //            drive.setPoseEstimate(ToBackdropRight.start());
 
-            Trajectory toBackdropLeft = drive.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(-33,21, Math.toRadians(180)))
-                    .build();
-            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+            Pose2d startPose = new Pose2d(0,0,Math.toRadians(90));
 
-            Trajectory toBackdropCenter = drive.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(-33,25, Math.toRadians(180)))
+            Trajectory toBackdropLeft = drive.trajectoryBuilder(startPose)
+                    .lineToSplineHeading(new Pose2d(-22,19, Math.toRadians(180)))
                     .build();
-            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
 
-            Trajectory toBackdropRight = drive.trajectoryBuilder(new Pose2d(0,0,Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(-33,32, Math.toRadians(180)))
+            Trajectory toBackdropCenter = drive.trajectoryBuilder(startPose)
+                    .lineToSplineHeading(new Pose2d(-22,25, Math.toRadians(180)))
                     .build();
-            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+
+            Trajectory toBackdropRight = drive.trajectoryBuilder(startPose)
+                    .lineToSplineHeading(new Pose2d(-22,35, Math.toRadians(180)))
+                    .build();
+            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+
+
+//            Trajectory leftStrafe = drive.trajectoryBuilder(toBackdropLeft.end())
+//                    .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
+//                    .build();
+//            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+//
+//            Trajectory centerStrafe = drive.trajectoryBuilder(toBackdropCenter.end())
+//                    .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
+//                    .build();
+//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+//
+//            Trajectory rightStrafe = drive.trajectoryBuilder(toBackdropRight.end())
+//                    .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
+//                    .build();
+//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+//
+//            Trajectory park = drive.trajectoryBuilder(rightStrafe.end())
+//                    .lineToSplineHeading(new Pose2d(-36,0, Math.toRadians(180)))
+//                    .build();
+//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(180)));
+
 
             if (location == LEFT) {
                 // Movements for left spot
+                // Movements for right spot
                 telemetry.addData("Position", "LEFT");
                 telemetry.update();
 
@@ -163,11 +189,11 @@ public class ArmAutoV1 extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(-1000, 0.5);
+                arm1.ArmToPos(-500, 0.5);
 
-                wrist.setPosition(0.49);
+                wrist.setPosition(0.7);
 
-                arm2.runToProfile(60);
+                arm2.runToProfile(95);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "LEFT");
@@ -178,10 +204,9 @@ public class ArmAutoV1 extends LinearOpMode {
 
                 sleep(750);
                 door.setPosition(0);
-                sleep(750);
-                door.setPosition(0.75);
+                sleep(1000);
 
-                arm2.runToProfile(0);
+                arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "LEFT");
@@ -190,8 +215,37 @@ public class ArmAutoV1 extends LinearOpMode {
                     telemetry.update();
                 }
 
+                door.setPosition(0.75);
+
+                arm1.ArmToPos(-1000, 1);
+
+                arm2.runToProfile(0);
+                while( (arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "LEFT");
+                    telemetry.addData("Arm2" , arm2.getLocation());
+                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.update();
+
+                }
+
+                arm1.ArmToPos(0,0.5);
+
+                arm2.runToProfile(0);
+                while( (arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "RIGHT");
+                    telemetry.addData("Arm2" , arm2.getLocation());
+                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.update();
+                }
+
+//                drive.followTrajectory(leftStrafe);
+
+
             } else if (location == CENTER) {
                 // Movements for center spot
+                // Movements for right spot
                 telemetry.addData("Position", "CENTER");
                 telemetry.update();
 
@@ -206,11 +260,11 @@ public class ArmAutoV1 extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(-1000, 0.5);
+                arm1.ArmToPos(-500, 0.5);
 
-                wrist.setPosition(0.4);
+                wrist.setPosition(0.7);
 
-                arm2.runToProfile(60);
+                arm2.runToProfile(95);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "CENTER");
@@ -221,8 +275,20 @@ public class ArmAutoV1 extends LinearOpMode {
 
                 sleep(750);
                 door.setPosition(0);
-                sleep(750);
+                sleep(1000);
+
+                arm2.runToProfile(120);
+                while( (arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "CENTER");
+                    telemetry.addData("Arm2" , arm2.getLocation());
+                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.update();
+                }
+
                 door.setPosition(0.75);
+
+                arm1.ArmToPos(-1000, 1);
 
                 arm2.runToProfile(0);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -232,6 +298,20 @@ public class ArmAutoV1 extends LinearOpMode {
                     telemetry.addData("Arm2 State" , arm2.isBusy());
                     telemetry.update();
                 }
+
+                arm1.ArmToPos(0,0.5);
+
+                arm2.runToProfile(0);
+                while( (arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "RIGHT");
+                    telemetry.addData("Arm2" , arm2.getLocation());
+                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.update();
+                }
+
+//                drive.followTrajectory(centerStrafe);
+
 
             } else {
                 // Movements for right spot
@@ -249,11 +329,11 @@ public class ArmAutoV1 extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(-1000, 0.5);
+                arm1.ArmToPos(-500, 0.5);
 
-                wrist.setPosition(0.4);
+                wrist.setPosition(0.7);
 
-                arm2.runToProfile(60);
+                arm2.runToProfile(95);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "RIGHT");
@@ -264,8 +344,20 @@ public class ArmAutoV1 extends LinearOpMode {
 
                 sleep(750);
                 door.setPosition(0);
-                sleep(750);
+                sleep(1000);
+
+                arm2.runToProfile(120);
+                while( (arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "RIGHT");
+                    telemetry.addData("Arm2" , arm2.getLocation());
+                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.update();
+                }
+
                 door.setPosition(0.75);
+
+                arm1.ArmToPos(-1000, 1);
 
                 arm2.runToProfile(0);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -276,7 +368,25 @@ public class ArmAutoV1 extends LinearOpMode {
                     telemetry.update();
                 }
 
+                arm1.ArmToPos(0,0.5);
+
+                arm2.runToProfile(0);
+                while( (arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "RIGHT");
+                    telemetry.addData("Arm2" , arm2.getLocation());
+                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.update();
+                }
+
+
+//                drive.followTrajectory(rightStrafe);
+
             }
+
+//            drive.followTrajectory(park);
+
+            sleep(30000);
 
             camera.stopStreaming();
 

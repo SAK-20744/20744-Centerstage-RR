@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-public class IVK {
+public class IVKMath {
 
     double length1 = 16.5;
     double length2 = 16.0625;
 
-    public IVK (){
+    public IVKMath(){
 
     }
 

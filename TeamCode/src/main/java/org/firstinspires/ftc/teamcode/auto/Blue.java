@@ -3,51 +3,58 @@ package org.firstinspires.ftc.teamcode.auto;
 import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
 import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
 
+import android.util.Size;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
+//@Disabled
 @Autonomous
-public class RedYellowAuto extends LinearOpMode {
+public class Blue extends LinearOpMode {
+
+    private CenterStageDetection detector = new CenterStageDetection();
+    private SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    private Arm1 arm1 = (new Arm1(hardwareMap));
+    private ServoArm arm2 = new ServoArm(hardwareMap);
+
+    private Servo wrist = hardwareMap.get(Servo.class, "wrist");
+    private DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
+    private DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
+    private CRServo leftArm = hardwareMap.get(CRServo.class, "leftArm");
+    private CRServo rightArm = hardwareMap.get(CRServo.class, "rightArm");
+    private CRServo intake = hardwareMap.get(CRServo.class, "intake");
+    private Servo door = hardwareMap.get(Servo.class, "door");
+
+    private boolean ButtonXBlock = false;
+    private double wristservoposition = 0.63;
+
+    private boolean isLeft = false;
+    private boolean isMiddle = false;
+    private boolean isRight = false;
+
+    CenterStageDetection.Location location;
+
 
     @Override
-    public void runOpMode() {
-
-        CenterStageDetection detector = new CenterStageDetection();
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Arm1 arm1 = (new Arm1(hardwareMap));
-        ServoArm arm2 = new ServoArm(hardwareMap);
-
-        Servo wrist = hardwareMap.get(Servo.class, "wrist");
-        DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
-        DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
-        CRServo leftArm = hardwareMap.get(CRServo.class, "leftArm");
-        CRServo rightArm = hardwareMap.get(CRServo.class, "rightArm");
-        CRServo intake = hardwareMap.get(CRServo.class, "intake");
-        Servo door = hardwareMap.get(Servo.class, "door");
-
-        boolean ButtonXBlock = false;
-        double wristservoposition = 0.63;
-
-        boolean isLeft = false;
-        boolean isMiddle = false;
-        boolean isRight = false;
-
-        CenterStageDetection.Location location;
+    public void runOpMode() throws InterruptedException{
 
         int width = 320;
         int height = 240;
@@ -67,8 +74,47 @@ public class RedYellowAuto extends LinearOpMode {
         telemetry.addData("Detecting Center: ", colorMiddle);
         telemetry.update();
 
+        Pose2d startPose = new Pose2d(0,0,Math.toRadians(90));
+
+        Trajectory toBackdropLeft = drive.trajectoryBuilder(startPose)
+                .lineToSplineHeading(new Pose2d(-22,19, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+
+        Trajectory toBackdropCenter = drive.trajectoryBuilder(startPose)
+                .lineToSplineHeading(new Pose2d(-22,25, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+
+        Trajectory toBackdropRight = drive.trajectoryBuilder(startPose)
+                .lineToSplineHeading(new Pose2d(-22,35, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+
+
+        Trajectory leftStrafe = drive.trajectoryBuilder(toBackdropLeft.end())
+                .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
+
+        Trajectory centerStrafe = drive.trajectoryBuilder(toBackdropCenter.end())
+                .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+
+        Trajectory rightStrafe = drive.trajectoryBuilder(toBackdropRight.end())
+                .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
+
+        Trajectory park = drive.trajectoryBuilder(rightStrafe.end())
+                .lineToSplineHeading(new Pose2d(-36,0, Math.toRadians(180)))
+                .build();
+//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(180)));
+
         // move motors to -660 for init
         wrist.setPosition(wristservoposition);
+        door.setPosition(0);
 
         while (!(opModeIsActive() || isStopRequested())) {
             left_lift.setPower(-gamepad2.right_stick_y);
@@ -114,59 +160,6 @@ public class RedYellowAuto extends LinearOpMode {
             telemetry.addData("Location", location);
 //
             telemetry.update();
-
-//            TrajectorySequence ToBackdropLeft = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
-//                    .splineToSplineHeading(new Pose2d(-32, 19, Math.toRadians(180.00)), Math.toRadians(180.00))
-//                    .build();
-//            drive.setPoseEstimate(ToBackdropLeft.start());
-//
-//            TrajectorySequence ToBackdropCenter = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
-//                    .splineToSplineHeading(new Pose2d(-32, 22, Math.toRadians(180.00)), Math.toRadians(180.00))
-//                    .build();
-//            drive.setPoseEstimate(ToBackdropCenter.start());
-//
-//            TrajectorySequence ToBackdropRight = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(90.00)))
-//                    .splineToSplineHeading(new Pose2d(-32, 25, Math.toRadians(180.00)), Math.toRadians(180.00))
-//                    .build();
-//            drive.setPoseEstimate(ToBackdropRight.start());
-
-            Pose2d startPose = new Pose2d(0,0,Math.toRadians(90));
-
-            Trajectory toBackdropLeft = drive.trajectoryBuilder(startPose)
-                    .lineToSplineHeading(new Pose2d(25,35, Math.toRadians(0)))
-                    .build();
-            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
-
-            Trajectory toBackdropCenter = drive.trajectoryBuilder(startPose)
-                    .lineToSplineHeading(new Pose2d(25,28, Math.toRadians(0)))
-                    .build();
-            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
-
-            Trajectory toBackdropRight = drive.trajectoryBuilder(startPose)
-                    .lineToSplineHeading(new Pose2d(25,19, Math.toRadians(0)))
-                    .build();
-            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
-
-
-//            Trajectory leftStrafe = drive.trajectoryBuilder(toBackdropLeft.end())
-//                    .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
-//                    .build();
-//            drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
-//
-//            Trajectory centerStrafe = drive.trajectoryBuilder(toBackdropCenter.end())
-//                    .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
-//                    .build();
-//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
-//
-//            Trajectory rightStrafe = drive.trajectoryBuilder(toBackdropRight.end())
-//                    .lineToSplineHeading(new Pose2d(-22,0, Math.toRadians(180)))
-//                    .build();
-//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(90)));
-//
-//            Trajectory park = drive.trajectoryBuilder(rightStrafe.end())
-//                    .lineToSplineHeading(new Pose2d(-36,0, Math.toRadians(180)))
-//                    .build();
-//            drive.setPoseEstimate(new Pose2d(0,0,Math.toRadians(180)));
 
 
             if (location == LEFT) {
@@ -226,18 +219,18 @@ public class RedYellowAuto extends LinearOpMode {
 
                 }
 
-                arm1.ArmToPos(0,0.5);
+//                arm1.ArmToPos(0,0.5);
+//
+//                arm2.runToProfile(0);
+//                while( (arm2.isBusy()) && !isStopRequested()) {
+//                    arm2.updateServoArm();
+//                    telemetry.addData("Position", "RIGHT");
+//                    telemetry.addData("Arm2" , arm2.getLocation());
+//                    telemetry.addData("Arm2 State" , arm2.isBusy());
+//                    telemetry.update();
+//                }
 
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-//                drive.followTrajectory(leftStrafe);
+                drive.followTrajectory(leftStrafe);
 
 
             } else if (location == CENTER) {
@@ -296,18 +289,18 @@ public class RedYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(0,0.5);
+//                arm1.ArmToPos(0,0.5);
+//
+//                arm2.runToProfile(0);
+//                while( (arm2.isBusy()) && !isStopRequested()) {
+//                    arm2.updateServoArm();
+//                    telemetry.addData("Position", "RIGHT");
+//                    telemetry.addData("Arm2" , arm2.getLocation());
+//                    telemetry.addData("Arm2 State" , arm2.isBusy());
+//                    telemetry.update();
+//                }
 
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-//                drive.followTrajectory(centerStrafe);
+                drive.followTrajectory(centerStrafe);
 
 
             } else {
@@ -365,23 +358,23 @@ public class RedYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(0,0.5);
+//                arm1.ArmToPos(0,0.5);
+//
+//                arm2.runToProfile(0);
+//                while( (arm2.isBusy()) && !isStopRequested()) {
+//                    arm2.updateServoArm();
+//                    telemetry.addData("Position", "RIGHT");
+//                    telemetry.addData("Arm2" , arm2.getLocation());
+//                    telemetry.addData("Arm2 State" , arm2.isBusy());
+//                    telemetry.update();
+//                }
 
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
 
-
-//                drive.followTrajectory(rightStrafe);
+                drive.followTrajectory(rightStrafe);
 
             }
 
-//            drive.followTrajectory(park);
+            drive.followTrajectory(park);
 
             sleep(30000);
 

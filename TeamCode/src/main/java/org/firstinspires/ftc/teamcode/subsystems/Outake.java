@@ -7,16 +7,19 @@ public class Outake {
     private Arm1 arm1;
     private ServoArm arm2;
     private Wrist wrist;
-    private IVK ivk;
+    private IVKMath ivk;
 
     public Outake(HardwareMap hardwareMap) {
-        ivk = (new IVK());
         arm1 = (new Arm1(hardwareMap));
-        arm2 = (new ServoArm(hardwareMap));
+        arm2 = new ServoArm(hardwareMap);
         wrist = (new Wrist(hardwareMap));
+        ivk = (new IVKMath());
     }
 
     public void BackdropHeight(double length){
+
+        arm2.updateServoArm();
+
         double ServoArmPos = ivk.q2backdrop(length);
         double MotorArmPos = ivk.q1Backdrop(length);
         double wristPos = ivk.q3Backdrop(length);

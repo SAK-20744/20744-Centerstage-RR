@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 
-@TeleOp(name= "NIKE Teleop - (Intake initializes near you)", group = "advanced")
+@TeleOp(name= "NIKE Teleop" , group = "advanced")
 public class NIKETeleopRR extends LinearOpMode {
     
     @Override
@@ -35,6 +35,8 @@ public class NIKETeleopRR extends LinearOpMode {
         AnalogInput rightAnalogInput;
         double leftPos;
         double rightPos;
+
+        double looptime = 0;
 
         double power = 1;
         int targetPos;
@@ -109,8 +111,8 @@ public class NIKETeleopRR extends LinearOpMode {
 
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -(gamepad1.left_stick_x),
                             -(gamepad1.left_stick_y),
+                            -(gamepad1.left_stick_x),
                             -gamepad1.right_stick_x
                     )
             );
@@ -137,6 +139,14 @@ public class NIKETeleopRR extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 wristservoposition = wristservoposition - 0.01;
             }
+
+            if (gamepad2.left_trigger > 0) {
+                wristservoposition = wristservoposition + 0.01;
+            }
+            if (gamepad2.right_trigger > 0) {
+                wristservoposition = wristservoposition - 0.01;
+            }
+
             wristservoposition = Math.min(Math.max(wristservoposition, 0), 1);
             telemetry.addData("servoPosition", wristservoposition);
             wrist.setPosition(wristservoposition);
@@ -177,9 +187,9 @@ public class NIKETeleopRR extends LinearOpMode {
             correctedArmPos = -1*uncorrectedArmPos/3;
 
             if(gamepad2.right_bumper)
-                intake.setPower(1);
-            else if(gamepad2.y)
                 intake.setPower(-1);
+            else if(gamepad2.y)
+                intake.setPower(1);
             else
                 intake.setPower(0);
 
@@ -200,6 +210,12 @@ public class NIKETeleopRR extends LinearOpMode {
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Corrected: ", correctedArmPos);
+
+
+            double loop = System.nanoTime();
+            telemetry.addData("hz ", 1000000000 / (loop - looptime));
+            looptime = loop;
+
 
             telemetry.update();
         }

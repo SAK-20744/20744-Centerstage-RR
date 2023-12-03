@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.tele;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -12,10 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
-import org.firstinspires.ftc.teamcode.subsystems.IVK;
 import org.firstinspires.ftc.teamcode.subsystems.Outake;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
-import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 
 @Config
 @TeleOp(name= "NIKE TeleopIVK", group = "advanced")
@@ -87,6 +84,8 @@ public class NIKETeleopIVK extends LinearOpMode {
         arm1 = (new Arm1(hardwareMap));
         arm2 = (new ServoArm(hardwareMap));
         Outake outake = new Outake(hardwareMap);
+
+
 
         waitForStart();
 
@@ -183,7 +182,6 @@ public class NIKETeleopIVK extends LinearOpMode {
 //            telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
 //            telemetry.addData("Corrected: ", arm2.getLocation());
 
-            arm2.updateServoArm();
             telemetry.update();
         }
     }

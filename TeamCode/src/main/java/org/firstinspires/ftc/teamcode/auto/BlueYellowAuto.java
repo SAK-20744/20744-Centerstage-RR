@@ -87,6 +87,8 @@ public class BlueYellowAuto extends LinearOpMode {
             }
         }
 
+
+
         waitForStart();
 
         if (!isStopRequested()) {

@@ -101,16 +101,7 @@ public class BlueFull extends LinearOpMode {
         TrajectorySequence toLeft = drive.trajectorySequenceBuilder(startPose)
                 .lineToSplineHeading(leftSpike)
                 .addDisplacementMarker(() -> {
-                    wrist.setPosition(0.21);
-                    arm1.ArmToPos(-2000,1);
-                    arm2.runToProfile(-7.5);
-                    while( (arm2.isBusy()) && !isStopRequested()) {
-                        arm2.updateServoArm();
-                        telemetry.addData("Position", "Left");
-                        telemetry.addData("Arm2" , arm2.getLocation());
-                        telemetry.addData("Arm2 State" , arm2.isBusy());
-                        telemetry.update();
-                    }
+                    moveArmsLeft();
                     dropPurple();
                 })
                 .lineToSplineHeading(leftBackdrop)
@@ -124,17 +115,8 @@ public class BlueFull extends LinearOpMode {
         TrajectorySequence toCenter = drive.trajectorySequenceBuilder(startPose)
                 .lineToSplineHeading(centerSpike)
                 .addDisplacementMarker(() -> {
-                    wrist.setPosition(0.21);
-                    arm1.ArmToPos(-2000,1);
-                    arm2.runToProfile(-7.5);
-                    while( (arm2.isBusy()) && !isStopRequested()) {
-                        arm2.updateServoArm();
-                        telemetry.addData("Position", "Center");
-                        telemetry.addData("Arm2", arm2.getLocation());
-                        telemetry.addData("Arm2 State", arm2.isBusy());
-                        telemetry.update();
-                    }
-                        dropPurple();
+                   moveArmsCenter();
+                   dropPurple();
                 })
                 .lineToSplineHeading(centerBackdrop)
                 .addDisplacementMarker(() ->{
@@ -147,17 +129,8 @@ public class BlueFull extends LinearOpMode {
         TrajectorySequence toRight = drive.trajectorySequenceBuilder(startPose)
                 .lineToSplineHeading(rightSpike)
                 .addDisplacementMarker(() -> {
-                    wrist.setPosition(0.21);
-                    arm1.ArmToPos(-2000,1);
-                    arm2.runToProfile(-7.5);
-                    while( (arm2.isBusy()) && !isStopRequested()) {
-                        arm2.updateServoArm();
-                        telemetry.addData("Position", "Right");
-                        telemetry.addData("Arm2" , arm2.getLocation());
-                        telemetry.addData("Arm2 State" , arm2.isBusy());
-                        telemetry.update();
-                    }
-                    dropPurple();
+                   moveArmsRight();
+                   dropPurple();
                 })
                 .lineToSplineHeading(rightBackdrop)
                 .addDisplacementMarker(() ->{
@@ -241,6 +214,45 @@ public class BlueFull extends LinearOpMode {
         sleep(500);
         intake.setPower(0);
         sleep(500); 
+    }
+
+    public void moveArmsLeft() {
+        wrist.setPosition(0.21);
+        arm1.ArmToPos(-2000,1);
+        arm2.runToProfile(-7.5);
+        while( (arm2.isBusy()) && !isStopRequested()) {
+            arm2.updateServoArm();
+            telemetry.addData("Position", "Left");
+            telemetry.addData("Arm2" , arm2.getLocation());
+            telemetry.addData("Arm2 State" , arm2.isBusy());
+            telemetry.update();
+        }
+    }
+
+    public void moveArmsCenter() {
+        wrist.setPosition(0.21);
+        arm1.ArmToPos(-2000,1);
+        arm2.runToProfile(-7.5);
+        while( (arm2.isBusy()) && !isStopRequested()) {
+            arm2.updateServoArm();
+            telemetry.addData("Position", "Center");
+            telemetry.addData("Arm2" , arm2.getLocation());
+            telemetry.addData("Arm2 State" , arm2.isBusy());
+            telemetry.update();
+        }
+    }
+
+    public void moveArmsRight() {
+        wrist.setPosition(0.21);
+        arm1.ArmToPos(-2000,1);
+        arm2.runToProfile(-7.5);
+        while( (arm2.isBusy()) && !isStopRequested()) {
+            arm2.updateServoArm();
+            telemetry.addData("Position", "Right");
+            telemetry.addData("Arm2" , arm2.getLocation());
+            telemetry.addData("Arm2 State" , arm2.isBusy());
+            telemetry.update();
+        }
     }
 
     public void dropYellow() {

@@ -10,11 +10,11 @@ public class IVKMath {
     }
 
     public double backdropY(double height) {
-        return height * Math.sin(30);
+        return height * Math.sin(60);
     }
 
     public double backdropX(double height) {
-        return height * Math.cos(30);
+        return height * Math.cos(60);
     }
 
     public double q2 (double x, double y) {
@@ -25,7 +25,7 @@ public class IVKMath {
         double x = backdropX(height);
         double y = backdropY(height);
 
-        return -Math.acos(((x*x)+(y*y)-(length1*length1)-(length2*length2)) / (2*length1*length2));
+        return -1*Math.acos(((x*x)+(y*y)-(length1*length1)-(length2*length2)) / (2*length1*length2));
     }
 
     public double q1 (double x, double y) {

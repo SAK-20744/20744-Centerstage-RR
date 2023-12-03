@@ -9,26 +9,43 @@ public class Outake {
     private Wrist wrist;
     private IVKMath ivk;
 
+    private double ServoArmPos;
+    private double MotorArmDeg;
+    private double wristPos;
+
     public Outake(HardwareMap hardwareMap) {
+
         arm1 = (new Arm1(hardwareMap));
         arm2 = new ServoArm(hardwareMap);
         wrist = (new Wrist(hardwareMap));
         ivk = (new IVKMath());
+
     }
 
     public void BackdropHeight(double length){
 
         arm2.updateServoArm();
 
-        double ServoArmPos = ivk.q2backdrop(length);
-        double MotorArmPos = ivk.q1Backdrop(length);
-        double wristPos = ivk.q3Backdrop(length);
+        ServoArmPos = ivk.q2backdrop(length);
+        MotorArmDeg = ivk.q1Backdrop(length);
+        wristPos = ivk.q3Backdrop(length);
 
-        arm1.ArmToDeg(MotorArmPos, 1);
+        arm1.ArmToPos(((int)MotorArmDeg*(-1000/90)), 1);
         arm2.runToProfile(ServoArmPos);
         wrist.setPosDeg(wristPos);
 
     }
 
+    public double getServoArmPos() {
+        return ServoArmPos;
+    }
+
+    public double getMotorArmPos() {
+        return MotorArmDeg;
+    }
+
+    public double getWristPos() {
+        return wristPos;
+    }
 }
 

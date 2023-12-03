@@ -98,7 +98,8 @@ public class Arm1 {
     }
 
     public void ArmToDeg(double degrees, double power){
-        int pos = (int) (this.getDegreesToTicksFactor(degrees));
+
+        int pos = (int)((degrees)*-1000/90);
 
         left_Arm1.setTargetPosition(pos);
         right_Arm1.setTargetPosition(pos);

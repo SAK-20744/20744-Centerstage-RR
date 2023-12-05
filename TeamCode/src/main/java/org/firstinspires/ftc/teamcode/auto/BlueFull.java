@@ -88,9 +88,9 @@ public class BlueFull extends LinearOpMode {
 
         Pose2d startPose = new Pose2d(0,0,Math.toRadians(90));
 
-        Pose2d leftSpike = new Pose2d(-6,36, Math.toRadians(90));
+        Pose2d leftSpike = new Pose2d(-6,32, Math.toRadians(90));
         Pose2d centerSpike = new Pose2d(8,36, Math.toRadians(90));
-        Pose2d rightSpike = new Pose2d(12,36, Math.toRadians(45));
+        Pose2d rightSpike = new Pose2d(12,32, Math.toRadians(45));
 
         Pose2d leftBackdrop = new Pose2d(-22, -19, Math.toRadians(180));
         Pose2d centerBackdrop = new Pose2d(-22, -25, Math.toRadians(180));

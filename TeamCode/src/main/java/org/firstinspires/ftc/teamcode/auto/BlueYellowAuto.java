@@ -140,7 +140,7 @@ public class BlueYellowAuto extends LinearOpMode {
             drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
 
             Trajectory toBackdropCenter = drive.trajectoryBuilder(startPose)
-                    .lineToSplineHeading(new Pose2d(-22,25, Math.toRadians(180)))
+                    .lineToSplineHeading(new Pose2d(-22,25.5, Math.toRadians(180)))
                     .build();
             drive.setPoseEstimate((new Pose2d(0,0,Math.toRadians(90))));
 
@@ -188,11 +188,11 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(-500, 0.5);
+                arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.7);
+                wrist.setPosition(0.75);
 
-                arm2.runToProfile(95);
+                arm2.runToProfile(100);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "LEFT");
@@ -201,10 +201,12 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                sleep(750);
-                door.setPosition(0);
-                sleep(1000);
 
+                    sleep(750);
+                if(arm2.getLocation() >= 85 && arm2.getLocation() <= 115){
+                    door.setPosition(0);
+                }
+                    sleep(200);
                 arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
@@ -259,11 +261,11 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(-500, 0.5);
+                arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.7);
+                wrist.setPosition(0.75);
 
-                arm2.runToProfile(95);
+                arm2.runToProfile(100);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "CENTER");
@@ -273,8 +275,10 @@ public class BlueYellowAuto extends LinearOpMode {
                 }
 
                 sleep(750);
-                door.setPosition(0);
-                sleep(1000);
+                if(arm2.getLocation() >= 85 && arm2.getLocation() <= 115){
+                    door.setPosition(0);
+                }
+                sleep(200);
 
                 arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -328,11 +332,11 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                arm1.ArmToPos(-500, 0.5);
+                arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.7);
+                wrist.setPosition(0.75);
 
-                arm2.runToProfile(95);
+                arm2.runToProfile(100);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "RIGHT");
@@ -342,8 +346,10 @@ public class BlueYellowAuto extends LinearOpMode {
                 }
 
                 sleep(750);
-                door.setPosition(0);
-                sleep(1000);
+                if(arm2.getLocation() >= 85 && arm2.getLocation() <= 115){
+                    door.setPosition(0);
+                }
+                sleep(200);
 
                 arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {

@@ -46,9 +46,8 @@ public class BluePurYel extends LinearOpMode {
 
         Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(28, 11, Math.toRadians(0));
-        Pose2d spike3 = new Pose2d(28, 11, Math.toRadians(0));
-        Pose2d boardLeft = new Pose2d(28, 25, Math.toRadians(90));
+        Pose2d spike2 = new Pose2d(-34.5, -18, Math.toRadians(-65));
+        Pose2d spike3 = new Pose2d(-36, -3.5, Math.toRadians(-90));
 
         TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(MiddleTile)
@@ -61,12 +60,6 @@ public class BluePurYel extends LinearOpMode {
                 .build();
         TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(spike3)
-                .build();
-        TrajectorySequence toMiddleLeft = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(MiddleTile)
-                .build();
-        TrajectorySequence toBoard = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(boardLeft)
                 .build();
 
         boolean ButtonXBlock = false;
@@ -133,7 +126,7 @@ public class BluePurYel extends LinearOpMode {
 
             arm2.runToProfile(0);
 
-            sleep(1500);
+            sleep(2000);
 
 
             colorLeft = detector.getColorLeft();
@@ -162,40 +155,19 @@ public class BluePurYel extends LinearOpMode {
 
                 sleep(200);
 
-                wrist.setPosition(0.21);
+                wrist.setPosition(0.5);
 
-                arm1.ArmToPos(-2000, 1);
-
-                arm2.runToProfile(-7.5);
+                arm2.runToProfile(-5);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
+                    telemetry.addData("Position", "LEFT");
                     telemetry.addData("Arm2" , arm2.getLocation());
                     telemetry.addData("Arm2 State" , arm2.isBusy());
                     telemetry.update();
                 }
 
                 door.setPosition(0);
-
-                sleep(1000);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
                 }
-
-                door.setPosition(0.95);
-
-                drive.followTrajectorySequence(toMiddleLeft);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toBoard);
-            }
             if (location == CENTER) {
                 // Movements for left spot
                 // Movements for right spot
@@ -208,37 +180,6 @@ public class BluePurYel extends LinearOpMode {
 
                 drive.followTrajectorySequence(toSpike2);
 
-                sleep(200);
-
-                wrist.setPosition(0.21);
-
-                arm1.ArmToPos(-2000, 1);
-
-                arm2.runToProfile(-7.5);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0);
-
-                sleep(1000);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.95);
-
-                drive.followTrajectorySequence(toMiddleLeft);
             }
             if (location == RIGHT) {
                 // Movements for left spot
@@ -252,37 +193,6 @@ public class BluePurYel extends LinearOpMode {
 
                 drive.followTrajectorySequence(toSpike3);
 
-                sleep(200);
-
-                wrist.setPosition(0.21);
-
-                arm1.ArmToPos(-2000, 1);
-
-                arm2.runToProfile(-7.5);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0);
-
-                sleep(1000);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "RIGHT");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.95);
-
-                drive.followTrajectorySequence(toMiddleLeft);
             }
             sleep(30000);
 
@@ -294,3 +204,4 @@ public class BluePurYel extends LinearOpMode {
     }
 
 }
+

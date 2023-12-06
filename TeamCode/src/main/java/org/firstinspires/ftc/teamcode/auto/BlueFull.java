@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Loc
 import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -89,7 +90,7 @@ public class BlueFull extends LinearOpMode {
 
         Pose2d leftSpike = new Pose2d(-6,36, Math.toRadians(90));
         Pose2d centerSpike = new Pose2d(8,36, Math.toRadians(90));
-        Pose2d rightSpike = new Pose2d(12,36, Math.toRadians(45));
+        Pose2d rightSpike = new Pose2d(14,32, Math.toRadians(45));
 
         Pose2d leftBackdrop = new Pose2d(-22, -19, Math.toRadians(180));
         Pose2d centerBackdrop = new Pose2d(-22, -25, Math.toRadians(180));
@@ -99,45 +100,49 @@ public class BlueFull extends LinearOpMode {
         Pose2d parkPos = new Pose2d(-28, 0, Math.toRadians(180));
 
         TrajectorySequence toLeft = drive.trajectorySequenceBuilder(startPose)
-                .lineToSplineHeading(leftSpike)
+                .lineToLinearHeading(leftSpike)
                 .addDisplacementMarker(() -> {
                     moveArmsLeft();
                     dropPurple();
                 })
-                .lineToSplineHeading(leftBackdrop)
+                .lineToLinearHeading(leftBackdrop)
                 .addDisplacementMarker(() ->{
                     dropYellow();
                 })
-                .lineToSplineHeading(outOfWay)
-                .lineToSplineHeading(parkPos)
+                .lineToLinearHeading(outOfWay)
+                .lineToLinearHeading(parkPos)
                 .build();
 
         TrajectorySequence toCenter = drive.trajectorySequenceBuilder(startPose)
-                .lineToSplineHeading(centerSpike)
+                .lineToLinearHeading(centerSpike)
                 .addDisplacementMarker(() -> {
                    moveArmsCenter();
                    dropPurple();
                 })
-                .lineToSplineHeading(centerBackdrop)
+                .lineToLinearHeading(centerBackdrop)
                 .addDisplacementMarker(() ->{
                     dropYellow();
                 })
-                .lineToSplineHeading(outOfWay)
-                .lineToSplineHeading(parkPos)
+                .lineToLinearHeading(outOfWay)
+                .lineToLinearHeading(parkPos)
                 .build();
 
         TrajectorySequence toRight = drive.trajectorySequenceBuilder(startPose)
-                .lineToSplineHeading(rightSpike)
+                .lineToLinearHeading(rightSpike)
                 .addDisplacementMarker(() -> {
                    moveArmsRight();
                    dropPurple();
                 })
-                .lineToSplineHeading(rightBackdrop)
+                .lineToLinearHeading(rightBackdrop)
                 .addDisplacementMarker(() ->{
                     dropYellow();
                 })
-                .lineToSplineHeading(outOfWay)
-                .lineToSplineHeading(parkPos)
+                .lineToLinearHeading(outOfWay)
+                .lineToLinearHeading(parkPos)
+                .build();
+
+        Trajectory right1 = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(rightSpike)
                 .build();
 
 

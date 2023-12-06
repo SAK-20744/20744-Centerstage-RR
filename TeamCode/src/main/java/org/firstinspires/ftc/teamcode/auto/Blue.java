@@ -27,7 +27,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-//@Disabled
+@Disabled
 @Autonomous
 public class Blue extends LinearOpMode {
 

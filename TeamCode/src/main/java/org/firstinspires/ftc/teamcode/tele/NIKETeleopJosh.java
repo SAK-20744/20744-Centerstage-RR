@@ -195,7 +195,7 @@ public class NIKETeleopJosh extends LinearOpMode {
             if (gamepad2.left_bumper)
                 door.setPosition(0);
             else
-                door.setPosition(0.65);
+                door.setPosition(0.95);
 
             if (gamepad2.dpad_right) {
                 plane.setPosition(0.6);

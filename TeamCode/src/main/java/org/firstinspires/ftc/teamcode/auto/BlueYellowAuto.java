@@ -100,7 +100,7 @@ public class BlueYellowAuto extends LinearOpMode {
             rightArm.setPower(0);
 
             wrist.setPosition(0.63);
-            door.setPosition(0.75);
+            door.setPosition(0.95);
 
             arm2.runToProfile(0);
 
@@ -203,10 +203,8 @@ public class BlueYellowAuto extends LinearOpMode {
 
 
                     sleep(750);
-                if(arm2.getLocation() >= 85 && arm2.getLocation() <= 115){
                     door.setPosition(0);
-                }
-                    sleep(200);
+                    sleep(400);
                 arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
@@ -216,7 +214,7 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                door.setPosition(0.75);
+                door.setPosition(0.95);
 
                 arm1.ArmToPos(-1000, 1);
 
@@ -275,10 +273,10 @@ public class BlueYellowAuto extends LinearOpMode {
                 }
 
                 sleep(750);
-                if(arm2.getLocation() >= 85 && arm2.getLocation() <= 115){
+
                     door.setPosition(0);
-                }
-                sleep(200);
+
+                sleep(400);
 
                 arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -289,7 +287,7 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                door.setPosition(0.75);
+                door.setPosition(0.95);
 
                 arm1.ArmToPos(-1000, 1);
 
@@ -346,10 +344,10 @@ public class BlueYellowAuto extends LinearOpMode {
                 }
 
                 sleep(750);
-                if(arm2.getLocation() >= 85 && arm2.getLocation() <= 115){
-                    door.setPosition(0);
-                }
-                sleep(200);
+
+                door.setPosition(0);
+
+                sleep(400);
 
                 arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -360,7 +358,7 @@ public class BlueYellowAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
-                door.setPosition(0.75);
+                door.setPosition(0.95);
 
                 arm1.ArmToPos(-1000, 1);
 

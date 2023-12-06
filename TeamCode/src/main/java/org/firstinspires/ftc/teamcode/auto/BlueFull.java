@@ -185,7 +185,7 @@ public class BlueFull extends LinearOpMode {
     public void doInit() {
 
         wrist.setPosition(0.63);
-        door.setPosition(0.75);
+        door.setPosition(0.95);
 
         while (!(opModeIsActive() || isStopRequested())) {
             left_lift.setPower(-gamepad2.right_stick_y);
@@ -206,7 +206,7 @@ public class BlueFull extends LinearOpMode {
     }
 
     public void dropPurple() {
-        door.setPosition(0.75);
+        door.setPosition(0.95);
         sleep(500);
         door.setPosition(0);
         sleep(500);
@@ -256,7 +256,7 @@ public class BlueFull extends LinearOpMode {
     }
 
     public void dropYellow() {
-        door.setPosition(0.75);
+        door.setPosition(0.95);
         sleep(500);
         door.setPosition(0);
     }

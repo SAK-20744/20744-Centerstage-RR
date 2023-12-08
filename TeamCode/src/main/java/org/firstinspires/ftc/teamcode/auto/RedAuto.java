@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
-public class BlueAuto extends LinearOpMode {
+public class RedAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
@@ -41,14 +41,14 @@ public class BlueAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
-        Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(16.5, 25, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 25, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(33.5, 25, Math.toRadians(90));
-        Pose2d park = new Pose2d(0,32,Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(31, -4, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(18.5, -26.5, Math.toRadians(-90));
+        Pose2d boardMiddle = new Pose2d(26, -25, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(34.5, -25, Math.toRadians(-90));
+        Pose2d park = new Pose2d(0, -34, Math.toRadians(-90));
 
         TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(MiddleTile)
@@ -153,7 +153,7 @@ public class BlueAuto extends LinearOpMode {
 
             arm2.runToProfile(0);
 
-            sleep(1500);
+            sleep(3000);
 
 
             colorLeft = detector.getColorLeft();
@@ -218,24 +218,24 @@ public class BlueAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toBoardLeft);
 
                 arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
                 arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.45);
+                wrist.setPosition(0.75);
 
                 arm2.runToProfile(95);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
@@ -252,20 +252,7 @@ public class BlueAuto extends LinearOpMode {
 
                 sleep(700);
 
-//                arm2.runToProfile(120);
-//                while( (arm2.isBusy()) && !isStopRequested()) {
-//                    arm2.updateServoArm();
-//                    telemetry.addData("Position", "Left");
-//                    telemetry.addData("Arm2" , arm2.getLocation());
-//                    telemetry.addData("Arm2 State" , arm2.isBusy());
-//                    telemetry.update();
-//                }
-
-                door.setPosition(0.95);
-
-                arm1.ArmToPos(-1100, 1);
-
-                arm2.runToProfile(0);
+                arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Left");
@@ -274,14 +261,27 @@ public class BlueAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
+                door.setPosition(0.95);
+
+                arm1.ArmToPos(-1100, 1);
+
+                arm2.runToProfile(0);
+                while ((arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "Left");
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
+                    telemetry.update();
+                }
+
 //                arm1.ArmToPos(0,0.5);
 
                 arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
@@ -336,24 +336,24 @@ public class BlueAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toBoardCenter);
 
                 arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
                 arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.45);
+                wrist.setPosition(0.75);
 
                 arm2.runToProfile(95);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
@@ -369,20 +369,7 @@ public class BlueAuto extends LinearOpMode {
 
                 sleep(700);
 
-//                arm2.runToProfile(120);
-//                while( (arm2.isBusy()) && !isStopRequested()) {
-//                    arm2.updateServoArm();
-//                    telemetry.addData("Position", "Center");
-//                    telemetry.addData("Arm2" , arm2.getLocation());
-//                    telemetry.addData("Arm2 State" , arm2.isBusy());
-//                    telemetry.update();
-//                }
-
-                door.setPosition(0.95);
-
-                arm1.ArmToPos(-1100, 1);
-
-                arm2.runToProfile(0);
+                arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Center");
@@ -391,14 +378,27 @@ public class BlueAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
+                door.setPosition(0.95);
+
+                arm1.ArmToPos(-1100, 1);
+
+                arm2.runToProfile(0);
+                while ((arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "Center");
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
+                    telemetry.update();
+                }
+
 //                arm1.ArmToPos(0,0.5);
 
                 arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
@@ -454,24 +454,24 @@ public class BlueAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toBoardRight);
 
                 arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
                 arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.45);
+                wrist.setPosition(0.75);
 
                 arm2.runToProfile(95);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 
@@ -488,20 +488,7 @@ public class BlueAuto extends LinearOpMode {
 
                 sleep(700);
 
-//                arm2.runToProfile(120);
-//                while( (arm2.isBusy()) && !isStopRequested()) {
-//                    arm2.updateServoArm();
-//                    telemetry.addData("Position", "Right");
-//                    telemetry.addData("Arm2" , arm2.getLocation());
-//                    telemetry.addData("Arm2 State" , arm2.isBusy());
-//                    telemetry.update();
-//                }
-
-                door.setPosition(0.95);
-
-                arm1.ArmToPos(-1100, 1);
-
-                arm2.runToProfile(0);
+                arm2.runToProfile(120);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Right");
@@ -510,14 +497,27 @@ public class BlueAuto extends LinearOpMode {
                     telemetry.update();
                 }
 
+                door.setPosition(0.95);
+
+                arm1.ArmToPos(-1100, 1);
+
+                arm2.runToProfile(0);
+                while ((arm2.isBusy()) && !isStopRequested()) {
+                    arm2.updateServoArm();
+                    telemetry.addData("Position", "Right");
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
+                    telemetry.update();
+                }
+
 //                arm1.ArmToPos(0,0.5);
 
                 arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
+                while ((arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
+                    telemetry.addData("Arm2", arm2.getLocation());
+                    telemetry.addData("Arm2 State", arm2.isBusy());
                     telemetry.update();
                 }
 

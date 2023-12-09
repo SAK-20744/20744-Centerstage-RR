@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.subsystems.vision;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -132,6 +133,14 @@ public class OldPipeline extends OpenCvPipeline {
         this.setImageSum(sum);
 
         int imageWidth = input.cols() / 3;
+//
+//        leftImage = new Mat(input, new Rect(new Point(30,155), new Point(80,145)));
+//        centerImage = new Mat(input, new Rect(new Point(180,155), new Point(230,145)));
+
+        Rect leftArea = new Rect(new Point(30,155), new Point(80,145));
+        Rect middleArea = new Rect(new Point(180,155), new Point(230,145));
+        Rect right = new Rect(new Point(250,155), new Point(300,145));
+
         leftImage = new Mat(input, new Rect(0, 0, imageWidth, input.rows()));
         centerImage = new Mat(input, new Rect(imageWidth, 0, imageWidth, input.rows()));
         rightImage = new Mat(input, new Rect(imageWidth * 2, 0, imageWidth, input.rows()));
@@ -144,17 +153,14 @@ public class OldPipeline extends OpenCvPipeline {
         int centerCount = Core.countNonZero(centerBinary);
         int rightCount = Core.countNonZero(rightBinary);
 
-        if (leftCount > centerCount && leftCount > rightCount) {
+        if ((leftCount > centerCount) && (leftCount > rightCount)) {
             elementPos = 1;
             return leftImage;
-        } else if (centerCount > rightCount) {
+        } else if ((centerCount > leftCount) && (centerCount > rightCount)) {
             elementPos = 2;
             return centerImage;
-        } else if (centerCount < rightCount) {
-            elementPos = 3;
-            return rightImage;
         } else {
-            elementPos = 0;
+            elementPos = 3;
             return input;
         }
 

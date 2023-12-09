@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.RIGHT;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,20 +7,14 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
-import org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
 import org.firstinspires.ftc.teamcode.subsystems.vision.callMainPipeline;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous
-public class VisionBlueAuto extends LinearOpMode {
+public class VisionRedAuto extends LinearOpMode {
 
     callMainPipeline cp;
     int elementPos = 0;
@@ -32,7 +22,7 @@ public class VisionBlueAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        cp = new callMainPipeline(hardwareMap, "blue");
+        cp = new callMainPipeline(hardwareMap, "red");
 
 //        CenterStageDetection detector = new CenterStageDetection();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -47,16 +37,16 @@ public class VisionBlueAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
-        Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(16.5, 25, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 25, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(33.5, 25, Math.toRadians(90));
-        Pose2d park = new Pose2d(0,32,Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(31, -4, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(18.5, -27, Math.toRadians(-90));
+        Pose2d boardMiddle = new Pose2d(26, -27, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(34.5, -27, Math.toRadians(-90));
+        Pose2d park = new Pose2d(0, -34, Math.toRadians(-90));
         Pose2d start = drive.getPoseEstimate();
-        Pose2d detect = new Pose2d(6.5,-2.5,Math.toRadians(0));
+        Pose2d detect = new Pose2d(5.5,-1,Math.toRadians(0));
 
 
         TrajectorySequence toDetect = drive.trajectorySequenceBuilder(start)
@@ -246,7 +236,7 @@ public class VisionBlueAuto extends LinearOpMode {
 
                 arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.45);
+                wrist.setPosition(0.55);
 
                 arm2.runToProfile(95);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -364,7 +354,7 @@ public class VisionBlueAuto extends LinearOpMode {
 
                 arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.45);
+                wrist.setPosition(0.55);
 
                 arm2.runToProfile(95);
                 while( (arm2.isBusy()) && !isStopRequested()) {
@@ -482,7 +472,7 @@ public class VisionBlueAuto extends LinearOpMode {
 
                 arm1.ArmToPos(-600, 0.5);
 
-                wrist.setPosition(0.45);
+                wrist.setPosition(0.55);
 
                 arm2.runToProfile(95);
                 while( (arm2.isBusy()) && !isStopRequested()) {

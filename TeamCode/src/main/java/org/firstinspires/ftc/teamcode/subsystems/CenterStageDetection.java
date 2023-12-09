@@ -70,8 +70,8 @@ MAGENTA = Parking Right
     @Override
     public Mat processFrame(Mat input) {
 
-        Rect leftArea = new Rect(new Point(10,155), new Point(50,145));
-        Rect middleArea = new Rect(new Point(150,155), new Point(200,145));
+        Rect leftArea = new Rect(new Point(30,155), new Point(80,145));
+        Rect middleArea = new Rect(new Point(180,155), new Point(230,145));
 
         // Noise reduction
         Imgproc.blur(input, blurredMatLeft, new Size(5, 5));

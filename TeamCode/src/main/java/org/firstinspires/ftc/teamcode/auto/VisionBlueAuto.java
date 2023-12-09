@@ -127,6 +127,7 @@ public class VisionBlueAuto extends LinearOpMode {
         wrist.setPosition(wristservoposition);
 
         while (!(opModeIsActive() || isStopRequested())) {
+
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             leftArm.setPower(-gamepad2.left_stick_y);
@@ -141,30 +142,29 @@ public class VisionBlueAuto extends LinearOpMode {
                 left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
+//            arm2.runToProfile(-5);
         }
-
-        cp.StartPipeline();
 
         waitForStart();
 
         if (!isStopRequested()) {
 
+            cp.StartPipeline();
+
             leftArm.setPower(0.45);
             rightArm.setPower(-0.45);
-            sleep(300);
+            sleep(450);
             leftArm.setPower(0);
             rightArm.setPower(0);
 
             wrist.setPosition(0.3);
             door.setPosition(0.75);
-
-            arm2.runToProfile(0);
-
             sleep(1500);
 
             cp.StopPipeline();
             elementPos = cp.getElementPos();
 
+            sleep(500);
 
 //            colorLeft = detector.getColorLeft();
 //            colorMiddle = detector.getColorMiddle();
@@ -179,7 +179,7 @@ public class VisionBlueAuto extends LinearOpMode {
 
             arm1.ArmToPos(-1750, 1);
 
-            if (elementPos == 3) {
+            if (elementPos == 1) {
                 // Movements for left spot
 
                 telemetry.addData("Position", "Left");
@@ -415,7 +415,7 @@ public class VisionBlueAuto extends LinearOpMode {
                 drive.followTrajectorySequence(centerPark);
 
             }
-            if (elementPos == 1) {
+            if (elementPos == 3) {
                 // Movements for Right spot
 
                 telemetry.addData("Position", "Right");

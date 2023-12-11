@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.common.vision;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -10,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 //import org.firstinspires.ftc.teamcode.common.hardware.Globals;
+import org.firstinspires.ftc.teamcode.common.hardware.Globals;
+import org.firstinspires.ftc.teamcode.common.vision.Side;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;

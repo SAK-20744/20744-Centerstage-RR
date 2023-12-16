@@ -6,12 +6,15 @@ package org.firstinspires.ftc.teamcode.auto;
         import com.acmerobotics.dashboard.config.Config;
         import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
         import com.acmerobotics.roadrunner.geometry.Pose2d;
+        import com.acmerobotics.roadrunner.trajectory.Trajectory;
         import com.arcrobotics.ftclib.command.CommandOpMode;
         import com.arcrobotics.ftclib.command.CommandScheduler;
+        import com.arcrobotics.ftclib.command.InstantCommand;
         import com.arcrobotics.ftclib.command.SequentialCommandGroup;
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
         import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
         import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+        import org.firstinspires.ftc.teamcode.common.commandbase.driveFollowTrajectory;
         import org.firstinspires.ftc.teamcode.common.hardware.Globals;
         import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
         import org.firstinspires.ftc.teamcode.common.vision.Side;
@@ -72,56 +75,57 @@ public class CommandBasedBlue extends CommandOpMode {
         Pose2d purpleScorePos = new Pose2d();
         Pose2d parkPos = new Pose2d();
 
+        Pose2d start = drive.getPoseEstimate();
+        Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(16.5, 25, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(25, 25, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(33.5, 25, Math.toRadians(90));
+        Pose2d park = new Pose2d(0,32,Math.toRadians(90));
+
         // 0.3, 300
 
         switch (side) {
             case LEFT:
-                yellowScorePos = new Pose2d(21.5, -23.25, 1.52);
-                purpleScorePos = new Pose2d(26, -25, 1.52);
-                parkPos = new Pose2d(6, -31, 3 * Math.PI / 2);
+                yellowScorePos = boardLeft;
+                purpleScorePos = spike1;
+                parkPos = park;
                 break;
             case CENTER:
-                yellowScorePos = new Pose2d(27.75, -23.25, 1.52);
-                purpleScorePos = new Pose2d(36, -18, 1.52);
-                parkPos = new Pose2d(6, -31, 3 * Math.PI / 2);
+                yellowScorePos = boardMiddle;
+                purpleScorePos = spike2;
+                parkPos = park;
                 break;
             case RIGHT:
-                yellowScorePos = new Pose2d(34.25, -23.25, 1.52);
-                purpleScorePos = new Pose2d(24, -4, 1.52);
-                parkPos = new Pose2d(6, -31, 3 * Math.PI / 2);
+                yellowScorePos = boardRight;
+                purpleScorePos = spike3;
+                parkPos = park;
                 break;
             default:
                 break;
 
         }
 
+        Trajectory toYellow = drive.trajectoryBuilder(start)
+                .lineToLinearHeading(yellowScorePos)
+                .build();
+        Trajectory toPurple = drive.trajectoryBuilder(yellowScorePos)
+                .lineToLinearHeading(purpleScorePos)
+                .build();
+        Trajectory toPark = drive.trajectoryBuilder(purpleScorePos)
+                .lineToLinearHeading(parkPos)
+                .build();
+
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
-//                        // go to yellow pixel scoring pos
-//                        new PositionCommand((Drivetrain) drivetrain, localizer, yellowScorePos)
-//                                .alongWith(new YellowPixelExtendCommand(robot, extension, intake)),
-//
-//                        // score yellow pixel
-//                        new InstantCommand(() -> intake.updateState(IntakeSubsystem.ClawState.INTERMEDIATE, ClawSide.RIGHT)),
-//                        new WaitCommand(200),
-//
-//                        // retract
-//                        new YellowPixelRetractCommand(robot, extension, intake, ClawSide.RIGHT),
-//
-//                        // go to purple pixel scoring pos
-//                        new PositionCommand((Drivetrain) drivetrain, localizer, purpleScorePos)
-//                                .alongWith(new PurplePixelExtendCommand(robot, extension, intake)),
-//
-//                        // score purple pixel
-//                        new WaitCommand(500),
-//                        new InstantCommand(() -> intake.updateState(IntakeSubsystem.ClawState.OPEN, ClawSide.LEFT)),
-//                        new WaitCommand(350),
-//
-//                        new PurplePixelRetractCommand(robot, extension, intake, ClawSide.LEFT),
-//
-//                        new PositionCommand((Drivetrain) drivetrain, localizer, parkPos)
-//                                .alongWith(new WaitCommand(400).andThen(new InstantCommand(() -> robot.intakePivotActuator.setTargetPosition(0.0475))))
+                        // go to yellow pixel scoring position
+                        new driveFollowTrajectory(drive, toYellow),
+
+                        // go to purple puxel scoring position
+                        new driveFollowTrajectory(drive, toPurple)
                 )
         );
     }
@@ -134,7 +138,6 @@ public class CommandBasedBlue extends CommandOpMode {
 
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - loopTime));
-//        telemetry.addLine(localizer.getPos().toString());
         loopTime = loop;
         telemetry.update();
 

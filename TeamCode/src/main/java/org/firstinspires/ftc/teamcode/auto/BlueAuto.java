@@ -107,8 +107,8 @@ public class BlueAuto extends LinearOpMode {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         camera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         camera.openCameraDevice();
-        camera.setPipeline(detector);
-        camera.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);
+//        camera.setPipeline(detector);
+        camera.startStreaming(width, height, OpenCvCameraRotation.SIDEWAYS_LEFT);
 
         CenterStageDetection.ColorDetected colorLeft = detector.getColorLeft();
         CenterStageDetection.ColorDetected colorMiddle = detector.getColorMiddle();

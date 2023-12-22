@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name= "NIKE Teleop Apriltag" , group = "advanced")
-public class NIKETeleopAprilTag extends LinearOpMode {
+@TeleOp(name= "NIKE Red Teleop Apriltag" , group = "advanced")
+public class RedTeleop extends LinearOpMode {
 
 
     public static double pX = 0.045, iX = 0, dX = 0.05;
@@ -152,7 +152,17 @@ public class NIKETeleopAprilTag extends LinearOpMode {
             targetFound = false;
             desiredTag = null;
 
-                // Step through the list of detected tags and look for a matching tag
+
+            if(gamepad1.x)
+                DESIRED_TAG_ID = 4;
+            else if(gamepad1.y)
+                DESIRED_TAG_ID = 5;
+            else if(gamepad1.b)
+                DESIRED_TAG_ID = 6;
+            else if(gamepad1.a)
+                DESIRED_TAG_ID = -1;
+
+                        // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.

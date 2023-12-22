@@ -129,17 +129,17 @@ public class RobotHardware {
         modules.get(1).setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 
         // DRIVETRAIN
-        this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "dtBackLeftMotor");
+        this.dtBackLeftMotor = hardwareMap.get(DcMotorEx.class, "bl");
         dtBackLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        this.dtFrontLeftMotor = hardwareMap.get(DcMotorEx.class, "dtFrontLeftMotor");
+        this.dtFrontLeftMotor = hardwareMap.get(DcMotorEx.class, "fl");
         dtFrontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        this.dtBackRightMotor = hardwareMap.get(DcMotorEx.class, "dtBackRightMotor");
+        this.dtBackRightMotor = hardwareMap.get(DcMotorEx.class, "br");
         dtBackRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtBackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "dtFrontRightMotor");
+        this.dtFrontRightMotor = hardwareMap.get(DcMotorEx.class, "fr");
         dtFrontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         dtFrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 

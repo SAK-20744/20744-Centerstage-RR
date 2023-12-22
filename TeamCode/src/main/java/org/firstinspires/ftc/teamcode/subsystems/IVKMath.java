@@ -9,12 +9,12 @@ public class IVKMath {
 
     }
 
-    public double backdropY(double height) {
-        return height * Math.sin(60);
-    }
-
     public double backdropX(double height) {
         return height * Math.cos(60);
+    }
+
+    public double backdropY(double height) {
+        return height * Math.sin(60);
     }
 
     public double q2 (double x, double y) {

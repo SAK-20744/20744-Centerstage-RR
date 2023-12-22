@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.tele;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -27,13 +26,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name= "NIKE Teleop Apriltag" , group = "advanced")
-public class NIKETeleopAprilTag extends LinearOpMode {
+@TeleOp(name= "NIKE Teleop ApriltagCopy" , group = "advanced")
+public class NIKETeleopAprilTagCopy extends LinearOpMode {
 
 
-    public static double pX = 0.045, iX = 0, dX = 0.05;
-//    public static double pY = 0, iY = 0, dY = 0;
-//    public static double pTurn = 0, iTurn = 0, dTurn = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -99,6 +95,7 @@ public class NIKETeleopAprilTag extends LinearOpMode {
         double uncorrectedArmPos = 0;
         double correctedArmPos = 0;
 
+
         boolean ButtonXBlock = false;
         double wristservoposition = 0;
         boolean ButtonOBlock = false;
@@ -106,14 +103,6 @@ public class NIKETeleopAprilTag extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive.setPoseEstimate(new Pose2d(0, 0, 0));
-
-        PIDFController speedController;
-//        PIDFController strafeController;
-//        PIDFController turnController;
-
-        speedController = new PIDFController(pX, iX, dX, 0);
-//        strafeController = new PIDFController(pY, iY, dY, 0);
-//        turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
 
         left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         right_lift = hardwareMap.get(DcMotor.class, "right_lift");
@@ -152,7 +141,7 @@ public class NIKETeleopAprilTag extends LinearOpMode {
             targetFound = false;
             desiredTag = null;
 
-                // Step through the list of detected tags and look for a matching tag
+            // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.
@@ -183,7 +172,6 @@ public class NIKETeleopAprilTag extends LinearOpMode {
                 telemetry.addData("\n>", "Drive using joysticks to find valid target\n");
             }
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-
             if (gamepad1.left_bumper && targetFound) {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
@@ -191,14 +179,9 @@ public class NIKETeleopAprilTag extends LinearOpMode {
                 double yawError = desiredTag.ftcPose.yaw;
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
-//                aprilTagDrive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                aprilTagDrive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
                 turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-                aprilTagDrive = speedController.calculate(DESIRED_DISTANCE, desiredTag.ftcPose.range);
-//                turn = turnController.calculate()
-
-
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
             } else {
@@ -384,12 +367,12 @@ public class NIKETeleopAprilTag extends LinearOpMode {
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-//    public static double SPEED_GAIN  =  0.2  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    public static double STRAFE_GAIN =  0.025 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    public static double TURN_GAIN   =  0.065  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    public static double SPEED_GAIN  =  0.2  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    public static double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
+    public static double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
-//    public static double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    public static double MAX_AUTO_STRAFE= 0.65;   //  Clip the approach speed to this max value (adjust for your robot)
+    public static double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
+    public static double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     public static double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
 
     private DcMotor leftFrontDrive   = null;  //  Used to control the left front drive wheel
@@ -398,7 +381,7 @@ public class NIKETeleopAprilTag extends LinearOpMode {
     private DcMotor rightBackDrive   = null;  //  Used to control the right back drive wheel
 
     private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag

@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name= "NIKE Teleop Apriltag" , group = "advanced")
-public class NIKETeleopAprilTag extends LinearOpMode {
+@TeleOp(name= "NIKE Blue Turn PID Apriltag" , group = "advanced")
+public class TurnTestTeleop extends LinearOpMode {
 
 
     public static double pX = 0.045, iX = 0, dX = 0.05;
 //    public static double pY = 0, iY = 0, dY = 0;
-//    public static double pTurn = 0, iTurn = 0, dTurn = 0;
+    public static double pTurn = 0.045, iTurn = 0, dTurn = 0.06;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -109,11 +109,11 @@ public class NIKETeleopAprilTag extends LinearOpMode {
 
         PIDFController speedController;
 //        PIDFController strafeController;
-//        PIDFController turnController;
+        PIDFController turnController;
 
         speedController = new PIDFController(pX, iX, dX, 0);
 //        strafeController = new PIDFController(pY, iY, dY, 0);
-//        turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
+        turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
 
         left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         right_lift = hardwareMap.get(DcMotor.class, "right_lift");
@@ -152,7 +152,17 @@ public class NIKETeleopAprilTag extends LinearOpMode {
             targetFound = false;
             desiredTag = null;
 
-                // Step through the list of detected tags and look for a matching tag
+
+            if(gamepad1.x)
+                DESIRED_TAG_ID = 1;
+            else if(gamepad1.y)
+                DESIRED_TAG_ID = 2;
+            else if(gamepad1.b)
+                DESIRED_TAG_ID = 3;
+            else if(gamepad1.a)
+                DESIRED_TAG_ID = -1;
+
+                        // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.
@@ -192,11 +202,11 @@ public class NIKETeleopAprilTag extends LinearOpMode {
 
                 // Use the speed and turn "gains" to calculate how we want the robot to move.
 //                aprilTagDrive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+//                turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
                 aprilTagDrive = speedController.calculate(DESIRED_DISTANCE, desiredTag.ftcPose.range);
-//                turn = turnController.calculate()
+                turn = turnController.calculate(0, desiredTag.ftcPose.bearing);
 
 
 

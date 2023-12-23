@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outake;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
 
 @Config
-//@Disabled
+@Disabled
 @TeleOp
 public class TestPID extends OpMode {
 

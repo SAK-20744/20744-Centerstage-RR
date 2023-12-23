@@ -9,20 +9,22 @@ package org.firstinspires.ftc.teamcode.auto;
         import com.acmerobotics.roadrunner.trajectory.Trajectory;
         import com.arcrobotics.ftclib.command.CommandOpMode;
         import com.arcrobotics.ftclib.command.CommandScheduler;
-        import com.arcrobotics.ftclib.command.InstantCommand;
         import com.arcrobotics.ftclib.command.SequentialCommandGroup;
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
         import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
         import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-        import org.firstinspires.ftc.teamcode.common.commandbase.driveFollowTrajectory;
-        import org.firstinspires.ftc.teamcode.common.hardware.Globals;
-        import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
-        import org.firstinspires.ftc.teamcode.common.vision.Side;
-        import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-        import org.firstinspires.ftc.teamcode.common.vision.PropPipeline;
+        import org.firstinspires.ftc.teamcode.subsystems.common.commandbase.driveFollowTrajectory;
+        import org.firstinspires.ftc.teamcode.subsystems.common.hardware.Globals;
+        import org.firstinspires.ftc.teamcode.subsystems.common.hardware.RobotHardware;
+        import org.firstinspires.ftc.teamcode.subsystems.common.vision.Side;
+        import org.firstinspires.ftc.teamcode.subsystems.drive.SampleMecanumDrive;
+        import org.firstinspires.ftc.teamcode.subsystems.common.vision.PropPipeline;
         import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
+@Disabled
 @Autonomous(name = "Command Based Blue")
 public class CommandBasedBlue extends CommandOpMode {
 

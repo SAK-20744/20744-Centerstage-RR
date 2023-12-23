@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.RIGHT;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
@@ -32,13 +28,13 @@ CYAN    = Parking Middle
 MAGENTA = Parking Right
  */
 
-    private enum ColorDetected {
+    public enum ColorDetected {
         GRAY,
         MAGENTA,
         CYAN
     }
 
-    private enum Location {
+    public enum Location {
         LEFT,
         CENTER,
         RIGHT;
@@ -46,12 +42,12 @@ MAGENTA = Parking Right
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_gray_bounds  = new Scalar(110, 110, 110, 255),
-            upper_gray_bounds  = new Scalar(150, 150, 150, 255),
-            lower_cyan_bounds    = new Scalar(0, 40, 160, 255),
-            upper_cyan_bounds    = new Scalar(120, 255, 255, 255),
-            lower_magenta_bounds = new Scalar(140, 0, 0, 255),
-            upper_magenta_bounds = new Scalar(255, 150, 150, 255);
+            lower_gray_bounds  = new Scalar(95, 100, 100, 255),
+            upper_gray_bounds  = new Scalar(150, 140, 173, 255),
+            lower_cyan_bounds    = new Scalar(0, 80, 180, 255),
+            upper_cyan_bounds    = new Scalar(95, 255, 255, 255),
+            lower_magenta_bounds = new Scalar(170, 50, 70, 255),
+            upper_magenta_bounds = new Scalar(255, 110, 120, 255);
 
     // Color definitions
     private final Scalar
@@ -86,8 +82,8 @@ MAGENTA = Parking Right
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
 
+        Rect leftArea = new Rect(new Point(160,200), new Point(280,100));
         Rect middleArea = new Rect(new Point(215,480), new Point(315,400));
-        Rect leftArea = new Rect(new Point(145,200), new Point(250,100));
 
         // Noise reduction
         Imgproc.blur(input, blurredMatLeft, new Size(5, 5));

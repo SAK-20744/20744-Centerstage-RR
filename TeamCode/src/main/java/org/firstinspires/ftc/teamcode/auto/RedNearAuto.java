@@ -74,7 +74,40 @@ public class RedNearAuto extends LinearOpMode {
         Pose2d boardRight = new Pose2d(18.5, -27, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(26, -27, Math.toRadians(-90));
         Pose2d boardLeft = new Pose2d(34.5, -27, Math.toRadians(-90));
-        Pose2d park = new Pose2d(0, -36, Math.toRadians(-90));
+        Pose2d closePark = new Pose2d(0, -36, Math.toRadians(-90));
+        Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
+        Pose2d park = closePark;
+
+        while (opModeInInit()) {
+
+            if (gamepad2.a) {
+                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
+            if(gamepad1.dpad_up){
+                park = gatePark;
+                telemetry.addData("Park Position: Gate Side ", 0);
+            }
+            if(gamepad1.dpad_down) {
+                park = closePark;
+                telemetry.addData("Park Position: Near Side ", 0);
+            }
+
+            left_lift.setPower(-gamepad2.right_stick_y);
+            right_lift.setPower(-gamepad2.right_stick_y);
+            leftArm.setPower(-gamepad2.left_stick_y);
+            rightArm.setPower(gamepad2.left_stick_y);
+
+            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
+            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
+            telemetry.addData("Servo Arm", arm2.getLocation());
+
+            telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.update();
+        }
 
         TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(MiddleTile)
@@ -119,28 +152,6 @@ public class RedNearAuto extends LinearOpMode {
         boolean ButtonXBlock = false;
         double wristservoposition = 0.63;
         wrist.setPosition(wristservoposition);
-
-        while (opModeInInit()) {
-
-            if (gamepad2.a) {
-                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            left_lift.setPower(-gamepad2.right_stick_y);
-            right_lift.setPower(-gamepad2.right_stick_y);
-            leftArm.setPower(-gamepad2.left_stick_y);
-            rightArm.setPower(gamepad2.left_stick_y);
-
-            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
-            telemetry.addData("Servo Arm", arm2.getLocation());
-
-            telemetry.addData("Location", propPipeline.getLocation());
-            telemetry.update();
-        }
 
         waitForStart();
 

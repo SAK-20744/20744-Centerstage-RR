@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.auto;
 import static org.firstinspires.ftc.teamcode.subsystems.myPropPipeline.Location.CENTER;
 import static org.firstinspires.ftc.teamcode.subsystems.myPropPipeline.Location.LEFT;
 import static org.firstinspires.ftc.teamcode.subsystems.myPropPipeline.Location.RIGHT;
-import org.firstinspires.ftc.teamcode.subsystems.myPropPipeline.Location;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -16,11 +15,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.teamcode.subsystems.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
-import org.firstinspires.ftc.teamcode.subsystems.myPropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drive.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.myPropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.myPropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -28,7 +28,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Blue Near 2+0")
+@Autonomous(name = "Blue Auto 2+0")
 public class BlueNearAuto extends LinearOpMode {
 
     private myPropPipeline propPipeline;
@@ -74,7 +74,40 @@ public class BlueNearAuto extends LinearOpMode {
         Pose2d boardLeft = new Pose2d(16.5, 26, Math.toRadians(90));
         Pose2d boardMiddle = new Pose2d(25, 26, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(33.5, 26, Math.toRadians(90));
-        Pose2d park = new Pose2d(0,32,Math.toRadians(90));
+        Pose2d closePark = new Pose2d(0,32,Math.toRadians(90));
+        Pose2d gatePark = new Pose2d(53.5,32,Math.toRadians(90));
+        Pose2d park = closePark;
+
+        while (opModeInInit()) {
+
+            if (gamepad2.a) {
+                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
+            if(gamepad1.dpad_up){
+                park = gatePark;
+                telemetry.addData("Park Position: Gate Side ", 0);
+            }
+            if(gamepad1.dpad_down) {
+                park = closePark;
+                telemetry.addData("Park Position: Near Side ", 0);
+            }
+
+            left_lift.setPower(-gamepad2.right_stick_y);
+            right_lift.setPower(-gamepad2.right_stick_y);
+            leftArm.setPower(-gamepad2.left_stick_y);
+            rightArm.setPower(gamepad2.left_stick_y);
+
+            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
+            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
+            telemetry.addData("Servo Arm", arm2.getLocation());
+
+            telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.update();
+        }
 
         TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(MiddleTile)
@@ -119,28 +152,6 @@ public class BlueNearAuto extends LinearOpMode {
         boolean ButtonXBlock = false;
         double wristservoposition = 0.63;
         wrist.setPosition(wristservoposition);
-
-        while (opModeInInit()) {
-
-            if (gamepad2.a) {
-                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            left_lift.setPower(-gamepad2.right_stick_y);
-            right_lift.setPower(-gamepad2.right_stick_y);
-            leftArm.setPower(-gamepad2.left_stick_y);
-            rightArm.setPower(gamepad2.left_stick_y);
-
-            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
-            telemetry.addData("Servo Arm", arm2.getLocation());
-
-            telemetry.addData("Location", propPipeline.getLocation());
-            telemetry.update();
-        }
 
         waitForStart();
 

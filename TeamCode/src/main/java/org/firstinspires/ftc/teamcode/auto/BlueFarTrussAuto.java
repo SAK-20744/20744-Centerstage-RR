@@ -15,12 +15,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.teamcode.subsystems.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
+import org.firstinspires.ftc.teamcode.subsystems.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.myPropPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.myPropPipeline.Location;
-import org.firstinspires.ftc.teamcode.subsystems.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -28,8 +28,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Red Near 2+0")
-public class RedNearAuto extends LinearOpMode {
+@Autonomous(name = "Blue Far Truss 2+0")
+public class BlueFarTrussAuto extends LinearOpMode {
 
     private myPropPipeline propPipeline;
     private VisionPortal portal;
@@ -67,34 +67,42 @@ public class RedNearAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
+        Pose2d firstTile = new Pose2d(15, -4, Math.toRadians(0));
+        Pose2d nextTile = new Pose2d(1.5,-4,Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(1.5,82, Math.toRadians(90));
         Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(31, -4, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(18.5, -27, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(26, -27, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(34.5, -27, Math.toRadians(-90));
-        Pose2d park = new Pose2d(0, -36, Math.toRadians(-90));
+        Pose2d boardRight = new Pose2d(34.5, 73, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(26, 73, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(18.5, 73, Math.toRadians(90));
+        Pose2d park = new Pose2d(0, 86, Math.toRadians(90));
 
-        TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(MiddleTile)
+        TrajectorySequence lineToFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToLinearHeading(firstTile)
                 .build();
-        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(MiddleTile)
+        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(firstTile)
                 .lineToLinearHeading(spike1)
                 .build();
-        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(MiddleTile)
+        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(firstTile)
                 .lineToLinearHeading(spike2)
                 .build();
-        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(MiddleTile)
+        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(firstTile)
                 .lineToLinearHeading(spike3)
                 .build();
-        TrajectorySequence toMiddleLeft = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(MiddleTile)
+        TrajectorySequence toFirstLeft = drive.trajectorySequenceBuilder(spike1)
+                .lineToLinearHeading(firstTile)
                 .build();
-        TrajectorySequence toMiddleCenter = drive.trajectorySequenceBuilder(spike2)
-                .lineToLinearHeading(MiddleTile)
+        TrajectorySequence toFirstCenter = drive.trajectorySequenceBuilder(spike2)
+                .lineToLinearHeading(firstTile)
                 .build();
-        TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
+        TrajectorySequence toFirstRight = drive.trajectorySequenceBuilder(spike3)
+                .lineToLinearHeading(firstTile)
+                .build();
+        TrajectorySequence toNextTile = drive.trajectorySequenceBuilder(firstTile)
+                .lineToLinearHeading(nextTile)
+                .build();
+        TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(nextTile)
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
@@ -158,7 +166,7 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(lineToFirstTile);
 //
 //                sleep(1000);
 
@@ -194,7 +202,15 @@ public class RedNearAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(toMiddleLeft);
+                drive.followTrajectorySequence(toFirstLeft);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toNextTile);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toMiddle);
 
                 sleep(500);
 
@@ -276,7 +292,7 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(lineToFirstTile);
 //
 //                sleep(1000);
 
@@ -312,7 +328,15 @@ public class RedNearAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(toMiddleCenter);
+                drive.followTrajectorySequence(toFirstCenter);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toNextTile);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toMiddle);
 
                 sleep(500);
 
@@ -394,7 +418,7 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(lineToFirstTile);
 //
 //                sleep(1000);
 
@@ -430,7 +454,15 @@ public class RedNearAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(toMiddleRight);
+                drive.followTrajectorySequence(toFirstRight);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toNextTile);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toMiddle);
 
                 sleep(500);
 

@@ -43,8 +43,8 @@ MAGENTA = Parking Right
     // Lower and upper boundaries for colors
     private static final Scalar
             lower_gray_bounds  = new Scalar(95, 100, 100, 255),
-            upper_gray_bounds  = new Scalar(150, 140, 173, 255),
-            lower_cyan_bounds    = new Scalar(0, 80, 180, 255),
+            upper_gray_bounds  = new Scalar(150, 140, 172, 255),
+            lower_cyan_bounds    = new Scalar(0, 80, 173, 255),
             upper_cyan_bounds    = new Scalar(95, 255, 255, 255),
             lower_magenta_bounds = new Scalar(170, 50, 70, 255),
             upper_magenta_bounds = new Scalar(255, 110, 120, 255);

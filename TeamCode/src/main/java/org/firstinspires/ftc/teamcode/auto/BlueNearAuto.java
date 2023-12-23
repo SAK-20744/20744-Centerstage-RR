@@ -71,9 +71,9 @@ public class BlueNearAuto extends LinearOpMode {
         Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(16.5, 25, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 25, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(33.5, 25, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(16.5, 26, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(25, 26, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(33.5, 26, Math.toRadians(90));
         Pose2d park = new Pose2d(0,32,Math.toRadians(90));
 
         TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -213,7 +213,7 @@ public class BlueNearAuto extends LinearOpMode {
 
                 wrist.setPosition(0.45);
 
-                arm2.runToProfile(95);
+                arm2.runToProfile(100);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Left");
@@ -331,7 +331,7 @@ public class BlueNearAuto extends LinearOpMode {
 
                 wrist.setPosition(0.45);
 
-                arm2.runToProfile(95);
+                arm2.runToProfile(100);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Center");
@@ -449,7 +449,7 @@ public class BlueNearAuto extends LinearOpMode {
 
                 wrist.setPosition(0.45);
 
-                arm2.runToProfile(95);
+                arm2.runToProfile(100);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Right");

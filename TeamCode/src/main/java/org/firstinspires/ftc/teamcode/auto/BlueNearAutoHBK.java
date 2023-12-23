@@ -28,8 +28,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Blue Far Gate 2+0")
-public class BlueFarGateAuto extends LinearOpMode {
+@Autonomous(name = "Blue HZIDbv 2+0")
+public class BlueNearAutoHBK extends LinearOpMode {
 
     private myPropPipeline propPipeline;
     private VisionPortal portal;
@@ -67,51 +67,67 @@ public class BlueFarGateAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d firstTile = new Pose2d(15, -4, Math.toRadians(0));
-        Pose2d nextTile = new Pose2d(52,-3,Math.toRadians(90));
-        Pose2d spike3Avoid = new Pose2d(48, -12,Math.toRadians(180));
-        Pose2d spike2Avoid = new Pose2d(48, -4, Math.toRadians(180));
-        Pose2d spike1Avoid = new Pose2d(30.5, -4, Math.toRadians(90));
-        Pose2d MiddleTile = new Pose2d(52,82, Math.toRadians(90));
-        Pose2d spike3 = new Pose2d(39, -12, Math.toRadians(180));
-        Pose2d spike2 = new Pose2d(40.5, -4, Math.toRadians(180));
-        Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(31.5, 74, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 74, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(17, 74, Math.toRadians(90));
-        Pose2d park = new Pose2d(52, 86, Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(16.5, 26, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(25, 26, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(33.5, 26, Math.toRadians(90));
+        Pose2d closePark = new Pose2d(0,32,Math.toRadians(90));
+        Pose2d gatePark = new Pose2d(53.5,32,Math.toRadians(90));
+        Pose2d park = closePark;
 
-        TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(firstTile)
+        while (opModeInInit()) {
+
+            if (gamepad2.a) {
+                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
+            if(gamepad1.dpad_up){
+                park = gatePark;
+                telemetry.addData("Park Position: Gate Side ", 0);
+            }
+            if(gamepad1.dpad_down) {
+                park = closePark;
+                telemetry.addData("Park Position: Near Side ", 0);
+            }
+
+            left_lift.setPower(-gamepad2.right_stick_y);
+            right_lift.setPower(-gamepad2.right_stick_y);
+            leftArm.setPower(-gamepad2.left_stick_y);
+            rightArm.setPower(gamepad2.left_stick_y);
+
+            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
+            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
+            telemetry.addData("Servo Arm", arm2.getLocation());
+
+            telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.update();
+        }
+
+        TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToLinearHeading(MiddleTile)
                 .build();
-        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(firstTile)
+        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(spike1)
                 .build();
-        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(firstTile)
+        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(spike2)
                 .build();
-        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(firstTile)
+        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(spike3)
                 .build();
-        TrajectorySequence avoid1 = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(spike1Avoid)
+        TrajectorySequence toMiddleLeft = drive.trajectorySequenceBuilder(spike1)
+                .lineToLinearHeading(MiddleTile)
                 .build();
-        TrajectorySequence avoid2 = drive.trajectorySequenceBuilder(spike2)
-                .lineToLinearHeading(spike2Avoid)
+        TrajectorySequence toMiddleCenter = drive.trajectorySequenceBuilder(spike2)
+                .lineToLinearHeading(MiddleTile)
                 .build();
-        TrajectorySequence avoid3 = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(spike3Avoid)
-                .build();
-        TrajectorySequence toNextLeft = drive.trajectorySequenceBuilder(spike1Avoid)
-                .lineToLinearHeading(nextTile)
-                .build();
-        TrajectorySequence toNextCenter = drive.trajectorySequenceBuilder(spike2Avoid)
-                .lineToLinearHeading(nextTile)
-                .build();
-        TrajectorySequence toNextRight = drive.trajectorySequenceBuilder(spike3Avoid)
-                .lineToLinearHeading(nextTile)
-                .build();
-        TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(nextTile)
+        TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
@@ -137,28 +153,6 @@ public class BlueFarGateAuto extends LinearOpMode {
         double wristservoposition = 0.63;
         wrist.setPosition(wristservoposition);
 
-        while (opModeInInit()) {
-
-            if (gamepad2.a) {
-                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            left_lift.setPower(-gamepad2.right_stick_y);
-            right_lift.setPower(-gamepad2.right_stick_y);
-            leftArm.setPower(-gamepad2.left_stick_y);
-            rightArm.setPower(gamepad2.left_stick_y);
-
-            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
-            telemetry.addData("Servo Arm", arm2.getLocation());
-
-            telemetry.addData("Location", propPipeline.getLocation());
-            telemetry.update();
-        }
-
         waitForStart();
 
         if (!isStopRequested()) {
@@ -175,7 +169,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-                drive.followTrajectorySequence(linetoFirstTile);
+                drive.followTrajectorySequence(lineToMiddleTile);
 //
 //                sleep(1000);
 
@@ -211,15 +205,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(avoid1);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toNextLeft);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toMiddle);
+                drive.followTrajectorySequence(toMiddleLeft);
 
                 sleep(500);
 
@@ -301,7 +287,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-                drive.followTrajectorySequence(linetoFirstTile);
+                drive.followTrajectorySequence(lineToMiddleTile);
 //
 //                sleep(1000);
 
@@ -337,15 +323,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(avoid2);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toNextCenter);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toMiddle);
+                drive.followTrajectorySequence(toMiddleCenter);
 
                 sleep(500);
 
@@ -427,7 +405,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-                drive.followTrajectorySequence(linetoFirstTile);
+                drive.followTrajectorySequence(lineToMiddleTile);
 //
 //                sleep(1000);
 
@@ -463,15 +441,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(avoid3);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toNextRight);
-
-                sleep(500);
-
-                drive.followTrajectorySequence(toMiddle);
+                drive.followTrajectorySequence(toMiddleRight);
 
                 sleep(500);
 

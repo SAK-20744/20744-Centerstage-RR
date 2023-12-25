@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.opencv.core.Core.ROTATE_90_COUNTERCLOCKWISE;
-import static org.opencv.core.Core.rotate;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -21,7 +20,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-public class myPropPipeline implements VisionProcessor, CameraStreamSource {
+public class PropPipeline implements VisionProcessor, CameraStreamSource {
 
     private final AtomicReference<Bitmap> lastFrame = new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
@@ -86,7 +85,7 @@ MAGENTA = Parking Right
     @Override
     public Object processFrame(Mat input, long captureTimeNanos) {
 
-//        Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
+        Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
 
         Rect leftArea = new Rect(new Point(160,200), new Point(280,100));
         Rect middleArea = new Rect(new Point(215,480), new Point(315,400));
@@ -184,17 +183,9 @@ MAGENTA = Parking Right
             );
         }
 
-        // Memory cleanup
-        blurredMatLeft.release();
-        blurredMatCenter.release();
-        grayMat.release();
-        cyaMat.release();
-        magMat.release();
-
-
-        if ((colorLeft == myPropPipeline.ColorDetected.CYAN) || (colorLeft == myPropPipeline.ColorDetected.MAGENTA))
+        if ((colorLeft == PropPipeline.ColorDetected.CYAN) || (colorLeft == PropPipeline.ColorDetected.MAGENTA))
             location = Location.LEFT;
-        else if ((colorMiddle == myPropPipeline.ColorDetected.CYAN) || (colorMiddle == myPropPipeline.ColorDetected.MAGENTA))
+        else if ((colorMiddle == PropPipeline.ColorDetected.CYAN) || (colorMiddle == PropPipeline.ColorDetected.MAGENTA))
             location = Location.CENTER;
         else
             location = Location.RIGHT;
@@ -220,6 +211,22 @@ MAGENTA = Parking Right
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+
+    }
+
+    protected void finalize() throws Throwable {
+        close();
+        super.finalize();
+    }
+
+    public void close() {
+
+        // Memory cleanup
+        blurredMatLeft.release();
+        blurredMatCenter.release();
+        grayMat.release();
+        cyaMat.release();
+        magMat.release();
 
     }
 

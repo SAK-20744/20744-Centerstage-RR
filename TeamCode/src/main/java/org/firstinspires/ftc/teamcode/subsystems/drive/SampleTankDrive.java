@@ -31,7 +31,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.drive.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.subsystems.drive.trajectorysequence.TrajectorySequenceRunner;
-import org.firstinspires.ftc.teamcode.subsystems.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

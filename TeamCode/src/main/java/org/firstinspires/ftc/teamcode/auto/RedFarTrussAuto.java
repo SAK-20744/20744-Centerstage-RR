@@ -28,8 +28,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Blue Near 2+0")
-public class BlueNearAuto extends LinearOpMode {
+@Autonomous(name = "Red Far Truss 2+0")
+public class RedFarTrussAuto extends LinearOpMode {
 
     private myPropPipeline propPipeline;
     private VisionPortal portal;
@@ -67,70 +67,42 @@ public class BlueNearAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
+        Pose2d firstTile = new Pose2d(15, -2, Math.toRadians(0));
+        Pose2d nextTile = new Pose2d(1.5,-2,Math.toRadians(-90));
+        Pose2d MiddleTile = new Pose2d(1.5, -75, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(16.5, 26, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 26, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(33.5, 26, Math.toRadians(90));
-        Pose2d closePark = new Pose2d(0,32,Math.toRadians(90));
-        Pose2d gatePark = new Pose2d(53.5,32,Math.toRadians(90));
-        Pose2d park = closePark;
+        Pose2d boardLeft = new Pose2d(16.5, -75, Math.toRadians(-90));
+        Pose2d boardMiddle = new Pose2d(25, -75, Math.toRadians(-90));
+        Pose2d boardRight = new Pose2d(33.5, -75, Math.toRadians(-90));
+        Pose2d park = new Pose2d(0, -83, Math.toRadians(90));
 
-        while (opModeInInit()) {
-
-            if (gamepad2.a) {
-                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            if(gamepad1.dpad_up){
-                park = gatePark;
-            }
-            if(gamepad1.dpad_down) {
-                park = closePark;
-            }
-
-            if(park == gatePark)
-                telemetry.addData("Park Position: Gate Side ", 0);
-            else
-                telemetry.addData("Park Position: Near Side ", 0);
-
-            left_lift.setPower(-gamepad2.right_stick_y);
-            right_lift.setPower(-gamepad2.right_stick_y);
-            leftArm.setPower(-gamepad2.left_stick_y);
-            rightArm.setPower(gamepad2.left_stick_y);
-
-            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
-            telemetry.addData("Servo Arm", arm2.getLocation());
-
-            telemetry.addData("Location", propPipeline.getLocation());
-            telemetry.update();
-        }
-
-        TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(MiddleTile)
+        TrajectorySequence lineToFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToLinearHeading(firstTile)
                 .build();
-        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(MiddleTile)
+        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(firstTile)
                 .lineToLinearHeading(spike1)
                 .build();
-        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(MiddleTile)
+        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(firstTile)
                 .lineToLinearHeading(spike2)
                 .build();
-        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(MiddleTile)
+        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(firstTile)
                 .lineToLinearHeading(spike3)
                 .build();
-        TrajectorySequence toMiddleLeft = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(MiddleTile)
+        TrajectorySequence toFirstLeft = drive.trajectorySequenceBuilder(spike1)
+                .lineToLinearHeading(firstTile)
                 .build();
-        TrajectorySequence toMiddleCenter = drive.trajectorySequenceBuilder(spike2)
-                .lineToLinearHeading(MiddleTile)
+        TrajectorySequence toFirstCenter = drive.trajectorySequenceBuilder(spike2)
+                .lineToLinearHeading(firstTile)
                 .build();
-        TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
+        TrajectorySequence toFirstRight = drive.trajectorySequenceBuilder(spike3)
+                .lineToLinearHeading(firstTile)
+                .build();
+        TrajectorySequence toNextTile = drive.trajectorySequenceBuilder(firstTile)
+                .lineToLinearHeading(nextTile)
+                .build();
+        TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(nextTile)
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
@@ -156,6 +128,28 @@ public class BlueNearAuto extends LinearOpMode {
         double wristservoposition = 0.63;
         wrist.setPosition(wristservoposition);
 
+        while (opModeInInit()) {
+
+            if (gamepad2.a) {
+                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
+            left_lift.setPower(-gamepad2.right_stick_y);
+            right_lift.setPower(-gamepad2.right_stick_y);
+            leftArm.setPower(-gamepad2.left_stick_y);
+            rightArm.setPower(gamepad2.left_stick_y);
+
+            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
+            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
+            telemetry.addData("Servo Arm", arm2.getLocation());
+
+            telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.update();
+        }
+
         waitForStart();
 
         if (!isStopRequested()) {
@@ -172,7 +166,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(lineToFirstTile);
 //
 //                sleep(1000);
 
@@ -208,7 +202,15 @@ public class BlueNearAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(toMiddleLeft);
+                drive.followTrajectorySequence(toFirstLeft);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toNextTile);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toMiddle);
 
                 sleep(500);
 
@@ -290,7 +292,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(lineToFirstTile);
 //
 //                sleep(1000);
 
@@ -326,7 +328,15 @@ public class BlueNearAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(toMiddleCenter);
+                drive.followTrajectorySequence(toFirstCenter);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toNextTile);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toMiddle);
 
                 sleep(500);
 
@@ -408,7 +418,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(lineToFirstTile);
 //
 //                sleep(1000);
 
@@ -444,7 +454,15 @@ public class BlueNearAuto extends LinearOpMode {
 
                 door.setPosition(0.95);
 
-                drive.followTrajectorySequence(toMiddleRight);
+                drive.followTrajectorySequence(toFirstRight);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toNextTile);
+
+                sleep(500);
+
+                drive.followTrajectorySequence(toMiddle);
 
                 sleep(500);
 

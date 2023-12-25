@@ -67,18 +67,18 @@ public class BlueFarGateAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d firstTile = new Pose2d(15, -4, Math.toRadians(0));
+        Pose2d firstTile = new Pose2d(15, -6, Math.toRadians(0));
         Pose2d nextTile = new Pose2d(52,-3,Math.toRadians(90));
         Pose2d spike3Avoid = new Pose2d(48, -12,Math.toRadians(180));
-        Pose2d spike2Avoid = new Pose2d(48, -4, Math.toRadians(180));
-        Pose2d spike1Avoid = new Pose2d(30.5, -4, Math.toRadians(90));
-        Pose2d MiddleTile = new Pose2d(52,82, Math.toRadians(90));
+        Pose2d spike2Avoid = new Pose2d(48, -8, Math.toRadians(150));
+        Pose2d spike1Avoid = new Pose2d(30.5, -6, Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(52,70, Math.toRadians(90));
         Pose2d spike3 = new Pose2d(39, -12, Math.toRadians(180));
-        Pose2d spike2 = new Pose2d(40.5, -4, Math.toRadians(180));
-        Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(31.5, 74, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 74, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(17, 74, Math.toRadians(90));
+        Pose2d spike2 = new Pose2d(43.5, -2, Math.toRadians(180));
+        Pose2d spike1 = new Pose2d(30.5, 3.5, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(31.5, 72.3, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(23.5, 72.3, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(14, 72.3, Math.toRadians(90));
         Pose2d park = new Pose2d(52, 86, Math.toRadians(90));
 
         TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -238,7 +238,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 wrist.setPosition(0.45);
 
-                arm2.runToProfile(100);
+                arm2.runToProfile(107);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Left");
@@ -364,7 +364,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 wrist.setPosition(0.45);
 
-                arm2.runToProfile(100);
+                arm2.runToProfile(107);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Center");
@@ -490,7 +490,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 wrist.setPosition(0.45);
 
-                arm2.runToProfile(100);
+                arm2.runToProfile(107);
                 while( (arm2.isBusy()) && !isStopRequested()) {
                     arm2.updateServoArm();
                     telemetry.addData("Position", "Right");

@@ -89,12 +89,15 @@ public class RedNearAuto extends LinearOpMode {
 
             if(gamepad1.dpad_up){
                 park = gatePark;
-                telemetry.addData("Park Position: Gate Side ", 0);
             }
             if(gamepad1.dpad_down) {
                 park = closePark;
-                telemetry.addData("Park Position: Near Side ", 0);
             }
+
+            if(park == gatePark)
+                telemetry.addData("Park Position: Gate Side ", 0);
+            else
+                telemetry.addData("Park Position: Near Side ", 0);
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);

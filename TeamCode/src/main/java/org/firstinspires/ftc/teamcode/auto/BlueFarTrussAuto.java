@@ -73,9 +73,9 @@ public class BlueFarTrussAuto extends LinearOpMode {
         Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(31, -4, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(34.5, 73, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(26, 73, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(18.5, 73, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(34.5, 72.5, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(26, 72.5, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(18.5, 72.5, Math.toRadians(90));
         Pose2d park = new Pose2d(0, 86, Math.toRadians(90));
 
         TrajectorySequence lineToFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())

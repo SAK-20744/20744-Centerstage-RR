@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.hardware;
+package org.firstinspires.ftc.teamcode.util.common.hardware;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,11 +17,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry.profile.ProfileConstraints;
+import org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry.profile.ProfileConstraints;
 //import org.firstinspires.ftc.teamcode.common.util.InverseKinematics;
-import org.firstinspires.ftc.teamcode.subsystems.common.util.wrappers.WActuatorGroup;
-import org.firstinspires.ftc.teamcode.subsystems.common.util.wrappers.WEncoder;
-import org.firstinspires.ftc.teamcode.subsystems.common.util.wrappers.WSubsystem;
+import org.firstinspires.ftc.teamcode.util.common.util.wrappers.WActuatorGroup;
+import org.firstinspires.ftc.teamcode.util.common.util.wrappers.WEncoder;
+import org.firstinspires.ftc.teamcode.util.common.util.wrappers.WSubsystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

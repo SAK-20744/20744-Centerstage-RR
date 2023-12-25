@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry;
+package org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry;
 
 public class Vector2D {
     public double x,y;

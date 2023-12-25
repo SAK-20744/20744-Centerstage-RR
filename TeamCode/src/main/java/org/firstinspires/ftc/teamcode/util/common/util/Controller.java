@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.util;
+package org.firstinspires.ftc.teamcode.util.common.util;
 
 //import org.firstinspires.ftc.teamcode.common.drive.pathing.geometry.Vector2D;
 

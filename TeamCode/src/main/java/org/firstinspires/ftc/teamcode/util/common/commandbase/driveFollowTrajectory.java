@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.commandbase;
+package org.firstinspires.ftc.teamcode.util.common.commandbase;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.InstantCommand;

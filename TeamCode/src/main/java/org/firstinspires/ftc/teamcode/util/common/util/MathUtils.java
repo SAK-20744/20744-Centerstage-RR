@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.util;
+package org.firstinspires.ftc.teamcode.util.common.util;
 
-import org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry.Vector2D;
+import org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry.Vector2D;
 
 public class MathUtils {
     public static double clamp(double num, double min, double max) {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.util.wrappers;
+package org.firstinspires.ftc.teamcode.util.common.util.wrappers;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry.profile.AsymmetricMotionProfile;
-import org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry.profile.ProfileConstraints;
-import org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry.profile.ProfileState;
+import org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry.profile.AsymmetricMotionProfile;
+import org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry.profile.ProfileConstraints;
+import org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry.profile.ProfileState;
 //import org.firstinspires.ftc.teamcode.common.hardware.AbsoluteAnalogEncoder;
-import org.firstinspires.ftc.teamcode.subsystems.common.hardware.AbsoluteAnalogEncoder;
-import org.firstinspires.ftc.teamcode.subsystems.common.hardware.RobotHardware;
-import org.firstinspires.ftc.teamcode.subsystems.common.util.MathUtils;
+import org.firstinspires.ftc.teamcode.util.common.hardware.AbsoluteAnalogEncoder;
+import org.firstinspires.ftc.teamcode.util.common.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.common.util.MathUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

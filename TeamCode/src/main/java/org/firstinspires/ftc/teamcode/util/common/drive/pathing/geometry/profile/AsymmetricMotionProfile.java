@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.drive.pathing.geometry.profile;
+package org.firstinspires.ftc.teamcode.util.common.drive.pathing.geometry.profile;
 
 import androidx.annotation.NonNull;
 

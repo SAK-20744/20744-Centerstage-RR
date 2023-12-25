@@ -15,12 +15,12 @@ package org.firstinspires.ftc.teamcode.auto.testing;
 
         import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
         import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-        import org.firstinspires.ftc.teamcode.subsystems.common.commandbase.driveFollowTrajectory;
-        import org.firstinspires.ftc.teamcode.subsystems.common.hardware.Globals;
-        import org.firstinspires.ftc.teamcode.subsystems.common.hardware.RobotHardware;
-        import org.firstinspires.ftc.teamcode.subsystems.common.vision.Side;
+        import org.firstinspires.ftc.teamcode.subsystems.PropPipeline;
+        import org.firstinspires.ftc.teamcode.util.common.commandbase.driveFollowTrajectory;
+        import org.firstinspires.ftc.teamcode.util.common.hardware.Globals;
+        import org.firstinspires.ftc.teamcode.util.common.hardware.RobotHardware;
+        import org.firstinspires.ftc.teamcode.util.common.vision.Side;
         import org.firstinspires.ftc.teamcode.subsystems.drive.SampleMecanumDrive;
-        import org.firstinspires.ftc.teamcode.subsystems.common.vision.PropPipeline;
         import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
@@ -70,7 +70,7 @@ public class CommandBasedBlue extends CommandOpMode {
             telemetry.update();
         }
 
-        Side side = propPipeline.getLocation();
+//        Side side = propPipeline.getLocation();
         portal.close();
 
         Pose2d yellowScorePos = new Pose2d();
@@ -89,26 +89,26 @@ public class CommandBasedBlue extends CommandOpMode {
 
         // 0.3, 300
 
-        switch (side) {
-            case LEFT:
-                yellowScorePos = boardLeft;
-                purpleScorePos = spike1;
-                parkPos = park;
-                break;
-            case CENTER:
-                yellowScorePos = boardMiddle;
-                purpleScorePos = spike2;
-                parkPos = park;
-                break;
-            case RIGHT:
-                yellowScorePos = boardRight;
-                purpleScorePos = spike3;
-                parkPos = park;
-                break;
-            default:
-                break;
-
-        }
+//        switch (side) {
+//            case LEFT:
+//                yellowScorePos = boardLeft;
+//                purpleScorePos = spike1;
+//                parkPos = park;
+//                break;
+//            case CENTER:
+//                yellowScorePos = boardMiddle;
+//                purpleScorePos = spike2;
+//                parkPos = park;
+//                break;
+//            case RIGHT:
+//                yellowScorePos = boardRight;
+//                purpleScorePos = spike3;
+//                parkPos = park;
+//                break;
+//            default:
+//                break;
+//
+//        }
 
         Trajectory toYellow = drive.trajectoryBuilder(start)
                 .lineToLinearHeading(yellowScorePos)

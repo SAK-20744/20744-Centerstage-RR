@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.subsystems.common.hardware;
+package org.firstinspires.ftc.teamcode.util.common.hardware;
 
-import org.firstinspires.ftc.teamcode.subsystems.common.vision.Side;
+import org.firstinspires.ftc.teamcode.util.common.vision.Side;
 
 public class Globals {
 

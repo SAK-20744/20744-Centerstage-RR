@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Outake;
@@ -20,6 +21,7 @@ public class NIKETeleopIVK extends LinearOpMode {
 
     private DcMotor left_lift;
     private DcMotor right_lift;
+    private DcMotor elbow;
 
     private CRServo leftArm;
     private CRServo rightArm;
@@ -28,24 +30,8 @@ public class NIKETeleopIVK extends LinearOpMode {
     private Servo wrist;
     private Servo plane;
 
-    private AnalogInput leftAnalogInput;
-    private AnalogInput rightAnalogInput;
-    private double leftPos;
-    private double rightPos;
-
-    private double power = 1;
-    private int targetPos;
-
     private Arm1 arm1;
-    private ServoArm arm2;
-
-    private double currentArmPos = 0;
-    private double lastArmPos = 0;
-    private double deltaArmPos;
-
-    private double universalArmPos = 0;
-    private double uncorrectedArmPos = 0;
-    private double correctedArmPos = 0;
+    private Elbow arm2;
 
     public static double kP;
     public static double kI;
@@ -71,10 +57,7 @@ public class NIKETeleopIVK extends LinearOpMode {
 
         left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         right_lift = hardwareMap.get(DcMotor.class, "right_lift");
-        leftAnalogInput = hardwareMap.get(AnalogInput.class, "left");
-        rightAnalogInput = hardwareMap.get(AnalogInput.class, "right");
-        leftArm = hardwareMap.get(CRServo.class, "leftArm");
-        rightArm = hardwareMap.get(CRServo.class, "rightArm");
+        elbow = hardwareMap.get(DcMotor.class, "elbow");
         intake = hardwareMap.get(CRServo.class, "intake");
         door = hardwareMap.get(Servo.class, "door");
         wrist = hardwareMap.get(Servo.class, "wrist");
@@ -82,7 +65,7 @@ public class NIKETeleopIVK extends LinearOpMode {
 
 //        Wrist wrist = new Wrist(hardwareMap);
         arm1 = (new Arm1(hardwareMap));
-        arm2 = (new ServoArm(hardwareMap));
+        arm2 = (new Elbow(hardwareMap));
         Outake outake = new Outake(hardwareMap);
 
 
@@ -92,17 +75,6 @@ public class NIKETeleopIVK extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
-////
-////            lastArmPos = currentArmPos;
-//            Pose2d poseEstimate = drive.getPoseEstimate();
-////            leftPos = leftAnalogInput.getVoltage() / leftAnalogInput.getMaxVoltage() * 360;
-////            rightPos = rightAnalogInput.getVoltage() / rightAnalogInput.getMaxVoltage() * 360;
-//
-//            Vector2d input = new Vector2d(
-//                    gamepad1.left_stick_y,
-//                    gamepad1.left_stick_x
-//            ).rotated(-poseEstimate.getHeading());
-//
 //            drive.setWeightedDrivePower(
 //                    new Pose2d(
 //                            input.getX(),
@@ -110,22 +82,7 @@ public class NIKETeleopIVK extends LinearOpMode {
 //                            -gamepad1.right_stick_x
 //                    )
 //            );
-//
 //            drive.update();
-//
-//            if (gamepad2.dpad_left) {
-//                left_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//                right_lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//                left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            }
-//            left_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            left_lift.setPower(-gamepad2.right_stick_y);
-//            right_lift.setPower(-gamepad2.right_stick_y);
-//
-//            leftArm.setPower(-gamepad2.left_stick_y);
-//            rightArm.setPower(gamepad2.left_stick_y);
 //
 //            if (gamepad2.dpad_up) {
 //                wristservoposition = wristservoposition + 0.01;

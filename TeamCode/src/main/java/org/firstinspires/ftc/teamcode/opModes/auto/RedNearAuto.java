@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.vision.myPropPipeline.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.myPropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.myPropPipeline.Location.RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
+
+import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -15,11 +17,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoArm;
-import org.firstinspires.ftc.teamcode.subsystems.vision.myPropPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.myPropPipeline.Location;
+import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -31,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name = "Red Near 2+0")
 public class RedNearAuto extends LinearOpMode {
 
-    private myPropPipeline propPipeline;
+    private PropPipeline propPipeline;
     private VisionPortal portal;
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;
@@ -43,7 +46,7 @@ public class RedNearAuto extends LinearOpMode {
         aprilTag.setDecimation(2);
         setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
-        propPipeline = new myPropPipeline();
+        propPipeline = new PropPipeline();
 
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
@@ -57,13 +60,12 @@ public class RedNearAuto extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Arm1 arm1 = (new Arm1(hardwareMap));
-        ServoArm arm2 = new ServoArm(hardwareMap);
+        Elbow arm2 = new Elbow(hardwareMap);
 
         Servo wrist = hardwareMap.get(Servo.class, "wrist");
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
-        CRServo leftArm = hardwareMap.get(CRServo.class, "leftArm");
-        CRServo rightArm = hardwareMap.get(CRServo.class, "rightArm");
+        DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
@@ -87,6 +89,11 @@ public class RedNearAuto extends LinearOpMode {
                 right_lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
+            if(gamepad2.b) {
+                elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
             if(gamepad1.dpad_up){
                 park = gatePark;
             }
@@ -101,13 +108,12 @@ public class RedNearAuto extends LinearOpMode {
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
-            leftArm.setPower(-gamepad2.left_stick_y);
-            rightArm.setPower(gamepad2.left_stick_y);
+            elbow.setPower(gamepad2.left_stick_y);
+            wrist.setPosition(0.63);
 
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
-            telemetry.addData("Servo Arm", arm2.getLocation());
-
+            telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
             telemetry.update();
         }
@@ -162,127 +168,42 @@ public class RedNearAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.3);
+            wrist.setPosition(0.24);
             door.setPosition(0.75);
-            arm1.ArmToPos(-1750, 1);
+            arm1.ArmToPos(-2000, 0.5);
+            arm2.ArmToPos(160, 1);
 
             if (location == LEFT) {
                 // Movements for left spot
-
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
                 drive.followTrajectorySequence(lineToMiddleTile);
-//
-//                sleep(1000);
-
                 drive.followTrajectorySequence(toSpike1);
-
-                sleep(200);
-
-                wrist.setPosition(0.21);
-
-                arm1.ArmToPos(-2000, 1);
-
-                arm2.runToProfile(-7.5);
-                while ((arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2", arm2.getLocation());
-                    telemetry.addData("Arm2 State", arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.1);
-
-                sleep(1000);
-
-                arm2.runToProfile(0);
-                while ((arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2", arm2.getLocation());
-                    telemetry.addData("Arm2 State", arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.95);
-
-                drive.followTrajectorySequence(toMiddleLeft);
-
                 sleep(500);
-
-                drive.followTrajectorySequence(toBoardLeft);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                arm1.ArmToPos(-600, 0.5);
-
-                wrist.setPosition(0.45);
-
-                arm2.runToProfile(100);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                sleep(750);
-
-
-                intake.setPower(-1);
-
-                sleep(750);
-
-                intake.setPower(0);
-
                 door.setPosition(0.1);
-
-                sleep(700);
-
-//                arm2.runToProfile(120);
-//                while( (arm2.isBusy()) && !isStopRequested()) {
-//                    arm2.updateServoArm();
-//                    telemetry.addData("Position", "Left");
-//                    telemetry.addData("Arm2" , arm2.getLocation());
-//                    telemetry.addData("Arm2 State" , arm2.isBusy());
-//                    telemetry.update();
-//                }
-
+                sleep(200);
+                arm2.ArmToPos(0,1);
+                sleep(500);
                 door.setPosition(0.95);
-
-                arm1.ArmToPos(-1100, 1);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-//                arm1.ArmToPos(0,0.5);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Left");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
+                drive.followTrajectorySequence(toMiddleLeft);
+                sleep(500);
+                drive.followTrajectorySequence(toBoardLeft);
+                arm1.ArmToPos(-664, 0.5);
+                wrist.setPosition(0.6);
+                arm2.ArmToPos(-812, 0.65);
+                intake.setPower(-1);
+                sleep(500);
+                intake.setPower(0);
+                sleep(1000);
+                door.setPosition(0.1);
+                sleep(749);
+                arm2.ArmToPos(-1000, 0.5);
+                door.setPosition(0.95);
+                sleep(1000);
+                arm1.ArmToPos(-1850, 0.5);
                 drive.followTrajectorySequence(leftPark);
+                arm2.ArmToPos(0,1);
 
             }
             if (location == CENTER) {
@@ -291,234 +212,64 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.update();
 
                 drive.followTrajectorySequence(lineToMiddleTile);
-//
-//                sleep(1000);
-
                 drive.followTrajectorySequence(toSpike2);
-
-                sleep(200);
-
-                wrist.setPosition(0.21);
-
-                arm1.ArmToPos(-2000, 1);
-
-                arm2.runToProfile(-7.5);
-                while ((arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2", arm2.getLocation());
-                    telemetry.addData("Arm2 State", arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.1);
-
-                sleep(1000);
-
-                arm2.runToProfile(0);
-                while ((arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2", arm2.getLocation());
-                    telemetry.addData("Arm2 State", arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.95);
-
-                drive.followTrajectorySequence(toMiddleCenter);
-
                 sleep(500);
-
-                drive.followTrajectorySequence(toBoardCenter);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                arm1.ArmToPos(-600, 0.5);
-
-                wrist.setPosition(0.45);
-
-                arm2.runToProfile(100);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                sleep(750);
-
-                intake.setPower(-1);
-
-                sleep(750);
-
-                intake.setPower(0);
-
                 door.setPosition(0.1);
-
-                sleep(700);
-
-//                arm2.runToProfile(120);
-//                while( (arm2.isBusy()) && !isStopRequested()) {
-//                    arm2.updateServoArm();
-//                    telemetry.addData("Position", "Center");
-//                    telemetry.addData("Arm2" , arm2.getLocation());
-//                    telemetry.addData("Arm2 State" , arm2.isBusy());
-//                    telemetry.update();
-//                }
-
+                sleep(200);
+                arm2.ArmToPos(0,1);
+                sleep(500);
                 door.setPosition(0.95);
-
-                arm1.ArmToPos(-1100, 1);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-//                arm1.ArmToPos(0,0.5);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Center");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
+                drive.followTrajectorySequence(toMiddleCenter);
+                sleep(500);
+                drive.followTrajectorySequence(toBoardCenter);
+                arm1.ArmToPos(-664, 0.5);
+                wrist.setPosition(0.6);
+                arm2.ArmToPos(-812, 65);
+                intake.setPower(-1);
+                sleep(500);
+                intake.setPower(0);
+                sleep(1000);
+                door.setPosition(0.1);
+                sleep(749);
+                arm2.ArmToPos(-1000, 0.5);
+                door.setPosition(0.95);
+                sleep(1000);
+                arm1.ArmToPos(-1850, 0.5);
                 drive.followTrajectorySequence(centerPark);
+                arm2.ArmToPos(0,1);
 
             }
             if (location == RIGHT) {
-                // Movements for Right spot
-
+                // Movements for right spot
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
                 drive.followTrajectorySequence(lineToMiddleTile);
-//
-//                sleep(1000);
-
                 drive.followTrajectorySequence(toSpike3);
-
-                sleep(200);
-
-                wrist.setPosition(0.21);
-
-                arm1.ArmToPos(-2000, 1);
-
-                arm2.runToProfile(-7.5);
-                while ((arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2", arm2.getLocation());
-                    telemetry.addData("Arm2 State", arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.1);
-
-                sleep(1000);
-
-                arm2.runToProfile(0);
-                while ((arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2", arm2.getLocation());
-                    telemetry.addData("Arm2 State", arm2.isBusy());
-                    telemetry.update();
-                }
-
-                door.setPosition(0.95);
-
-                drive.followTrajectorySequence(toMiddleRight);
-
                 sleep(500);
-
-                drive.followTrajectorySequence(toBoardRight);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                arm1.ArmToPos(-600, 0.5);
-
-                wrist.setPosition(0.45);
-
-                arm2.runToProfile(100);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-                sleep(750);
-
-
-                intake.setPower(-1);
-
-                sleep(750);
-
-                intake.setPower(0);
-
                 door.setPosition(0.1);
-
-                sleep(700);
-
-//                arm2.runToProfile(120);
-//                while( (arm2.isBusy()) && !isStopRequested()) {
-//                    arm2.updateServoArm();
-//                    telemetry.addData("Position", "Right");
-//                    telemetry.addData("Arm2" , arm2.getLocation());
-//                    telemetry.addData("Arm2 State" , arm2.isBusy());
-//                    telemetry.update();
-//                }
-
+                sleep(200);
+                arm2.ArmToPos(0,1);
+                sleep(500);
                 door.setPosition(0.95);
-
-                arm1.ArmToPos(-1100, 1);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
-//                arm1.ArmToPos(0,0.5);
-
-                arm2.runToProfile(0);
-                while( (arm2.isBusy()) && !isStopRequested()) {
-                    arm2.updateServoArm();
-                    telemetry.addData("Position", "Right");
-                    telemetry.addData("Arm2" , arm2.getLocation());
-                    telemetry.addData("Arm2 State" , arm2.isBusy());
-                    telemetry.update();
-                }
-
+                drive.followTrajectorySequence(toMiddleRight);
+                sleep(500);
+                drive.followTrajectorySequence(toBoardRight);
+                arm1.ArmToPos(-664, 0.5);
+                wrist.setPosition(0.6);
+                arm2.ArmToPos(-812, 0.65);
+                intake.setPower(-1);
+                sleep(500);
+                intake.setPower(0);
+                sleep(1000);
+                door.setPosition(0.1);
+                sleep(749);
+                arm2.ArmToPos(-1000, 0.5);
+                door.setPosition(0.95);
+                sleep(1000);
+                arm1.ArmToPos(-1850, 0.5);
                 drive.followTrajectorySequence(rightPark);
+                arm2.ArmToPos(0,1);
             }
             sleep(30000);
         }

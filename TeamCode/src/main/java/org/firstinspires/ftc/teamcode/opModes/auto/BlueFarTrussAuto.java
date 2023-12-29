@@ -47,6 +47,7 @@ public class BlueFarTrussAuto extends LinearOpMode {
 
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+
                 .addProcessor(aprilTag)
                 .addProcessor(propPipeline)
                 .enableLiveView(true)

@@ -31,9 +31,9 @@ import java.util.concurrent.TimeUnit;
 public class NIKETeleopAprilTag extends LinearOpMode {
 
 
-    public static double pX = 0.045, iX = 0, dX = 0.05;
-//    public static double pY = 0, iY = 0, dY = 0;
-//    public static double pTurn = 0, iTurn = 0, dTurn = 0;
+    public static double pX = 0.045, iX = 0.02, dX = 0.05;
+    public static double pY = 0.055, iY = 0, dY = 0.35;
+    public static double pTurn = 0.045, iTurn = 0, dTurn = 0.05;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -108,12 +108,12 @@ public class NIKETeleopAprilTag extends LinearOpMode {
         drive.setPoseEstimate(new Pose2d(0, 0, 0));
 
         PIDFController speedController;
-//        PIDFController strafeController;
-//        PIDFController turnController;
+        PIDFController strafeController;
+        PIDFController turnController;
 
         speedController = new PIDFController(pX, iX, dX, 0);
-//        strafeController = new PIDFController(pY, iY, dY, 0);
-//        turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
+        strafeController = new PIDFController(pY, iY, dY, 0);
+        turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
 
         left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         right_lift = hardwareMap.get(DcMotor.class, "right_lift");
@@ -177,25 +177,27 @@ public class NIKETeleopAprilTag extends LinearOpMode {
                 telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
                 telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
                 telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing", "%3.0f degrees", desiredTag.ftcPose.bearing);
-                telemetry.addData("Yaw", "%3.0f degrees", desiredTag.ftcPose.yaw);
+                telemetry.addData("elevation", "%3.0f degrees", desiredTag.ftcPose.elevation);
+                telemetry.addData("pitch", "%3.0f degrees", desiredTag.ftcPose.pitch);
             } else {
                 telemetry.addData("\n>", "Drive using joysticks to find valid target\n");
             }
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
 
             if (gamepad1.left_bumper && targetFound) {
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double headingError = desiredTag.ftcPose.bearing;
-                double yawError = desiredTag.ftcPose.yaw;
+//                // Determine heading, range and pitch (tag image rotation) error so we can use them to control the robot automatically.
+//                double rangeError = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+//                double headingError = -desiredTag.ftcPose.elevation;
+//                double pitchError = -desiredTag.ftcPose.pitch;
+//
+//                // Use the speed and turn "gains" to calculate how we want the robot to move.
+////                aprilTagDrive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+//                turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+//                strafe = Range.clip(-pitchError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
-                // Use the speed and turn "gains" to calculate how we want the robot to move.
-//                aprilTagDrive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-                aprilTagDrive = speedController.calculate(DESIRED_DISTANCE, desiredTag.ftcPose.range);
+                turn = turnController.calculate(targetTurn, desiredTag.ftcPose.pitch);
+                strafe = (strafeController.calculate(targetStrafe, desiredTag.ftcPose.elevation));
+                aprilTagDrive = speedController.calculate(targetDrive, desiredTag.ftcPose.range);
 //                turn = turnController.calculate()
 
 
@@ -208,7 +210,7 @@ public class NIKETeleopAprilTag extends LinearOpMode {
                 turn = -gamepad1.right_stick_x / 1.0;
                 telemetry.addData("Manual", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
             }
-            telemetry.update();
+//            telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
             moveRobot(aprilTagDrive, strafe, turn);
@@ -267,10 +269,6 @@ public class NIKETeleopAprilTag extends LinearOpMode {
                 wristservoposition = wristservoposition - 0.01;
             }
 
-            wristservoposition = Math.min(Math.max(wristservoposition, 0), 1);
-            telemetry.addData("servoPosition", wristservoposition);
-            wrist.setPosition(wristservoposition);
-
             if (gamepad2.x && !ButtonXBlock) {
                 ButtonXBlock = true;
                 if (wrist.getPosition() == 0.63) {
@@ -288,6 +286,11 @@ public class NIKETeleopAprilTag extends LinearOpMode {
             } else if (!gamepad2.circle) {
                 ButtonOBlock = false;
             }
+
+            wristservoposition = Math.min(Math.max(wristservoposition, 0), 1);
+            telemetry.addData("servoPosition", wristservoposition);
+            wrist.setPosition(wristservoposition);
+
 
             currentArmPos = rightPos;
             deltaArmPos = lastArmPos - currentArmPos;
@@ -366,8 +369,8 @@ public class NIKETeleopAprilTag extends LinearOpMode {
  * Release the Left Bumper to return to manual driving mode.
  *
  * Under "Drive To Target" mode, the robot has three goals:
- * 1) Turn the robot to always keep the Tag centered on the camera frame. (Use the Target Bearing to turn the robot.)
- * 2) Strafe the robot towards the centerline of the Tag, so it approaches directly in front  of the tag.  (Use the Target Yaw to strafe the robot)
+ * 1) Turn the robot to always keep the Tag centered on the camera frame. (Use the Target elevation to turn the robot.)
+ * 2) Strafe the robot towards the centerline of the Tag, so it approaches directly in front  of the tag.  (Use the Target pitch to strafe the robot)
  * 3) Drive towards the Tag to get to the desired distance.  (Use Tag Range to drive the robot forward/backward)
  *
  * Use DESIRED_DISTANCE to set how close you want the robot to get to the target.
@@ -379,18 +382,22 @@ public class NIKETeleopAprilTag extends LinearOpMode {
  */
 
     // Adjust these numbers to suit your robot.
-    public static double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+//    public static double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+//
+//    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
+//    //  applied to the drive motors to correct the error.
+//    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
+////    public static double SPEED_GAIN  =  0.2  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+//    public static double STRAFE_GAIN =  0.025 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree pitch error.   (0.25 / 25.0)
+//    public static double TURN_GAIN   =  0.065  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+//
+////    public static double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
+//    public static double MAX_AUTO_STRAFE= 0.65;   //  Clip the approach speed to this max value (adjust for your robot)
+//    public static double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
 
-    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
-    //  applied to the drive motors to correct the error.
-    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-//    public static double SPEED_GAIN  =  0.2  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    public static double STRAFE_GAIN =  0.025 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    public static double TURN_GAIN   =  0.065  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-
-//    public static double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    public static double MAX_AUTO_STRAFE= 0.65;   //  Clip the approach speed to this max value (adjust for your robot)
-    public static double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
+    public static double targetTurn = 0;
+    public static double targetStrafe = 0;
+    public static double targetDrive = 15;
 
     private DcMotor leftFrontDrive   = null;  //  Used to control the left front drive wheel
     private DcMotor rightFrontDrive  = null;  //  Used to control the right front drive wheel
@@ -410,14 +417,14 @@ public class NIKETeleopAprilTag extends LinearOpMode {
      * <p>
      * Positive Y is strafe left
      * <p>
-     * Positive Yaw is counter-clockwise
+     * Positive pitch is counter-clockwise
      */
-    public void moveRobot(double x, double y, double yaw) {
+    public void moveRobot(double x, double y, double pitch) {
         // Calculate wheel powers.
-        double leftFrontPower    =  x -y -yaw;
-        double rightFrontPower   =  x +y +yaw;
-        double leftBackPower     =  x +y -yaw;
-        double rightBackPower    =  x -y +yaw;
+        double leftFrontPower    =  x -y -pitch;
+        double rightFrontPower   =  x +y +pitch;
+        double leftBackPower     =  x +y -pitch;
+        double rightBackPower    =  x -y +pitch;
 
         // Normalize wheel powers to be less than 1.0
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));

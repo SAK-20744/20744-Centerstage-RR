@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumD
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 
 @Config
-@TeleOp(name= "NIKE Teleop" , group = "advanced")
+@TeleOp(name= "NIKE Teleop RR" , group = "advanced")
 public class NIKETeleopRR extends LinearOpMode {
 
     public static double SPEED = 0.8;

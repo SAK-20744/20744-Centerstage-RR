@@ -54,9 +54,9 @@ public class Wrist {
         wristServo.setPosition(pos);
     }
 
-    public void setPosDeg (double deg) {
-        wristServo.setPosition((deg-10)/180);
-    }
+//    public void setPosDeg (double deg) {
+//        wristServo.setPosition();
+//    }
 
     public double getPosition (){
         servoPosition = wristServo.getPosition();

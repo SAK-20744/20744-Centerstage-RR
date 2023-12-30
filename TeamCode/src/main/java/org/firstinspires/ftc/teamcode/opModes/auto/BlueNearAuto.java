@@ -17,7 +17,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.Exposur
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
-import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoArm;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
@@ -196,7 +195,8 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(749);
-                arm2.ArmToPos(-1000, 0.5);
+                arm2.ArmToPos(-900, 0.5);
+                sleep(500);
                 door.setPosition(0.95);
                 sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
@@ -229,7 +229,8 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(749);
-                arm2.ArmToPos(-1000, 0.5);
+                arm2.ArmToPos(-900, 0.5);
+                sleep(500);
                 door.setPosition(0.95);
                 sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
@@ -262,7 +263,8 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(749);
-                arm2.ArmToPos(-1000, 0.5);
+                arm2.ArmToPos(-900, 0.5);
+                sleep(500);
                 door.setPosition(0.95);
                 sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);

@@ -18,9 +18,8 @@ public class Outake {
     private double MotorArmPos;
     private double wristPos;
     
-    
     public Outake(HardwareMap hardwareMap) {
-
+        
         arm1 = (new Arm1(hardwareMap));
         arm2 = new Elbow(hardwareMap);
         wrist = (new Wrist(hardwareMap));
@@ -30,15 +29,20 @@ public class Outake {
 
     public void BackdropHeight(double length){
 
+        if(length>33)
+            length = 33;
+        if(length<0)
+            length = 0;
+
         if(length>0) {
             ServoArmDeg = ivk.q2(length);
             MotorArmDeg = ivk.q1(length);
             wristDeg = ivk.q3(length);
         }
         else {
-            ServoArmDeg = 0;
+            ServoArmDeg = -12.5;
             MotorArmDeg = 180;
-            wristDeg = 60;
+            wristDeg = 5;
         }
             ServoArmPos = -ServoArmDeg * 1000 / 90;
             MotorArmPos = MotorArmDeg * -1000 / 90;

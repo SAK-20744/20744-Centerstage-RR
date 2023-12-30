@@ -144,10 +144,6 @@ public class NIKETeleop extends LinearOpMode {
             }
 
             height -= gamepad2.left_stick_y*0.5;
-            if(height>33)
-                height = 33;
-            if(height<0)
-                height = 0;
             outake.BackdropHeight(height);
 
             telemetry.addData("Height:", height);

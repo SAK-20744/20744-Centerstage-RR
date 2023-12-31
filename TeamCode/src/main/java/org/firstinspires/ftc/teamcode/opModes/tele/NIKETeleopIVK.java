@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.tele;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Outake;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoArm;
 
 @Config
+@Disabled
 @TeleOp(name= "NIKE TeleopIVK", group = "advanced")
 public class NIKETeleopIVK extends LinearOpMode {
 
@@ -137,7 +139,7 @@ public class NIKETeleopIVK extends LinearOpMode {
                 height = 33;
             if(height<0)
                 height = 0;
-            outake.BackdropHeight(height);
+            outake.BackdropHeight(height, true);
 
             telemetry.addData("Height:", height);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());

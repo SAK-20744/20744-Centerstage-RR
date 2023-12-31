@@ -2,18 +2,19 @@ package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
 public class IVKMath {
 
-    double length1 = 16.5;
-    double length2 = 16.5;
+    private double length1 = 16.5;
+    private double length2 = 16.5;
+    private double angle;
 
-    public IVKMath(){
-
+    public IVKMath(double theAngle){
+        angle = theAngle;
     }
 
     public double backdropX(double height) {
-        return height * Math.sin(60);
+        return (height * Math.sin(angle))-10;
     }
     public double backdropY(double height) {
-        return height * Math.cos(60);
+        return (height * Math.cos(angle));
     }
 
     public double a1 (double height) {
@@ -38,7 +39,7 @@ public class IVKMath {
         double x = backdropX(height);
         double y = backdropY(height);
 
-        return 240-(q1(height)+q2(height));
+        return 247-(q1(height)+q2(height));
     }
 
     public double getA1 (double height) {

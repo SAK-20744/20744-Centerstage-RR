@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Outake {
+public class OutakeSingle {
 
     private Arm1 arm1;
     private Elbow arm2;
@@ -13,7 +12,7 @@ public class Outake {
     private double ServoArmDeg;
     private double MotorArmDeg;
     private double wristDeg;
-    
+
     private double ServoArmPos;
     private double MotorArmPos;
     private double wristPos;
@@ -28,8 +27,8 @@ public class Outake {
     private double max = 33.5;
     private double offset6Max = 30.095;
     private double offset10Max = 27.361;
-    
-    public Outake(HardwareMap hardwareMap) {
+
+    public OutakeSingle(HardwareMap hardwareMap) {
         arm1 = (new Arm1(hardwareMap));
         arm2 = new Elbow(hardwareMap);
         wrist = (new Wrist(hardwareMap));
@@ -86,8 +85,8 @@ public class Outake {
             speed = 0.5;
         }
 
-        if(length < 5.5){
-            length = 5.5;
+        if(length > 2 && length < 8){
+            length = 6;
         }
 
         if(length>0) {

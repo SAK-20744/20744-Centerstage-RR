@@ -88,7 +88,7 @@ MAGENTA = Parking Right
         Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
 
         Rect leftArea = new Rect(new Point(70,370), new Point(205,510));
-        Rect middleArea = new Rect(new Point(420,360), new Point(480,480));
+        Rect middleArea = new Rect(new Point(420,360), new Point(480,465));
 //
 //        Rect leftArea = new Rect(new Point(240,800), new Point(340,890));
 //        Rect middleArea = new Rect(new Point(760,720), new Point(880,810));

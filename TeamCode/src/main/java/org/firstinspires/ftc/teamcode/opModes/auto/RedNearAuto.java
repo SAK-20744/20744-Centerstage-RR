@@ -4,8 +4,6 @@ import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Loca
 import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
 
-import android.util.Size;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -17,13 +15,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
-import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoArm;
+import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
-import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -71,7 +68,7 @@ public class RedNearAuto extends LinearOpMode {
 
         Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(31, -4, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(18.5, -27, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(26, -27, Math.toRadians(-90));
@@ -94,10 +91,10 @@ public class RedNearAuto extends LinearOpMode {
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            if(gamepad1.dpad_up){
+            if(gamepad2.dpad_up){
                 park = gatePark;
             }
-            if(gamepad1.dpad_down) {
+            if(gamepad2.dpad_down) {
                 park = closePark;
             }
 
@@ -198,7 +195,8 @@ public class RedNearAuto extends LinearOpMode {
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(749);
-                arm2.ArmToPos(-1000, 0.5);
+                arm2.ArmToPos(-900, 0.5);
+                sleep(500);
                 door.setPosition(0.95);
                 sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
@@ -231,7 +229,8 @@ public class RedNearAuto extends LinearOpMode {
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(749);
-                arm2.ArmToPos(-1000, 0.5);
+                arm2.ArmToPos(-900, 0.5);
+                sleep(500);
                 door.setPosition(0.95);
                 sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
@@ -264,7 +263,8 @@ public class RedNearAuto extends LinearOpMode {
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(749);
-                arm2.ArmToPos(-1000, 0.5);
+                arm2.ArmToPos(-900, 0.5);
+                sleep(500);
                 door.setPosition(0.95);
                 sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);

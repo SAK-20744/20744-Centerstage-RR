@@ -98,10 +98,10 @@ public class NIKETeleopSingle extends LinearOpMode {
             }
             else if(gamepad1.y) {
                 intake.setPower(1);
-                intaking = true;
             }
             else if(gamepad2.y) {
                 intake.setPower(1);
+                intaking = true;
             }
             else {
                 intake.setPower(0);
@@ -119,17 +119,38 @@ public class NIKETeleopSingle extends LinearOpMode {
                 plane.setPosition(0.2);
             }
 
+            if(gamepad1.dpad_up) {
+                hanging = false;
+                height = 27;
+            }
+//            if(gamepad1.dpad_down)
+
             if(height < 0)
                 height = 0;
 
-            if(gamepad1.right_trigger>0)
+            if(gamepad1.right_trigger>0) {
+                hanging  = false;
                 height += 0.3;
-            if(gamepad1.left_trigger>0)
+            }
+            if(gamepad1.left_trigger>0) {
+                hanging = false;
                 height -= 0.3;
+            }
 
             if(gamepad1.a) {
+                hanging = false;
                 height = 0;
             }
+
+            if(gamepad1.b) {
+                hanging = false;
+                height = 8.1;
+            }
+
+            if(gamepad1.dpad_down) {
+                hanging = true;
+            }
+
 
                 outake.BackdropHeightOffset10(height, intaking, hanging);
 

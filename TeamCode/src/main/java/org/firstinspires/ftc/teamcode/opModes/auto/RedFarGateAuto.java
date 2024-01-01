@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.util.Encoder;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -35,6 +37,9 @@ public class RedFarGateAuto extends LinearOpMode {
     private VisionPortal portal;
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;
+
+    private Encoder parallelEncoder;
+    private Encoder perpendicularEncoder;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -60,6 +65,9 @@ public class RedFarGateAuto extends LinearOpMode {
         Arm1 arm1 = (new Arm1(hardwareMap));
         Elbow arm2 = new Elbow(hardwareMap);
 
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fl"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr"));
+
         Servo wrist = hardwareMap.get(Servo.class, "wrist");
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
@@ -71,16 +79,15 @@ public class RedFarGateAuto extends LinearOpMode {
         Pose2d nextTile = new Pose2d(52,-3,Math.toRadians(-90));
         Pose2d spike3Avoid = new Pose2d(31, 12,Math.toRadians(-90));
         Pose2d spike2Avoid = new Pose2d(52,4 , Math.toRadians(180));
-        Pose2d spike1Avoid = new Pose2d(30.5, 6, Math.toRadians(180));
+        Pose2d spike1Avoid = new Pose2d(48, 11, Math.toRadians(180));
         Pose2d MiddleTile = new Pose2d(52,-74, Math.toRadians(-90));
-        Pose2d spike1 = new Pose2d(34, 11, Math.toRadians(180));
+        Pose2d spike1 = new Pose2d(37.5, 11, Math.toRadians(180));
         Pose2d spike2 = new Pose2d(39, 4, Math.toRadians(-90));
         Pose2d spike3 = new Pose2d(29.5, -6.75, Math.toRadians(-90));
         Pose2d boardLeft = new Pose2d(33.5, -75, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(25, -75, Math.toRadians(-90));
         Pose2d boardRight = new Pose2d(16.5, -75, Math.toRadians(-90));
         Pose2d park = new Pose2d(52, -86, Math.toRadians(-90));
-
 
         TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(firstTile)
@@ -157,10 +164,13 @@ public class RedFarGateAuto extends LinearOpMode {
             elbow.setPower(gamepad2.left_stick_y);
             wrist.setPosition(0.63);
 
+            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
+            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
+
             telemetry.update();
         }
 
@@ -290,6 +300,12 @@ public class RedFarGateAuto extends LinearOpMode {
             }
             sleep(30000);
         }
+    }
+
+    private void updateEncoderTelemetry() {
+        telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
+        telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
+        telemetry.update();
     }
 
     private void    setManualExposure(int exposureMS, int gain) {

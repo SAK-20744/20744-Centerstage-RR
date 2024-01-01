@@ -59,7 +59,7 @@ public class OutakeSingle {
         }
             ServoArmPos = -ServoArmDeg * 1000 / 90;
             MotorArmPos = MotorArmDeg * -1000 / 90;
-            wristPos = (wristDeg/190);
+            wristPos = (6711.53 * Math.pow(wristDeg, -2.09156))-0.109251;
 
         arm1.ArmToPos((int)Math.round(MotorArmPos), 1);
         arm2.ArmToPos((int)Math.round(ServoArmPos), 1);
@@ -74,18 +74,23 @@ public class OutakeSingle {
 
         if(length>offset10Max)
             length = offset10Max;
-        if(length<0)
-            length = 0;
-//        if(length>0 && length<4)
-//            length = 4;
-//        if(length>4 && length<8)
-//            length = 8;
-        if(length>0 && length<8) {
-            length = 8;
+        if(length<4)
+            length = 4;
+
+        if(length>4 && length<8) {
+            length = 8.1;
             speed = 0.5;
         }
+//
+//        if(length == 8.1)
+//            speed = 0.5;
 
-        if(length > 2 && length < 8){
+//        if(length > 0 && length < 8.5){
+//            length = 8;
+//        }
+
+        if(hang) {
+            speed = 1;
             length = 6;
         }
 
@@ -113,9 +118,6 @@ public class OutakeSingle {
         ServoArmPos = -ServoArmDeg * 1000 / 90;
         MotorArmPos = MotorArmDeg * -1000 / 90;
         wristPos = (wristDeg/190);
-
-        if(hang)
-            speed = 1;
 
         arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
         arm2.ArmToPos((int)Math.round(ServoArmPos), speed);

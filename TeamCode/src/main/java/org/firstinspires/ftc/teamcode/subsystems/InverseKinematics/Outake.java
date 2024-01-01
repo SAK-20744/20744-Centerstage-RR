@@ -113,7 +113,8 @@ public class Outake {
         }
         ServoArmPos = -ServoArmDeg * 1000 / 90;
         MotorArmPos = MotorArmDeg * -1000 / 90;
-        wristPos = (wristDeg/190);
+//        wristPos = (wristDeg/190);
+//        wristPos = (6711.53 * Math.pow(wristDeg, -2.09156))-0.109251;
 
         if(hang)
             speed = 1;

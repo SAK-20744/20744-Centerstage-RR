@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoArm;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.util.Encoder;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
@@ -37,6 +39,9 @@ public class BlueFarGateAuto extends LinearOpMode {
     private VisionPortal portal;
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;
+
+    private Encoder parallelEncoder;
+    private Encoder perpendicularEncoder;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,6 +67,9 @@ public class BlueFarGateAuto extends LinearOpMode {
         Arm1 arm1 = (new Arm1(hardwareMap));
         Elbow arm2 = new Elbow(hardwareMap);
 
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fl"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "fr"));
+
         Servo wrist = hardwareMap.get(Servo.class, "wrist");
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
@@ -77,10 +85,10 @@ public class BlueFarGateAuto extends LinearOpMode {
         Pose2d MiddleTile = new Pose2d(52,70, Math.toRadians(90));
         Pose2d spike3 = new Pose2d(39, -12, Math.toRadians(180));
         Pose2d spike2 = new Pose2d(43.5, -2, Math.toRadians(180));
-        Pose2d spike1 = new Pose2d(30.5, 3.5, Math.toRadians(90));
+        Pose2d spike1 = new Pose2d(28.3, 3.5, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(31.5, 72.3, Math.toRadians(90));
         Pose2d boardMiddle = new Pose2d(23.5, 72.3, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(14, 72.3, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(15.2, 72.3, Math.toRadians(90));
         Pose2d park = new Pose2d(52, 86, Math.toRadians(90));
 
         TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -158,10 +166,13 @@ public class BlueFarGateAuto extends LinearOpMode {
             elbow.setPower(gamepad2.left_stick_y);
             wrist.setPosition(0.63);
 
+            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
+            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
+
             telemetry.update();
         }
 
@@ -176,7 +187,7 @@ public class BlueFarGateAuto extends LinearOpMode {
             arm1.ArmToPos(-2000, 0.5);
             arm2.ArmToPos(160, 1);
 
-            if (location == PropPipeline.Location.LEFT) {
+            if (location == LEFT) {
                 // Movements for left spot
 
                 telemetry.addData("Position", "Left");
@@ -214,7 +225,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 arm2.ArmToPos(0,1);
 
             }
-            if (location == PropPipeline.Location.CENTER) {
+            if (location == CENTER) {
                 // Movements for center spot
                 telemetry.addData("Position", "Center");
                 telemetry.update();
@@ -251,7 +262,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 arm2.ArmToPos(0,1);
 
             }
-            if (location == PropPipeline.Location.RIGHT) {
+            if (location == RIGHT) {
                 // Movements for Right spot
 
                 telemetry.addData("Position", "Right");
@@ -291,6 +302,12 @@ public class BlueFarGateAuto extends LinearOpMode {
             }
             sleep(30000);
         }
+    }
+
+    private void updateEncoderTelemetry() {
+        telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
+        telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
+        telemetry.update();
     }
 
     private void    setManualExposure(int exposureMS, int gain) {

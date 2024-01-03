@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
@@ -27,7 +28,6 @@ import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import java.lang.Math;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +46,7 @@ public class BlueNearAuto extends LinearOpMode {
     private DcMotor leftBackDrive    = null;
     private DcMotor rightBackDrive   = null;
 
-    private static final int DESIRED_TAG_ID = 1;     // LEFT April Tag - Aligns the robot to the Center
+    private static final int DESIRED_TAG_ID = 1; // LEFT April Tag - Aligns the robot to the Center
 
     private double pX = 0.045, iX = 0.02, dX = 0.05;
     private double pY = 0.055, iY = 0, dY = 0.35;
@@ -123,15 +123,16 @@ public class BlueNearAuto extends LinearOpMode {
         Servo door = hardwareMap.get(Servo.class, "door");
 
         Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
-        Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
-        Pose2d aprilTagPose = new Pose2d(25, 24, Math.toRadians(90));
+        Pose2d MiddleTileLeft = new Pose2d(6, -2, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(28, 9.5, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(29.5, -4, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(29, -6.75, Math.toRadians(-90));
+        Pose2d aprilPose = new Pose2d(25, 24.5, Math.toRadians(90));
         Pose2d boardLeft = new Pose2d(16.5, 24, Math.toRadians(90));
         Pose2d boardMiddle = new Pose2d(25, 24, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(33.5, 24, Math.toRadians(90));
-        Pose2d closePark = new Pose2d(0,32,Math.toRadians(90));
-        Pose2d gatePark = new Pose2d(53.5,32,Math.toRadians(90));
+        Pose2d closePark = new Pose2d(0, 32,Math.toRadians(90));
+        Pose2d gatePark = new Pose2d(53.5 ,32,Math.toRadians(90));
         Pose2d park = closePark;
 
         while (opModeInInit()) {
@@ -169,6 +170,7 @@ public class BlueNearAuto extends LinearOpMode {
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
             telemetry.update();
         }
 
@@ -191,10 +193,10 @@ public class BlueNearAuto extends LinearOpMode {
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(MiddleTile)
+                .lineToLinearHeading(MiddleTileLeft)
                 .build();
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(aprilTagPose)
+                .lineToLinearHeading(aprilPose)
                 .build();
         TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
                 .lineToLinearHeading(park)
@@ -216,7 +218,7 @@ public class BlueNearAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.24);
+            wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
             arm2.ArmToPos(160, 1);
@@ -230,6 +232,7 @@ public class BlueNearAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike1);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -240,25 +243,24 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
+                drive.setPoseEstimate(aprilPose);
+                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.68);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
-                sleep(749);
-                arm2.ArmToPos(-900, 0.5);
-                sleep(500);
-                door.setPosition(0.95);
-                sleep(1000);
+                sleep(100);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
+                sleep(1000);
                 drive.followTrajectorySequence(leftPark);
                 arm2.ArmToPos(0,1);
 
@@ -270,6 +272,7 @@ public class BlueNearAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -280,25 +283,24 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
+                drive.setPoseEstimate(aprilPose);
+                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.68);
                 arm2.ArmToPos(-812, 65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
-                sleep(749);
-                arm2.ArmToPos(-900, 0.5);
-                sleep(500);
-                door.setPosition(0.95);
-                sleep(1000);
+                sleep(100);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
+                sleep(1000);
                 drive.followTrajectorySequence(centerPark);
                 arm2.ArmToPos(0,1);
 
@@ -310,6 +312,7 @@ public class BlueNearAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike3);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -320,25 +323,24 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
+                drive.setPoseEstimate(aprilPose);
+                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.68);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
-                sleep(749);
-                arm2.ArmToPos(-900, 0.5);
-                sleep(500);
-                door.setPosition(0.95);
-                sleep(1000);
+                sleep(100);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
+                sleep(1000);
                 drive.followTrajectorySequence(rightPark);
                 arm2.ArmToPos(0,1);
             }
@@ -412,7 +414,7 @@ public class BlueNearAuto extends LinearOpMode {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
                 strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
-                aprilTagDrive = speedController.calculate(12, desiredTag.ftcPose.range);
+                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
                 telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
@@ -455,7 +457,7 @@ public class BlueNearAuto extends LinearOpMode {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
                 strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
-                aprilTagDrive = speedController.calculate(12, desiredTag.ftcPose.range);
+                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
                 telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
@@ -498,5 +500,6 @@ public class BlueNearAuto extends LinearOpMode {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
     }
+
 
 }

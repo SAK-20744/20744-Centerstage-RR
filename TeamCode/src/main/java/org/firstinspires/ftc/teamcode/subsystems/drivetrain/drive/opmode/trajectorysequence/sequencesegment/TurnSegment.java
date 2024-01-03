@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.trajectorysequence.sequencesegment;
+package org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.sequencesegment;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.profile.MotionProfile;

@@ -126,7 +126,7 @@ public class BlueNearAuto extends LinearOpMode {
         Pose2d spike1 = new Pose2d(28, 11, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(30.5, -6.75, Math.toRadians(-90));
-        Pose2d aprilTag = new Pose2d(25, 24, Math.toRadians(90));
+        Pose2d aprilTagPose = new Pose2d(25, 24, Math.toRadians(90));
         Pose2d boardLeft = new Pose2d(16.5, 24, Math.toRadians(90));
         Pose2d boardMiddle = new Pose2d(25, 24, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(33.5, 24, Math.toRadians(90));
@@ -194,7 +194,7 @@ public class BlueNearAuto extends LinearOpMode {
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(aprilTag)
+                .lineToLinearHeading(aprilTagPose)
                 .build();
         TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
                 .lineToLinearHeading(park)
@@ -221,6 +221,8 @@ public class BlueNearAuto extends LinearOpMode {
             arm1.ArmToPos(-2000, 0.5);
             arm2.ArmToPos(160, 1);
 
+            portal.setProcessorEnabled(aprilTag, true);
+
             if (location == LEFT) {
                 // Movements for left spot
                 telemetry.addData("Position", "Left");
@@ -238,8 +240,8 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTag);
-                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTag)
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
@@ -278,8 +280,8 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTag);
-                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTag)
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
@@ -318,8 +320,8 @@ public class BlueNearAuto extends LinearOpMode {
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTag);
-                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTag)
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);

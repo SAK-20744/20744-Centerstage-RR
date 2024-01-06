@@ -66,7 +66,7 @@ public class BlueNearAuto extends LinearOpMode {
 
         aprilTag = new AprilTagProcessor.Builder().build();
         aprilTag.setDecimation(2);
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        setManualExposure(5, 250);  // Use low exposure time to reduce motion blur
 
         propPipeline = new PropPipeline();
 
@@ -92,7 +92,7 @@ public class BlueNearAuto extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+//        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
@@ -124,13 +124,13 @@ public class BlueNearAuto extends LinearOpMode {
 
         Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
         Pose2d MiddleTileLeft = new Pose2d(6, -2, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(28, 9.5, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(28, 9.8, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(29.5, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(29, -6.75, Math.toRadians(-90));
-        Pose2d aprilPose = new Pose2d(25, 24.5, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(16.5, 24, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 24, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(33.5, 24, Math.toRadians(90));
+        Pose2d aprilPose = new Pose2d(25, 24, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(17, 23.45, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(25, 23.45, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(34, 22.5, Math.toRadians(90));
         Pose2d closePark = new Pose2d(0, 32,Math.toRadians(90));
         Pose2d gatePark = new Pose2d(53.5 ,32,Math.toRadians(90));
         Pose2d park = closePark;
@@ -193,7 +193,7 @@ public class BlueNearAuto extends LinearOpMode {
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(MiddleTileLeft)
+                .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(aprilPose)
@@ -218,6 +218,8 @@ public class BlueNearAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
+            drive.followTrajectorySequence(lineToMiddleTile);
+
             wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
@@ -230,7 +232,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike1);
                 wrist.setPosition(0.24);
                 sleep(500);
@@ -270,7 +272,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
                 wrist.setPosition(0.24);
                 sleep(500);
@@ -310,7 +312,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike3);
                 wrist.setPosition(0.24);
                 sleep(500);
@@ -344,6 +346,7 @@ public class BlueNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(rightPark);
                 arm2.ArmToPos(0,1);
             }
+            door.setPosition(0.95);
             sleep(30000);
         }
     }

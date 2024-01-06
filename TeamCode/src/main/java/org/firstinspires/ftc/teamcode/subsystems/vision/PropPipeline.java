@@ -45,9 +45,9 @@ MAGENTA = Parking Right
     // Lower and upper boundaries for colors
     private static final Scalar
             lower_gray_bounds  = new Scalar(140, 140, 140, 255),
-            upper_gray_bounds  = new Scalar(170, 170, 170, 255),
-            lower_cyan_bounds    = new Scalar(0, 45, 120, 255),
-            upper_cyan_bounds    = new Scalar(50, 255, 255, 255),
+            upper_gray_bounds  = new Scalar(170, 170, 167, 255),
+            lower_cyan_bounds    = new Scalar(0, 35, 112, 255),
+            upper_cyan_bounds    = new Scalar(60, 255, 255, 255),
             lower_magenta_bounds = new Scalar(155, 20, 60, 255),
             upper_magenta_bounds = new Scalar(255, 60, 100, 255);
 
@@ -87,8 +87,8 @@ MAGENTA = Parking Right
 
         Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
 
-        Rect leftArea = new Rect(new Point(70,370), new Point(205,510));
-        Rect middleArea = new Rect(new Point(420,360), new Point(480,465));
+        Rect leftArea = new Rect(new Point(110,395), new Point(170,475));
+        Rect middleArea = new Rect(new Point(445,380), new Point(480,445));
 //
 //        Rect leftArea = new Rect(new Point(240,800), new Point(340,890));
 //        Rect middleArea = new Rect(new Point(760,720), new Point(880,810));

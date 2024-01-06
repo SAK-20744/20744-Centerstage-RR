@@ -68,7 +68,7 @@ public class RedFarGateAuto extends LinearOpMode {
 
         aprilTag = new AprilTagProcessor.Builder().build();
         aprilTag.setDecimation(2);
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        setManualExposure(5, 250);  // Use low exposure time to reduce motion blur
 
         propPipeline = new PropPipeline();
 
@@ -94,7 +94,7 @@ public class RedFarGateAuto extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+//        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
@@ -140,7 +140,7 @@ public class RedFarGateAuto extends LinearOpMode {
         Pose2d park = new Pose2d(50, -83, Math.toRadians(-90));
         Pose2d prepare = new Pose2d(53,-82,Math.toRadians(45));
 
-        double waitTime = 0;
+        double waitTime = 3;
 
         TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(firstTile)
@@ -192,14 +192,14 @@ public class RedFarGateAuto extends LinearOpMode {
                 sleep(350);
             }
             if(gamepad2.dpad_down) {
-                waitTime += 0.5;
+                waitTime -= 0.5;
                 sleep(350);
             }
 
             if(waitTime < 0)
                 waitTime = 0;
-            if(waitTime > 3.7)
-                waitTime = 3.7;
+            if(waitTime > 4)
+                waitTime = 4;
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);

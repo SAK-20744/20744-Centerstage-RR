@@ -291,7 +291,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return navx_device.getYaw();
+        return Math.toRadians(navx_device.getYaw());
     }
 
 //    @Override

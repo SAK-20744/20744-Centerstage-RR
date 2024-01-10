@@ -294,11 +294,19 @@ public class SAK26MecanumDrive extends MecanumDrive {
         return Math.toRadians(navx_device.getYaw());
     }
 
-//    @Override
-//    public Double getExternalHeadingVelocity() {
-////        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
-////        return navx_device.
-//    }
+    @Override
+    public Double getExternalHeadingVelocity() {
+        double velInitial = Math.toRadians(navx_device.getYaw());
+        double timeInitial = System.nanoTime();
+        double velFinal = Math.toRadians(navx_device.getYaw());
+        double timeFinal = System.nanoTime();
+
+        double deltaV = velFinal - velInitial;
+        double deltaT = timeFinal - timeInitial;
+        double headingVel = deltaV/deltaT;
+
+        return headingVel;
+    }
 
         public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
         return new MinVelocityConstraint(Arrays.asList(

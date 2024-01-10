@@ -36,17 +36,7 @@ public class IVKMath {
     }
 
     public double q3 (double height) {
-        double x = backdropX(height);
-        double y = backdropY(height);
-
         return 247-(q1(height)+q2(height));
     }
 
-    public double getA1 (double height) {
-        return a1(height);
-    }
-
-    public double getQ1 (double height) {
-        return q1(height);
-    }
 }

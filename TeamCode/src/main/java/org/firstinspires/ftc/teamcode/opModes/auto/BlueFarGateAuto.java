@@ -268,7 +268,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike1);
                 sleep(500);
-                door.setPosition(0.1);
+                door.setPosition(0.1); // door is the backdoor: 0.1 is closed, and 0.95 is open
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);

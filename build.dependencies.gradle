@@ -5,6 +5,7 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
         dirs 'libs', 'C:\\Users\\samse\\navx-micro\\android\\libs'
+        dirs 'libs', 'C:\\Users\\samse\\navx-mxp2\\android\\libs'
     }
     maven { url 'https://jitpack.io' }
 }

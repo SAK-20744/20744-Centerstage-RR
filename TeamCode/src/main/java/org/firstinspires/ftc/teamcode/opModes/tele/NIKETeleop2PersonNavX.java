@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SAK26MecanumDr
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 
 @Config
-@TeleOp(name= "NIKE Teleop" , group = "advanced")
+@TeleOp(name= "NIKE Field Centric" , group = "advanced")
 public class NIKETeleop2PersonNavX extends LinearOpMode {
 
     public static double SPEED = 0.8;

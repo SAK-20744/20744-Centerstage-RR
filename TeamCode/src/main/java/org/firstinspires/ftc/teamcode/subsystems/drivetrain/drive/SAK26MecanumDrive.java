@@ -48,7 +48,7 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SAK26MecanumDrive extends MecanumDrive {
+public class SAK26MecanumDrive extends NavXMecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.52, 0.05, 0.67);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(14.65, 0.0875, 0.86);
 
@@ -60,8 +60,8 @@ public class SAK26MecanumDrive extends MecanumDrive {
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(DriveConstants.MAX_VEL, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(DriveConstants.MAX_ACCEL);
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(NavXDriveConstants.MAX_VEL, NavXDriveConstants.MAX_ANG_VEL, NavXDriveConstants.TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(NavXDriveConstants.MAX_ACCEL);
 
     private TrajectoryFollower follower;
 
@@ -76,7 +76,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
     private List<Integer> lastEncVels = new ArrayList<>();
 
     public SAK26MecanumDrive(HardwareMap hardwareMap) {
-        super(DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic, DriveConstants.TRACK_WIDTH, DriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
+        super(NavXDriveConstants.kV, NavXDriveConstants.kA, NavXDriveConstants.kStatic, NavXDriveConstants.TRACK_WIDTH, NavXDriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.25, 0.25, Math.toRadians(2.5)), 0.25);
@@ -111,14 +111,14 @@ public class SAK26MecanumDrive extends MecanumDrive {
             motor.setMotorType(motorConfigurationType);
         }
 
-        if (DriveConstants.RUN_USING_ENCODER) {
+        if (NavXDriveConstants.RUN_USING_ENCODER) {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (DriveConstants.RUN_USING_ENCODER && DriveConstants.MOTOR_VELO_PID != null) {
-            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, DriveConstants.MOTOR_VELO_PID);
+        if (NavXDriveConstants.RUN_USING_ENCODER && NavXDriveConstants.MOTOR_VELO_PID != null) {
+            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, NavXDriveConstants.MOTOR_VELO_PID);
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
@@ -152,7 +152,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         return new TrajectorySequenceBuilder(
                 startPose,
                 VEL_CONSTRAINT, ACCEL_CONSTRAINT,
-                DriveConstants.MAX_ANG_VEL, DriveConstants.MAX_ANG_ACCEL
+                NavXDriveConstants.MAX_ANG_VEL, NavXDriveConstants.MAX_ANG_ACCEL
         );
     }
 
@@ -262,7 +262,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         for (DcMotorEx motor : motors) {
             int position = motor.getCurrentPosition();
             lastEncPositions.add(position);
-            wheelPositions.add(DriveConstants.encoderTicksToInches(position));
+            wheelPositions.add(NavXDriveConstants.encoderTicksToInches(position));
         }
         return wheelPositions;
     }
@@ -275,7 +275,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         for (DcMotorEx motor : motors) {
             int vel = (int) motor.getVelocity();
             lastEncVels.add(vel);
-            wheelVelocities.add(DriveConstants.encoderTicksToInches(vel));
+            wheelVelocities.add(NavXDriveConstants.encoderTicksToInches(vel));
         }
         return wheelVelocities;
     }
@@ -291,14 +291,14 @@ public class SAK26MecanumDrive extends MecanumDrive {
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return Math.toRadians(navx_device.getYaw());
+        return Math.toRadians(-navx_device.getYaw());
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        double velInitial = Math.toRadians(navx_device.getYaw());
+        double velInitial = Math.toRadians(-navx_device.getYaw());
         double timeInitial = System.nanoTime();
-        double velFinal = Math.toRadians(navx_device.getYaw());
+        double velFinal = Math.toRadians(-navx_device.getYaw());
         double timeFinal = System.nanoTime();
 
         double deltaV = velFinal - velInitial;
@@ -306,6 +306,9 @@ public class SAK26MecanumDrive extends MecanumDrive {
         double headingVel = deltaV/deltaT;
 
         return headingVel;
+
+//        return Double.valueOf(navx_device.getRawGyroZ());
+
     }
 
         public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

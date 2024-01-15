@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -49,6 +50,8 @@ import java.text.DecimalFormat;
  * Sensor Status and Timestamp, and World-Frame Linear
  * Acceleration data.
  */
+
+@Config
 @TeleOp(name = "Sensor: navX Motion-processed Data", group = "Sensor")
 // @Disabled Comment this in to remove this from the Driver Station OpMode List
 public class NavXProcessedold extends OpMode {
@@ -118,6 +121,8 @@ public class NavXProcessedold extends OpMode {
             cf =
             motion = "-------";
       }
+
+
       telemetry.addData("2 GyroAccel", gyrocal );
       telemetry.addData("3 Y,P,R", ypr);
       telemetry.addData("4 Magnetometer", magcal );

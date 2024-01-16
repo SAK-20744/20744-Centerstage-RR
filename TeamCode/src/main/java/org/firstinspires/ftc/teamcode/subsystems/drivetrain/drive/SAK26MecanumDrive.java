@@ -48,7 +48,7 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SAK26MecanumDrive extends NavXMecanumDrive {
+public class SAK26MecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.52, 0.05, 0.67);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(14.65, 0.0875, 0.86);
 

@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
-public class IVKMath {
+public class BackdropIVK {
 
     private double length1 = 16.5;
     private double length2 = 16.5;
     private double angle;
 
-    public IVKMath(double theAngle){
+    public BackdropIVK(double theAngle){
         angle = theAngle;
     }
 

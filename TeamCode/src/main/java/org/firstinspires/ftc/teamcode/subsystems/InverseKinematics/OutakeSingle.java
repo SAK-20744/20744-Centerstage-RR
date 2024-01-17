@@ -7,7 +7,7 @@ public class OutakeSingle {
     private Arm1 arm1;
     private Elbow arm2;
     private Wrist wrist;
-    private IVKMath ivk;
+    private BackdropIVK ivk;
 
     private double ServoArmDeg;
     private double MotorArmDeg;
@@ -37,7 +37,7 @@ public class OutakeSingle {
     public void BackdropHeight(double length, boolean intaking){
 
         myAngle = angle;
-        ivk = (new IVKMath(myAngle));
+        ivk = (new BackdropIVK(myAngle));
 
         if(length>max)
             length = max;
@@ -70,7 +70,7 @@ public class OutakeSingle {
     public void BackdropHeightOffset10(double length, boolean intaking, boolean hang){
 
         myAngle = angle;
-        ivk = (new IVKMath(myAngle));
+        ivk = (new BackdropIVK(myAngle));
 
         if(length>offset10Max)
             length = offset10Max;

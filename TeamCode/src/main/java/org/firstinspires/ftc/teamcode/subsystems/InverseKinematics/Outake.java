@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Outake {
@@ -8,7 +7,8 @@ public class Outake {
     private Arm1 arm1;
     private Elbow arm2;
     private Wrist wrist;
-    private IVKMath ivk;
+    private BackdropIVK ivk;
+    private IVK myIVK;
 
     private double ServoArmDeg;
     private double MotorArmDeg;
@@ -38,7 +38,7 @@ public class Outake {
     public void BackdropHeight(double length, boolean intaking){
 
         myAngle = angle;
-        ivk = (new IVKMath(myAngle));
+        ivk = (new BackdropIVK(myAngle));
 
         if(length>max)
             length = max;
@@ -71,7 +71,7 @@ public class Outake {
     public void BackdropHeightOffset10(double length, boolean intaking, boolean hang){
 
         myAngle = angle;
-        ivk = (new IVKMath(myAngle));
+        ivk = (new BackdropIVK(myAngle));
 
         if(length>offset10Max)
             length = offset10Max;
@@ -124,6 +124,22 @@ public class Outake {
         wrist.setPos(wristPos);
 
     }
+
+    public void IVKtoXY(double X, double Y, double speed){
+        myAngle = angle;
+        myIVK = (new IVK());
+
+        ServoArmDeg = myIVK.q2(X,Y);
+        MotorArmDeg = myIVK.q1(X,Y);
+        wristDeg = myIVK.q3(X,Y);
+
+        ServoArmPos = -ServoArmDeg * 1000 / 90;
+        MotorArmPos = MotorArmDeg * -1000 / 90;
+
+        arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
+        arm2.ArmToPos((int)Math.round(ServoArmPos), speed);
+        wrist.setPos(wristPos);
+    };
 
     public double getServoArmDeg() {
         return ServoArmDeg;

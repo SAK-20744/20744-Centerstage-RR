@@ -98,16 +98,16 @@ public class BlueFarGateAuto extends LinearOpMode {
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(
-                new IMU.Parameters(
-//                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
-                        new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
-                        )
-                )
-        );
+//        IMU imu = hardwareMap.get(IMU.class, "imu");
+//        imu.initialize(
+//                new IMU.Parameters(
+////                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
+//                        new RevHubOrientationOnRobot(
+//                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+//                        )
+//                )
+//        );
 
 
 
@@ -210,7 +210,7 @@ public class BlueFarGateAuto extends LinearOpMode {
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
-            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
+//            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
 
             telemetry.update();
         }

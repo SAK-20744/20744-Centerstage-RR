@@ -33,8 +33,12 @@ public class NIKETeleopV3 extends LinearOpMode {
 
     public static double SPEED = 0.8;
     public static double ELBOWSPEED = 1;
+    //change x and y to match gamepad2.a positions
+    private double x, y;
+    private boolean useWrist = true;
 
     private double boardIMU = 0;
+    private double pixelLevel = 1;
 
     private double height = 0;
     private AHRS navx_device;
@@ -211,7 +215,17 @@ public class NIKETeleopV3 extends LinearOpMode {
 
             drive.update();
 
-//            if(gamepad2.right_bumper || gamepad1.right_bumper) {
+            if (gamepad2.left_bumper)
+                door.setPosition(0);
+            else
+                door.setPosition(0.95);
+
+            if (gamepad1.dpad_right || gamepad2.dpad_right) {
+                plane.setPosition(0.6);
+            } else {
+                plane.setPosition(0.2);
+            }
+
             if(gamepad2.right_bumper) {
                 intake.setPower(-1);
                 intaking = true;
@@ -228,51 +242,132 @@ public class NIKETeleopV3 extends LinearOpMode {
                 intaking = false;
             }
 
-            if (gamepad2.left_bumper)
-                door.setPosition(0);
-            else
-                door.setPosition(0.95);
-
-            if (gamepad1.dpad_right || gamepad2.dpad_right) {
-                plane.setPosition(0.6);
-            } else {
-                plane.setPosition(0.2);
-            }
-
-            if(gamepad1.dpad_up || gamepad2.dpad_up) {
-                hanging = false;
-                height = 27;
-            }
-//            if(gamepad1.dpad_down)
-
-            if(height < 0)
-                height = 0;
-
-            if(gamepad2.right_trigger>0) {
-                hanging  = false;
-                height += 0.3;
-            }
-            if(gamepad2.left_trigger>0) {
-                hanging = false;
-                height -= 0.3;
-            }
-
-            if(gamepad2.a) {
-                hanging = false;
-                height = 0;
-            }
-
             if(gamepad2.dpad_down) {
-                hanging = true;
+                pixelLevel -= 1;
+                sleep(50);
+            }
+            if(gamepad2.dpad_up) {
+                pixelLevel += 1;
+                sleep(50);
+            }
+            
+            if(pixelLevel < 1) 
+                pixelLevel = 1;
+            if(pixelLevel > 12)
+                pixelLevel = 12;
+            
+            if(gamepad2.a){
+                //Intaking
+                useWrist = false;
+                x=0;
+                y=0;
             }
 
-            if(gamepad2.b) {
-                hanging = false;
-                height = 8.1;
+            if(gamepad2.b){
+                //Scoring
+                intaking = false;
+                useWrist = true;
+                if(pixelLevel == 1){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 2){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 3){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 4){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 5){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 6){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 7){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 8){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 9){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 10){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 11){
+                    x=0;
+                    y=0;
+                }
+                else if(pixelLevel == 12){
+                    x=0;
+                    y=0;
+                }
+            }
+            if(gamepad2.dpad_left){
+                //Pre-Hang
+                intaking = false;
+                useWrist = true;
+                x=0;
+                y=0;
+            }
+            if(gamepad2.dpad_right){
+                //Hang
+                intaking = false;
+                useWrist = true;
+                x=0;
+                y=0;
             }
 
-            outake.BackdropHeightOffset10(height, intaking, hanging);
+            outake.IVKtoXY(x,y,useWrist,intaking,1);
 
+//            if(gamepad1.dpad_up || gamepad2.dpad_up) {
+//                hanging = false;
+//                height = 27;
+//            }
+////            if(gamepad1.dpad_down)
+//
+//            if(height < 0)
+//                height = 0;
+//
+//            if(gamepad2.right_trigger>0) {
+//                hanging  = false;
+//                height += 0.3;
+//            }
+//            if(gamepad2.left_trigger>0) {
+//                hanging = false;
+//                height -= 0.3;
+//            }
+//
+//            if(gamepad2.a) {
+//                hanging = false;
+//                height = 0;
+//            }
+//
+//            if(gamepad2.dpad_down) {
+//                hanging = true;
+//            }
+//
+//            if(gamepad2.b) {
+//                hanging = false;
+//                height = 8.1;
+//            }
+//
+//            outake.BackdropHeightOffset10(height, intaking, hanging);
+
+            telemetry.addData("Pixel Level:", pixelLevel);
             telemetry.addData("Height:", height);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());
             telemetry.addData("Arm1 Pos:" , outake.getMotorArmPos());

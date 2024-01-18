@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;

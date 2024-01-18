@@ -22,10 +22,10 @@
 
 package org.firstinspires.ftc.teamcode.subsystems.vision;
 
-import org.firstinspires.ftc.teamcode.subsystems.vision.trc.FtcEocvColorBlobProcessor;
-import org.firstinspires.ftc.teamcode.subsystems.vision.trc.FtcVisionEocvColorBlob;
-import org.firstinspires.ftc.teamcode.subsystems.vision.trc.TrcOpenCvColorBlobPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.trc.TrcVisionTargetInfo;
+import org.firstinspires.ftc.teamcode.subsystems.util.trc.FtcEocvColorBlobProcessor;
+import org.firstinspires.ftc.teamcode.subsystems.util.trc.FtcVisionEocvColorBlob;
+import org.firstinspires.ftc.teamcode.subsystems.util.trc.TrcOpenCvColorBlobPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.util.trc.TrcVisionTargetInfo;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import org.opencv.imgproc.Imgproc;

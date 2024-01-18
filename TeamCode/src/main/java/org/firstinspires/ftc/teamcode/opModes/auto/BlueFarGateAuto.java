@@ -1,30 +1,27 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;

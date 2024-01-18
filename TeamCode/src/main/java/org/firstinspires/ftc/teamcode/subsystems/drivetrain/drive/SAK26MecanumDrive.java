@@ -306,9 +306,6 @@ public class SAK26MecanumDrive extends MecanumDrive {
         double headingVel = deltaV/deltaT;
 
         return headingVel;
-
-//        return Double.valueOf(navx_device.getRawGyroZ());
-
     }
 
         public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

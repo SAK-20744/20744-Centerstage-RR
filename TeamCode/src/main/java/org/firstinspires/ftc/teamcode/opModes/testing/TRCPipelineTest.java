@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.vision.Pipeline;
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.FtcEocvColorBlobProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.FtcVisionEocvColorBlob;
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.RobotParams;
+import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -29,6 +30,7 @@ public class TRCPipelineTest extends LinearOpMode {
     private Pipeline pipeline;
     private VisionPortal portal;
     private AprilTagProcessor aprilTag;
+    private Vision myVision = new Vision();
 
     public FtcVisionEocvColorBlob purplePixelVision;
     private FtcEocvColorBlobProcessor purplePixelProcessor;
@@ -105,7 +107,8 @@ public class TRCPipelineTest extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(pipeline, 30);
 
         while (opModeInInit()) {
-//            telemetry.addData("Location", propPipeline.getLocation());
+            int pos = Vision.getLastDetectedTeamPropPosition();
+            telemetry.addData("Location", pos);
             telemetry.update();
         }
 
@@ -113,6 +116,8 @@ public class TRCPipelineTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 //            telemetry.addData("Location", propPipeline.getLocation());
+            int pos = Vision.getLastDetectedTeamPropPosition();
+            telemetry.addData("Location", pos);
             telemetry.update();
         }
     }

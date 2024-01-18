@@ -111,7 +111,7 @@ public class Vision
 //    public FtcVisionTensorFlow tensorFlowVision;
     private TfodProcessor tensorFlowProcessor;
 //    public FtcVision vision;
-    private int lastTeamPropPos = 0;
+    private static int lastTeamPropPos = 0;
 
 
 
@@ -122,7 +122,7 @@ public class Vision
      *
      * @return last team prop position, 0 if never detected it.
      */
-    public int getLastDetectedTeamPropPosition()
+    public static int getLastDetectedTeamPropPosition()
     {
         return lastTeamPropPos;
     }   //getLastDetectedTeamPropPosition

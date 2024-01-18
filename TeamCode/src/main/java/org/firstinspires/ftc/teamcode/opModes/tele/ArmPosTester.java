@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 
 @Config
-@TeleOp(name= "NIKE Teleop RR" , group = "advanced")
+@TeleOp(name= "Arm Pos Tester" , group = "advanced")
 public class ArmPosTester extends LinearOpMode {
 
     public static double SPEED = 0.8;

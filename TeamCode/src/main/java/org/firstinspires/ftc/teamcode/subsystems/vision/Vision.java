@@ -22,25 +22,13 @@
 
 package org.firstinspires.ftc.teamcode.subsystems.vision;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.vision.trc.FtcEocvColorBlobProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.vision.trc.FtcVisionEocvColorBlob;
-import org.firstinspires.ftc.teamcode.subsystems.vision.trc.TrcDbgTrace;
 import org.firstinspires.ftc.teamcode.subsystems.vision.trc.TrcOpenCvColorBlobPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.trc.TrcOpenCvDetector;
 import org.firstinspires.ftc.teamcode.subsystems.vision.trc.TrcVisionTargetInfo;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class implements AprilTag/TensorFlow/Eocv Vision for the game season. It creates and initializes all the
@@ -64,13 +52,13 @@ public class Vision
     // color conversion must be RGBA (or RGB) to whatever color space you want to convert.
     //
     // YCrCb Color Space.
-    private static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
-    private static final double[] purplePixelColorThresholds = {60.0, 250.0, 120.0, 150.0, 140.0, 170.0};
-    private static final double[] greenPixelColorThresholds = {40.0, 200.0, 60.0, 120.0, 60.0, 120.0};
-    private static final double[] yellowPixelColorThresholds = {150.0, 250.0, 110.0, 160.0, 20.0, 100.0};
-    private static final double[] whitePixelColorThresholds = {250.0, 255.0, 100.0, 130.0, 120.0, 140.0};
-    private static final double[] redBlobColorThresholds = {20.0, 120.0, 180.0, 240.0, 90.0, 120.0};
-    private static final double[] blueBlobColorThresholds = {20.0, 250.0, 40.0, 250.0, 160.0, 240.0};
+    public static final int colorConversion = Imgproc.COLOR_RGB2YCrCb;
+    public static final double[] purplePixelColorThresholds = {60.0, 250.0, 120.0, 150.0, 140.0, 170.0};
+    public static final double[] greenPixelColorThresholds = {40.0, 200.0, 60.0, 120.0, 60.0, 120.0};
+    public static final double[] yellowPixelColorThresholds = {150.0, 250.0, 110.0, 160.0, 20.0, 100.0};
+    public static final double[] whitePixelColorThresholds = {250.0, 255.0, 100.0, 130.0, 120.0, 140.0};
+    public static final double[] redBlobColorThresholds = {20.0, 120.0, 180.0, 240.0, 90.0, 120.0};
+    public static final double[] blueBlobColorThresholds = {20.0, 250.0, 40.0, 250.0, 160.0, 240.0};
 //    // HSV Color Space.
 //    private static final int colorConversion = Imgproc.COLOR_RGB2HSV_FULL;
 //    private static final double[] purplePixelColorThresholds = {170.0, 200.0, 40.0, 160.0, 100.0, 255.0};
@@ -79,7 +67,7 @@ public class Vision
 //    private static final double[] whitePixelColorThresholds = {70.0, 120.0, 0.0, 255.0, 230.0, 255.0};
 //    private static final double[] redBlobColorThresholds = {0.0, 10.0, 120.0, 255.0, 100.0, 255.0};
 //    private static final double[] blueBlobColorThresholds = {160.0, 200.0, 120.0, 255.0, 100.0, 255.0};
-    private static final TrcOpenCvColorBlobPipeline.FilterContourParams pixelFilterContourParams =
+    public static final TrcOpenCvColorBlobPipeline.FilterContourParams pixelFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(1000.0)
             .setMinPerimeter(120.0)
@@ -88,7 +76,7 @@ public class Vision
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
             .setAspectRatioRange(0.2, 5.0);
-    private static final TrcOpenCvColorBlobPipeline.FilterContourParams blobFilterContourParams =
+    public static final TrcOpenCvColorBlobPipeline.FilterContourParams blobFilterContourParams =
         new TrcOpenCvColorBlobPipeline.FilterContourParams()
             .setMinArea(1000.0)
             .setMinPerimeter(100.0)
@@ -124,6 +112,10 @@ public class Vision
     private TfodProcessor tensorFlowProcessor;
 //    public FtcVision vision;
     private int lastTeamPropPos = 0;
+
+
+
+
 
        /**
      * This method returns the last detected team prop position.

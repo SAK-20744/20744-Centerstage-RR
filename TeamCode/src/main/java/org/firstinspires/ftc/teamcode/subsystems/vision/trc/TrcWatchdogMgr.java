@@ -36,7 +36,7 @@ import java.util.Locale;
 public class TrcWatchdogMgr
 {
     public static final String moduleName = TrcWatchdogMgr.class.getSimpleName();
-    private static final TrcDbgTrace staticTracer = new TrcDbgTrace();
+//    private static final TrcDbgTrace staticTracer = new TrcDbgTrace();
 
     private static final double DEF_TASK_INTERVAL = 1.0;        // in seconds.
     private static final double DEF_HEARTBEAT_THRESHOLD = 1.0;  // in seconds.
@@ -114,11 +114,11 @@ public class TrcWatchdogMgr
             }
             else
             {
-                staticTracer.traceWarn(
-                    moduleName,
-                    "Only the thread created this watchdog " + name +
-                    " is allowed to send heart beat (thread=" + thread.getName() + ").");
-                TrcDbgTrace.printThreadStack();
+//                staticTracer.traceWarn(
+//                    moduleName,
+//                    "Only the thread created this watchdog " + name +
+//                    " is allowed to send heart beat (thread=" + thread.getName() + ").");
+//                TrcDbgTrace.printThreadStack();
             }
         }   //sendHeartBeat
 
@@ -134,8 +134,8 @@ public class TrcWatchdogMgr
             if (!paused && !expired && currTime > heartBeatExpiredTime)
             {
                 expired = true;
-                staticTracer.traceWarn(moduleName, "%s expired.", this);
-                TrcDbgTrace.printThreadStack(thread);
+//                staticTracer.traceWarn(moduleName, "%s expired.", this);
+//                TrcDbgTrace.printThreadStack(thread);
             }
 
             return expired;
@@ -158,11 +158,11 @@ public class TrcWatchdogMgr
             }
             else
             {
-                staticTracer.traceWarn(
-                    moduleName,
-                    "Only the thread created this watchdog " + name +
-                    " is allowed to unregister (thread=" + thread.getName() + ").");
-                TrcDbgTrace.printThreadStack();
+//                staticTracer.traceWarn(
+//                    moduleName,
+//                    "Only the thread created this watchdog " + name +
+//                    " is allowed to unregister (thread=" + thread.getName() + ").");
+//                TrcDbgTrace.printThreadStack();
             }
 
             return success;
@@ -230,7 +230,7 @@ public class TrcWatchdogMgr
     {
         TrcTaskMgr.TaskObject watchdogTaskObj = TrcTaskMgr.createTask(moduleName, this::watchdogTask);
 //        watchdogTaskObj.registerTask(TrcTaskMgr.TaskType.STANDALONE_TASK, (long) (taskInterval*1000));
-        staticTracer.traceDebug(moduleName, "Starting Watchdog Manager.");
+//        staticTracer.traceDebug(moduleName, "Starting Watchdog Manager.");
     }   //TrcWatchdogMgr
 
     /**
@@ -247,13 +247,13 @@ public class TrcWatchdogMgr
         Watchdog watchdog = null;
 
         instance = getInstance();
-        if (staticTracer.getTraceLevel().getValue() >= TrcDbgTrace.MsgLevel.DEBUG.getValue())
-        {
-            staticTracer.traceDebug(
-                moduleName,
-                "Registering watchdog " + name + " (heartBeatThreshold=" + heartBeatThreshold + ").");
-            TrcDbgTrace.printThreadStack();
-        }
+//        if (staticTracer.getTraceLevel().getValue() >= TrcDbgTrace.MsgLevel.DEBUG.getValue())
+//        {
+//            staticTracer.traceDebug(
+//                moduleName,
+//                "Registering watchdog " + name + " (heartBeatThreshold=" + heartBeatThreshold + ").");
+//            TrcDbgTrace.printThreadStack();
+//        }
 
         synchronized (watchdogList)
         {
@@ -267,8 +267,8 @@ public class TrcWatchdogMgr
             }
             else
             {
-                staticTracer.traceWarn(moduleName, "Watchdog " + name + " was already registered.");
-                TrcDbgTrace.printThreadStack();
+//                staticTracer.traceWarn(moduleName, "Watchdog " + name + " was already registered.");
+//                TrcDbgTrace.printThreadStack();
             }
         }
 
@@ -311,11 +311,11 @@ public class TrcWatchdogMgr
     {
         boolean success;
 
-        if (staticTracer.getTraceLevel().getValue() >= TrcDbgTrace.MsgLevel.DEBUG.getValue())
-        {
-            staticTracer.traceDebug(moduleName, "Unregistering watchdog " + watchdog + ".");
-            TrcDbgTrace.printThreadStack();
-        }
+//        if (staticTracer.getTraceLevel().getValue() >= TrcDbgTrace.MsgLevel.DEBUG.getValue())
+//        {
+//            staticTracer.traceDebug(moduleName, "Unregistering watchdog " + watchdog + ".");
+//            TrcDbgTrace.printThreadStack();
+//        }
 
         synchronized (watchdogList)
         {
@@ -325,8 +325,8 @@ public class TrcWatchdogMgr
 
         if (!success)
         {
-            staticTracer.traceWarn(moduleName, "Watchdog " + watchdog.name + " was never registered.");
-            TrcDbgTrace.printThreadStack();
+//            staticTracer.traceWarn(moduleName, "Watchdog " + watchdog.name + " was never registered.");
+//            TrcDbgTrace.printThreadStack();
         }
 
         return success;

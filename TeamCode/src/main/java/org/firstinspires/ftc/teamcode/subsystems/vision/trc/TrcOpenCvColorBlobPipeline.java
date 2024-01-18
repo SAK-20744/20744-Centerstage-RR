@@ -200,8 +200,8 @@ public class TrcOpenCvColorBlobPipeline implements TrcOpenCvPipeline<TrcOpenCvDe
     private static final int ANNOTATE_RECT_THICKNESS = 3;
     private static final double ANNOTATE_FONT_SCALE = 0.3;
 
-    private final TrcDbgTrace tracer;
-    private final TrcVisionPerformanceMetrics performanceMetrics;
+//    private final TrcDbgTrace tracer;
+//    private final TrcVisionPerformanceMetrics performanceMetrics;
     private final String instanceName;
     private final Integer colorConversion;
     private double[] colorThresholds;
@@ -243,8 +243,8 @@ public class TrcOpenCvColorBlobPipeline implements TrcOpenCvPipeline<TrcOpenCvDe
             throw new RuntimeException("colorThresholds must be an array of 6 doubles.");
         }
 
-        this.tracer = new TrcDbgTrace();
-        this.performanceMetrics = new TrcVisionPerformanceMetrics(instanceName, tracer);
+//        this.tracer = new TrcDbgTrace();
+//        this.performanceMetrics = new TrcVisionPerformanceMetrics(instanceName, tracer);
         this.instanceName = instanceName;
         this.colorConversion = colorConversion;
         this.colorThresholds = colorThresholds;
@@ -273,10 +273,10 @@ public class TrcOpenCvColorBlobPipeline implements TrcOpenCvPipeline<TrcOpenCvDe
      *
      * @return tracer.
      */
-    public TrcDbgTrace getTracer()
-    {
-        return tracer;
-    }   //getTracer
+//    public TrcDbgTrace getTracer()
+//    {
+//        return tracer;
+//    }   //getTracer
 
     /**
      * This method returns the color threshold values.
@@ -344,7 +344,7 @@ public class TrcOpenCvColorBlobPipeline implements TrcOpenCvPipeline<TrcOpenCvDe
     @Override
     public void reset()
     {
-        performanceMetrics.reset();
+//        performanceMetrics.reset();
         intermediateStep = 0;
     }   //reset
 
@@ -390,8 +390,8 @@ public class TrcOpenCvColorBlobPipeline implements TrcOpenCvPipeline<TrcOpenCvDe
             filterContours(contoursOutput, filterContourParams, filterContoursOutput);
             contoursOutput = filterContoursOutput;
         }
-        performanceMetrics.logProcessingTime(startTime);
-        performanceMetrics.printMetrics();
+//        performanceMetrics.logProcessingTime(startTime);
+//        performanceMetrics.printMetrics();
 
         if (contoursOutput.size() > 0)
         {

@@ -34,7 +34,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TrcTaskMgr
 {
     private static final String moduleName = TrcTaskMgr.class.getSimpleName();
-    private static final TrcDbgTrace tracer = new TrcDbgTrace();
+//    private static final TrcDbgTrace tracer = new TrcDbgTrace();
 
     public static final long PERIODIC_INTERVAL_MS = 20;         // in msec
     public static final long IO_INTERVAL_MS = 10;               // in msec
@@ -452,19 +452,19 @@ public class TrcTaskMgr
             taskTotalElapsedTimes[taskType.value] += elapsedTime;
             taskTimeSlotCounts[taskType.value]++;
 
-            if (tracer.getTraceLevel().getValue() >= TrcDbgTrace.MsgLevel.DEBUG.getValue())
-            {
-                tracer.traceVerbose(
-                    moduleName, "%s.%s: start=.6f, elapsed=%.6f",
-                    taskName, taskType, (startTime/1000000000.0), elapsedTime/1000000000.0);
-                long timeThreshold = getTaskInterval()*1000000; //convert to nanoseconds.
-                if (timeThreshold == 0) timeThreshold = TASKTIME_THRESHOLD_MS * 1000000L;
-                if (timeThreshold > 0 && elapsedTime > timeThreshold)
-                {
-                    tracer.traceWarn(
-                        moduleName, "%s.%s takes too long (%.3f)", taskName, taskType, elapsedTime/1000000000.0);
-                }
-            }
+//            if (tracer.getTraceLevel().getValue() >= TrcDbgTrace.MsgLevel.DEBUG.getValue())
+//            {
+//                tracer.traceVerbose(
+//                    moduleName, "%s.%s: start=.6f, elapsed=%.6f",
+//                    taskName, taskType, (startTime/1000000000.0), elapsedTime/1000000000.0);
+//                long timeThreshold = getTaskInterval()*1000000; //convert to nanoseconds.
+//                if (timeThreshold == 0) timeThreshold = TASKTIME_THRESHOLD_MS * 1000000L;
+//                if (timeThreshold > 0 && elapsedTime > timeThreshold)
+//                {
+//                    tracer.traceWarn(
+//                        moduleName, "%s.%s takes too long (%.3f)", taskName, taskType, elapsedTime/1000000000.0);
+//                }
+//            }
         }   //recordElapsedTime
 
         /**
@@ -512,7 +512,7 @@ public class TrcTaskMgr
 
         taskObj = new TaskObject(taskName, task);
         taskList.add(taskObj);
-        tracer.traceDebug(moduleName, "taskName=" + taskName + ", taskObj=" + taskObj);
+//        tracer.traceDebug(moduleName, "taskName=" + taskName + ", taskObj=" + taskObj);
 
         return taskObj;
     }   //createTask
@@ -635,7 +635,7 @@ public class TrcTaskMgr
 
             if (taskTypeCounter > 0)
             {
-                tracer.traceInfo(moduleName, msg.toString());
+//                tracer.traceInfo(moduleName, msg.toString());
             }
         }
     }   //printTaskPerformanceMetrics
@@ -654,7 +654,7 @@ public class TrcTaskMgr
                 msg.append(" ");
                 msg.append(type);
             }
-            tracer.traceInfo(moduleName, taskObj + ": " + msg);
+//            tracer.traceInfo(moduleName, taskObj + ": " + msg);
         }
     }   //printAllRegisteredTask
 

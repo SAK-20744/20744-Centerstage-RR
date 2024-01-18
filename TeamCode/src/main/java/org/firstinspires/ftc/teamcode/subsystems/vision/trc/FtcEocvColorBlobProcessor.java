@@ -127,10 +127,10 @@ public class FtcEocvColorBlobProcessor implements TrcOpenCvPipeline<TrcOpenCvDet
      *
      * @return tracer.
      */
-    public TrcDbgTrace getTracer()
-    {
-        return colorBlobPipeline.getTracer();
-    }   //getTracer
+//    public TrcDbgTrace getTracer()
+//    {
+//        return colorBlobPipeline.getTracer();
+//    }   //getTracer
 
     //
     // Implements TrcOpenCvPipeline interface.

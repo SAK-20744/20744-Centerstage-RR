@@ -44,7 +44,7 @@ public class FtcVisionEocvColorBlob
     }   //interface FilterTarget
 
     private final FtcEocvColorBlobProcessor colorBlobProcessor;
-    private final TrcDbgTrace tracer;
+//    private final TrcDbgTrace tracer;
     private final String instanceName;
     private final TrcHomographyMapper homographyMapper;
 
@@ -73,7 +73,7 @@ public class FtcVisionEocvColorBlob
         // Create the Color Blob processor.
         colorBlobProcessor = new FtcEocvColorBlobProcessor(
             instanceName, colorConversion, colorThresholds, filterContourParams, externalContourOnly);
-        tracer = colorBlobProcessor.getTracer();
+//        tracer = colorBlobProcessor.getTracer();
         this.instanceName = instanceName;
 
         if (cameraRect != null && worldRect != null)
@@ -136,10 +136,10 @@ public class FtcVisionEocvColorBlob
      *
      * @return tracer.
      */
-    public TrcDbgTrace getTracer()
-    {
-        return tracer;
-    }   //getTracer
+//    public TrcDbgTrace getTracer()
+//    {
+//        return tracer;
+//    }   //getTracer
 
     /**
      * This method returns the target info of the given detected target.
@@ -155,7 +155,7 @@ public class FtcVisionEocvColorBlob
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> targetInfo = new TrcVisionTargetInfo<>(
             target, homographyMapper, objHeightOffset, cameraHeight);
 
-        tracer.traceDebug(instanceName, "TargetInfo=" + targetInfo);
+//        tracer.traceDebug(instanceName, "TargetInfo=" + targetInfo);
 
         return targetInfo;
     }   //getDetectedTargetInfo
@@ -194,7 +194,7 @@ public class FtcVisionEocvColorBlob
                 {
                     rejected = true;
                 }
-                tracer.traceDebug(instanceName, "[" + i + "] rejected=" + rejected);
+//                tracer.traceDebug(instanceName, "[" + i + "] rejected=" + rejected);
             }
 
             if (targets.size() > 0)

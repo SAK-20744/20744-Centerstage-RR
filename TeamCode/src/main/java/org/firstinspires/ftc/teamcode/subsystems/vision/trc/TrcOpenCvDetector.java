@@ -77,7 +77,7 @@ public abstract class TrcOpenCvDetector implements TrcVisionProcessor<Mat, TrcOp
         boolean validateTarget(DetectedObject<?> object);
     }   //interface FilterTarget
 
-    protected final TrcDbgTrace tracer;
+//    protected final TrcDbgTrace tracer;
     protected final String instanceName;
     private final TrcHomographyMapper homographyMapper;
     private final TrcVisionTask<Mat, DetectedObject<?>> visionTask;
@@ -95,7 +95,7 @@ public abstract class TrcOpenCvDetector implements TrcVisionProcessor<Mat, TrcOp
         String instanceName, int numImageBuffers, TrcHomographyMapper.Rectangle cameraRect,
         TrcHomographyMapper.Rectangle worldRect)
     {
-        this.tracer = new TrcDbgTrace();
+//        this.tracer = new TrcDbgTrace();
         this.instanceName = instanceName;
         if (cameraRect != null && worldRect != null)
         {
@@ -217,13 +217,13 @@ public abstract class TrcOpenCvDetector implements TrcVisionProcessor<Mat, TrcOp
                 }
             }
 
-            if (detectedTargets != null)
-            {
-                for (int i = 0; i < detectedTargets.length; i++)
-                {
-                    tracer.traceDebug(instanceName, "[" + i + "] Target=" + detectedTargets[i]);
-                }
-            }
+//            if (detectedTargets != null)
+//            {
+//                for (int i = 0; i < detectedTargets.length; i++)
+//                {
+////                    tracer.traceDebug(instanceName, "[" + i + "] Target=" + detectedTargets[i]);
+//                }
+//            }
         }
 
         return detectedTargets;

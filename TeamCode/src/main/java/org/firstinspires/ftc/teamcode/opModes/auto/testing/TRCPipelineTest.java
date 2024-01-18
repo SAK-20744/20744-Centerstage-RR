@@ -1,5 +1,15 @@
 package org.firstinspires.ftc.teamcode.opModes.auto.testing;
 
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.blobFilterContourParams;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.blueBlobColorThresholds;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.colorConversion;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.greenPixelColorThresholds;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.pixelFilterContourParams;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.purplePixelColorThresholds;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.redBlobColorThresholds;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.whitePixelColorThresholds;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.yellowPixelColorThresholds;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,13 +17,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.subsystems.vision.Pipeline;
 import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.Vision;
 import org.firstinspires.ftc.teamcode.subsystems.vision.trc.FtcEocvColorBlobProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.vision.trc.FtcVisionEocvColorBlob;
+import org.firstinspires.ftc.teamcode.subsystems.vision.trc.RobotParams;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 //@Disabled
-@Autonomous(name = "PipelineTest")
+@Autonomous(name = "TCRPipelineTest")
 public class TRCPipelineTest extends LinearOpMode {
 
     private Pipeline pipeline;
@@ -39,6 +51,42 @@ public class TRCPipelineTest extends LinearOpMode {
         pipeline = new Pipeline();
         aprilTag = new AprilTagProcessor.Builder().build();
         aprilTag.setDecimation(3);
+
+        purplePixelVision = new FtcVisionEocvColorBlob(
+                "PurplePixel", colorConversion, purplePixelColorThresholds, pixelFilterContourParams, true,
+                RobotParams.cameraRect, RobotParams.worldRect, true);
+        purplePixelProcessor = purplePixelVision.getVisionProcessor();
+//        visionProcessorsList.add(purplePixelProcessor);
+
+        greenPixelVision = new FtcVisionEocvColorBlob(
+                "GreenPixel", colorConversion, greenPixelColorThresholds, pixelFilterContourParams, true,
+                RobotParams.cameraRect, RobotParams.worldRect, true);
+        greenPixelProcessor = greenPixelVision.getVisionProcessor();
+//        visionProcessorsList.add(greenPixelProcessor);
+
+        yellowPixelVision = new FtcVisionEocvColorBlob(
+                "YellowPixel", colorConversion, yellowPixelColorThresholds, pixelFilterContourParams, true,
+                RobotParams.cameraRect, RobotParams.worldRect, true);
+        yellowPixelProcessor = yellowPixelVision.getVisionProcessor();
+//        visionProcessorsList.add(yellowPixelProcessor);
+
+        whitePixelVision = new FtcVisionEocvColorBlob(
+                "WhitePixel", colorConversion, whitePixelColorThresholds, pixelFilterContourParams, true,
+                RobotParams.cameraRect, RobotParams.worldRect, true);
+        whitePixelProcessor = whitePixelVision.getVisionProcessor();
+//        visionProcessorsList.add(whitePixelProcessor);
+
+        redBlobVision = new FtcVisionEocvColorBlob(
+                "RedBlob", colorConversion, redBlobColorThresholds, blobFilterContourParams, true,
+                RobotParams.cameraRect, RobotParams.worldRect, true);
+        redBlobProcessor = redBlobVision.getVisionProcessor();
+//        visionProcessorsList.add(redBlobProcessor);
+
+        blueBlobVision = new FtcVisionEocvColorBlob(
+                "BlueBlob", colorConversion, blueBlobColorThresholds, blobFilterContourParams, true,
+                RobotParams.cameraRect, RobotParams.worldRect, true);
+        blueBlobProcessor = blueBlobVision.getVisionProcessor();
+//        visionProcessorsList.add(blueBlobProcessor);
 
         portal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))

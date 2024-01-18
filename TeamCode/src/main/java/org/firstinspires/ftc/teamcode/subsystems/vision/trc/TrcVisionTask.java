@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class TrcVisionTask<I, O>
 {
-    private final TrcDbgTrace tracer;
+//    private final TrcDbgTrace tracer;
     private final String instanceName;
     private final TrcVisionProcessor<I, O> visionProcessor;
     private final I[] imageBuffers;
@@ -57,7 +57,7 @@ public class TrcVisionTask<I, O>
     public TrcVisionTask(
         String instanceName, TrcVisionProcessor<I, O> visionProcessor, I[] imageBuffers)
     {
-        this.tracer = new TrcDbgTrace();
+//        this.tracer = new TrcDbgTrace();
         this.instanceName = instanceName;
         this.visionProcessor = visionProcessor;
         this.imageBuffers = imageBuffers;
@@ -80,10 +80,10 @@ public class TrcVisionTask<I, O>
      *
      * @param msgLevel specifies the message level.
      */
-    public void setTraceLevel(TrcDbgTrace.MsgLevel msgLevel)
-    {
-        tracer.setTraceLevel(msgLevel);
-    }   //setTraceLevel
+//    public void setTraceLevel(TrcDbgTrace.MsgLevel msgLevel)
+//    {
+//        tracer.setTraceLevel(msgLevel);
+//    }   //setTraceLevel
 
     /**
      * This method enables/disables the vision task. As long as the task is enabled, it will continue to
@@ -172,9 +172,9 @@ public class TrcVisionTask<I, O>
             double elapsedTime = TrcTimer.getCurrentTime() - startTime;
             totalTime += elapsedTime;
             totalFrames++;
-            tracer.traceDebug(
-                instanceName, "AvgProcessTime=%.6f, FrameRate=%f",
-                totalTime/totalFrames, totalFrames/(TrcTimer.getCurrentTime() - taskStartTime));
+//            tracer.traceDebug(
+//                instanceName, "AvgProcessTime=%.6f, FrameRate=%f",
+//                totalTime/totalFrames, totalFrames/(TrcTimer.getCurrentTime() - taskStartTime));
 
             I output = visionProcessor.getSelectedOutput();
             if (output != null)

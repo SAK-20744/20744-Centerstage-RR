@@ -13,13 +13,13 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class PipelineTest extends LinearOpMode {
 
     private PropPipeline propPipeline;
-    private VisionPortal portal;
+    private VisionPortal myPortal;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         propPipeline = new PropPipeline();
-        portal = new VisionPortal.Builder()
+        myPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
 //                .setCameraResolution(new Size(720, 1280))
                 .addProcessor(propPipeline)

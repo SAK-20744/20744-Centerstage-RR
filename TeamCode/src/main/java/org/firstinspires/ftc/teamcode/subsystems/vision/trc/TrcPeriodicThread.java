@@ -163,7 +163,7 @@ public class TrcPeriodicThread<T>
     }   //class TaskState
 
     private static final AtomicInteger numActiveThreads = new AtomicInteger(0);
-    private final TrcDbgTrace tracer;
+//    private final TrcDbgTrace tracer;
     private final String instanceName;
     private final PeriodicTask task;
     private final Object context;
@@ -180,7 +180,7 @@ public class TrcPeriodicThread<T>
      */
     public TrcPeriodicThread(String instanceName, PeriodicTask task, Object context, int taskPriority)
     {
-        this.tracer = new TrcDbgTrace();
+//        this.tracer = new TrcDbgTrace();
         this.instanceName = instanceName;
         this.task = task;
         this.context = context;
@@ -327,12 +327,12 @@ public class TrcPeriodicThread<T>
 
         int numThreads = numActiveThreads.incrementAndGet();
 
-        tracer.traceDebug(
-            instanceName,
-            "Thread " + numThreads +
-            ": tid=" + thread.getId() +
-            ", priority=" + thread.getPriority() +
-            ", group=" + thread.getThreadGroup());
+//        tracer.traceDebug(
+//            instanceName,
+//            "Thread " + numThreads +
+//            ": tid=" + thread.getId() +
+//            ", priority=" + thread.getPriority() +
+//            ", group=" + thread.getThreadGroup());
         // Do not create a watchdog for the Watchdog Manager task.
         TrcWatchdogMgr.Watchdog threadWatchdog =
             instanceName.equals(TrcWatchdogMgr.moduleName)? null: TrcWatchdogMgr.registerWatchdog(instanceName);
@@ -348,8 +348,8 @@ public class TrcPeriodicThread<T>
                 elapsedNanoTime = TrcTimer.getNanoTime() - startNanoTime;
                 totalThreadNanoTime += elapsedNanoTime;
                 loopCount++;
-                tracer.traceVerbose(
-                    instanceName, "start=%.6f, elapsed=%.6f", startNanoTime/1000000000.0, elapsedNanoTime/1000000000.0);
+//                tracer.traceVerbose(
+//                    instanceName, "start=%.6f, elapsed=%.6f", startNanoTime/1000000000.0, elapsedNanoTime/1000000000.0);
             }
 
             TrcEvent.performEventCallback();
@@ -394,9 +394,9 @@ public class TrcPeriodicThread<T>
         }
 
         numThreads = numActiveThreads.decrementAndGet();
-        tracer.traceDebug(
-            instanceName, "Exiting thread: numThreads=%d, AvgLoopTime=%.6f",
-            numThreads, totalThreadNanoTime/1000000000.0/loopCount);
+//        tracer.traceDebug(
+//            instanceName, "Exiting thread: numThreads=%d, AvgLoopTime=%.6f",
+//            numThreads, totalThreadNanoTime/1000000000.0/loopCount);
     }   //run
 
 }

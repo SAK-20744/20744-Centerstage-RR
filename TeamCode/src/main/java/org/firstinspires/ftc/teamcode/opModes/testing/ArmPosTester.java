@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.tele;
+package org.firstinspires.ftc.teamcode.opModes.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ArmKinematics;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 
@@ -42,6 +43,8 @@ public class ArmPosTester extends LinearOpMode {
         boolean ButtonOBlock = false;
 
         double arm1Deg, arm2Deg;
+
+        ArmKinematics armKinematics = new ArmKinematics();
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -120,6 +123,8 @@ public class ArmPosTester extends LinearOpMode {
             arm2Deg = (elbow.getCurrentPosition()/(-1000 / 90));
             telemetry.addData("Arm1 Degrees", arm1Deg);
             telemetry.addData("Arm2 Degrees", arm2Deg);
+            telemetry.addData("X: ", armKinematics.getXCoordinate(arm1Deg,arm2Deg));
+            telemetry.addData("Y: ", armKinematics.getYCoordinate(arm1Deg,arm2Deg));
 
             double loop = System.nanoTime();
             telemetry.addData("hz ", 1000000000 / (loop - looptime));

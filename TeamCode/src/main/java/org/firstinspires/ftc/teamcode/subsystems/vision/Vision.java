@@ -24,6 +24,7 @@ package org.firstinspires.ftc.teamcode.subsystems.vision;
 
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.FtcEocvColorBlobProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.FtcVisionEocvColorBlob;
+import org.firstinspires.ftc.teamcode.subsystems.util.trc.RobotParams;
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.TrcOpenCvColorBlobPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.util.trc.TrcVisionTargetInfo;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -85,12 +86,6 @@ public class Vision
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
             .setAspectRatioRange(0.8, 1.25);
-    private static final String TFOD_MODEL_ASSET = "CenterStage.tflite";
-    private static final String TFOD_MODEL_FILENAME = "TrcCenterStage.tflite";
-    private static final float TFOD_MIN_CONFIDENCE = 0.90f;
-    public static final String TFOD_PIXEL_LABEL = "Pixel";
-    public static final String[] TFOD_FIRST_LABELS = {TFOD_PIXEL_LABEL};
-    public static final String[] TFOD_TRC_LABELS = {"Yellow Pixel", "Purple Pixel", "White Pixel", "Green Pixel"};
 
 //    private FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
 //    public FtcRawEocvVision rawColorBlobVision;
@@ -104,13 +99,10 @@ public class Vision
     private FtcEocvColorBlobProcessor yellowPixelProcessor;
     public FtcVisionEocvColorBlob whitePixelVision;
     private FtcEocvColorBlobProcessor whitePixelProcessor;
-    public FtcVisionEocvColorBlob redBlobVision;
+    public static FtcVisionEocvColorBlob redBlobVision;
     private FtcEocvColorBlobProcessor redBlobProcessor;
-    public FtcVisionEocvColorBlob blueBlobVision;
+    public static FtcVisionEocvColorBlob blueBlobVision;
     private FtcEocvColorBlobProcessor blueBlobProcessor;
-//    public FtcVisionTensorFlow tensorFlowVision;
-    private TfodProcessor tensorFlowProcessor;
-//    public FtcVision vision;
     private static int lastTeamPropPos = 0;
 
 
@@ -126,6 +118,55 @@ public class Vision
     {
         return lastTeamPropPos;
     }   //getLastDetectedTeamPropPosition
+
+    public static int getDetectedTeamPropPosition(boolean red)
+    {
+        int pos = 0;
+        TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> teamPropInfo = null;
+
+        if (red)
+        {
+            if (redBlobVision != null)
+            {
+                teamPropInfo = redBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0);
+            }
+        }
+        else
+        {
+            if (blueBlobVision != null)
+            {
+                teamPropInfo = blueBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0);
+            }
+        }
+
+        if (teamPropInfo != null)
+        {
+            double teamPropXPos = teamPropInfo.rect.x + teamPropInfo.rect.width/2.0;
+            double oneThirdScreenWidth = RobotParams.CAM_IMAGE_WIDTH/3.0;
+            String ledLabel = null;
+
+            if (teamPropXPos < oneThirdScreenWidth)
+            {
+                pos = 1;
+            }
+            else if (teamPropXPos < oneThirdScreenWidth*2)
+            {
+                pos = 2;
+            }
+            else
+            {
+                pos = 3;
+            }
+
+        }
+
+        if (pos != 0)
+        {
+            lastTeamPropPos = pos;
+        }
+
+        return pos;
+    }   //getDetectedTeamPropPosition
 
     public boolean validatePixel(TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> pixelInfo)
     {

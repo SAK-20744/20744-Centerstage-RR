@@ -107,6 +107,7 @@ public class TRCPipelineTest extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(pipeline, 30);
 
         while (opModeInInit()) {
+            Vision.getDetectedTeamPropPosition(false);
             int pos = Vision.getLastDetectedTeamPropPosition();
             telemetry.addData("Location", pos);
             telemetry.update();

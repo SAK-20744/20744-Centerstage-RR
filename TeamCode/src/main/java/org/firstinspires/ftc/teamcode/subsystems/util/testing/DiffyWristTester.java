@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.testing;
+package org.firstinspires.ftc.teamcode.subsystems.util.testing;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,14 +22,18 @@ public class DiffyWristTester extends LinearOpMode {
 
         waitForStart();
 
+        diffyWrist.runToProfile(desiredRoll, desiredPitch);
+
         while (opModeIsActive()) {
 
-            diffyWrist.runToProfile(desiredRoll, desiredPitch);
+//            diffyWrist.updateServoArm();
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
                 diffyWrist.updateServoArm();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
+                telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
+                telemetry.addData("rightCorrectedPos: ", diffyWrist.getCorrectedRightPos());
                 telemetry.addData("leftTarget: ", diffyWrist.getLeftTarget());
                 telemetry.addData("rightTarget: ", diffyWrist.getRightTarget());
                 telemetry.addData("Moving?: ", diffyWrist.isBusy());
@@ -39,8 +43,11 @@ public class DiffyWristTester extends LinearOpMode {
             // Display telemetry (optional)
             telemetry.addData("Left Position", diffyWrist.getLeftPosition());
             telemetry.addData("Right Position", diffyWrist.getRightPosition());
+            telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
+            telemetry.addData("rightCorrectedPos: ", diffyWrist.getCorrectedRightPos());
             telemetry.addData("leftTarget: ", diffyWrist.getLeftTarget());
             telemetry.addData("rightTarget: ", diffyWrist.getRightTarget());
+            telemetry.addData("Moving?: ", diffyWrist.isBusy());
             telemetry.update();
 
         }

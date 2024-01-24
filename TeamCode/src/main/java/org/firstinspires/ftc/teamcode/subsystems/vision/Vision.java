@@ -57,7 +57,7 @@ public class Vision
     public static final double[] purplePixelColorThresholds = {60.0, 250.0, 120.0, 150.0, 140.0, 170.0};
     public static final double[] greenPixelColorThresholds = {40.0, 200.0, 60.0, 120.0, 60.0, 120.0};
     public static final double[] yellowPixelColorThresholds = {150.0, 250.0, 110.0, 160.0, 20.0, 100.0};
-    public static final double[] whitePixelColorThresholds = {250.0, 255.0, 100.0, 130.0, 120.0, 140.0};
+    public static final double[] whitePixelColorThresholds = {245.0, 250.0, 100.0, 130.0, 120.0, 140.0};
     public static final double[] redBlobColorThresholds = {20.0, 120.0, 180.0, 240.0, 90.0, 120.0};
     public static final double[] blueBlobColorThresholds = {20.0, 250.0, 40.0, 250.0, 160.0, 240.0};
 //    // HSV Color Space.
@@ -142,8 +142,7 @@ public class Vision
         if (teamPropInfo != null)
         {
             double teamPropXPos = teamPropInfo.rect.x + teamPropInfo.rect.width/2.0;
-            double oneThirdScreenWidth = RobotParams.CAM_IMAGE_WIDTH/3.0;
-            String ledLabel = null;
+            double oneThirdScreenWidth = RobotParams.CAM_IMAGE_WIDTH/2.0;
 
             if (teamPropXPos < oneThirdScreenWidth)
             {

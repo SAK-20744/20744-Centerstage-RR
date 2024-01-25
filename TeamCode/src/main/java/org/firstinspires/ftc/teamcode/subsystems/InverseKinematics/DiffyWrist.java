@@ -27,15 +27,15 @@ public class DiffyWrist {
     private double leftPos;
     private double rightPos;
 
-    private double targetLeft;
-    private double targetRight;
+    public static double targetLeft;
+    public static double targetRight;
 
     private double correctedLeftPosition, correctedRightPosition;
 
     private boolean moving, rightMoving, leftMoving;
 
     public static double p = 0.0077875;
-    public static double i = 0;
+    public static double i = 0.0145;
     public static double d = 0;
     public static double f = 0;
 
@@ -67,12 +67,20 @@ public class DiffyWrist {
         deltaLeftPos = lastLeftPos - currentLeftPos;
         deltaRightPos = lastRightPos - currentRightPos;
 
-        if ((Math.abs(deltaLeftPos) > 30) || (Math.abs(deltaRightPos) > 30)) {
-            if (rightServo.getPower() < 0) {
-                universalRightPos += 360;
-            } else {
-                universalRightPos -= 360;
-            }
+//        if ((Math.abs(deltaLeftPos) > 180) || (Math.abs(deltaRightPos) > 180)) {
+//            if (rightServo.getPower() < 0) {
+//                universalRightPos -= 360;
+//            } else {
+//                universalRightPos += 360;
+//            }
+//            if (leftServo.getPower() < 0) {
+//                universalLeftPos -= 360;
+//            } else {
+//                universalLeftPos += 360;
+//            }
+//        }
+
+        if ((Math.abs(deltaLeftPos) > 180)){
             if (leftServo.getPower() < 0) {
                 universalLeftPos += 360;
             } else {
@@ -80,24 +88,41 @@ public class DiffyWrist {
             }
         }
 
-        correctedLeftPosition = universalLeftPos + leftPos;
-        correctedRightPosition = universalRightPos + rightPos;
+        if ((Math.abs(deltaRightPos) > 180)){
+            if (rightServo.getPower() < 0) {
+                universalRightPos += 360;
+            } else {
+                universalRightPos -= 360;
+            }
+        }
 
-//        if ((Math.abs(deltaLeftPos) > 90) || (Math.abs(deltaRightPos) > 90)) {
-//            if (rightServo.getPower() < 0) {
-//                correctedRightPosition = rightPos + 360;
+//        if ((Math.abs(deltaLeftPos) > 180)){
+//            if (deltaLeftPos > 0) {
+//                universalLeftPos = 360 - universalLeftPos;
 //            } else {
-//                correctedRightPosition =  rightPos - 360;
+//                universalLeftPos = 360 + universalLeftPos;
 //            }
-//            if (leftServo.getPower() < 0) {
-//                correctedLeftPosition = leftPos + 360;
+//        }
+//
+//        if ((Math.abs(deltaRightPos) > 180)){
+//            if (deltaRightPos > 0) {
+//                universalRightPos = 360 - universalRightPos;
 //            } else {
-//                correctedLeftPosition =  leftPos - 360;
+//                universalRightPos = 360 + universalRightPos;
 //            }
 //        }
 
-        double rightPower = controller.calculate(targetRight, correctedRightPosition);
-        double leftPower = controller.calculate(targetLeft, correctedLeftPosition);
+        correctedLeftPosition = universalLeftPos + leftPos;
+        correctedRightPosition = universalRightPos + rightPos;
+
+        double leftError = targetLeft - correctedLeftPosition;
+        double rightError = targetRight - correctedRightPosition;
+//
+        double leftPower = controller.calculate(leftError, 0);
+        double rightPower = controller.calculate(rightError, 0);
+
+//        double rightPower = controller.calculate(correctedRightPosition, targetRight);
+//        double leftPower = controller.calculate(correctedLeftPosition, targetLeft);
 //
         if (moving) {
             if(leftMoving) {
@@ -116,6 +141,8 @@ public class DiffyWrist {
 
         if(rightMoving || leftMoving)
             moving = true;
+        else
+            moving = false;
 
         leftServo.setPower(leftPower);
         rightServo.setPower(rightPower);
@@ -138,15 +165,15 @@ public class DiffyWrist {
 
     public void runToProfile(double desiredRoll, double desiredPitch) {
         // Set your target angles based on desiredPitch and desiredRoll
-        targetLeft = desiredRoll + desiredPitch;
-        targetRight = desiredRoll - desiredPitch;
+        targetLeft =  desiredPitch + desiredRoll;
+        targetRight = desiredPitch - desiredRoll;
 
-        double leftError = targetLeft - leftPos;
-        double rightError = targetRight - rightPos;
-
+//        double leftError = targetLeft - leftPos;
+//        double rightError = targetRight - rightPos;
+//
 //        double leftPower = controller.calculate(leftError, 0);
 //        double rightPower = controller.calculate(rightError, 0);
-//
+
 //        leftServo.setPower(leftPower);
 //        rightServo.setPower(rightPower);
 

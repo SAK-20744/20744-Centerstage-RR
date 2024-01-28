@@ -34,8 +34,10 @@ public class NIKETeleopV3 extends LinearOpMode {
     public static double SPEED = 0.8;
     public static double ELBOWSPEED = 1;
     //change x and y to match gamepad2.a positions
-    private double x, y;
+    private double arm1Position, arm2Position,wristPosition;
+    private double armSpeed = 1;
     private boolean useWrist = true;
+    private boolean backdrop = false;
 
     private double boardIMU = 0;
     private double pixelLevel = 1;
@@ -52,36 +54,36 @@ public class NIKETeleopV3 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        boolean targetFound = false;    // Set to true when an AprilTag target is detected
-        double aprilTagDrive = 0;        // Desired forward power/speed (-1 to +1)
-        double strafe = 0;        // Desired strafe power/speed (-1 to +1)
-        double turn = 0;        // Desired turning power/speed (-1 to +1)
-
-        // Initialize the Apriltag Detection process
-        initAprilTag();
-
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must match the names assigned during the robot configuration.
-        // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "fl");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "fr");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "bl");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "br");
-
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-        if (USE_WEBCAM)
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-
-        // Wait for driver to press start
-        telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch Play to start OpMode");
+//        boolean targetFound = false;    // Set to true when an AprilTag target is detected
+//        double aprilTagDrive = 0;        // Desired forward power/speed (-1 to +1)
+//        double strafe = 0;        // Desired strafe power/speed (-1 to +1)
+//        double turn = 0;        // Desired turning power/speed (-1 to +1)
+//
+//        // Initialize the Apriltag Detection process
+//        initAprilTag();
+//
+//        // Initialize the hardware variables. Note that the strings used here as parameters
+//        // to 'get' must match the names assigned during the robot configuration.
+//        // step (using the FTC Robot Controller app on the phone).
+//        leftFrontDrive  = hardwareMap.get(DcMotor.class, "fl");
+//        rightFrontDrive = hardwareMap.get(DcMotor.class, "fr");
+//        leftBackDrive  = hardwareMap.get(DcMotor.class, "bl");
+//        rightBackDrive = hardwareMap.get(DcMotor.class, "br");
+//
+//        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
+//        // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
+//        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+//        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+//        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+//        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+//        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+//
+//        if (USE_WEBCAM)
+//            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+//
+//        // Wait for driver to press start
+//        telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
+//        telemetry.addData(">", "Touch Play to start OpMode");
 
         DcMotor left_lift;
         DcMotor right_lift;
@@ -145,71 +147,89 @@ public class NIKETeleopV3 extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        useWrist = true;
+        backdrop = false;
+        arm1Position=178;
+        arm2Position=-30;
+
         while (opModeIsActive() && !isStopRequested()) {
+//
+//
+//            targetFound = false;
+//            desiredTag = null;
+//
+//            // Step through the list of detected tags and look for a matching tag
+//            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+//            for (AprilTagDetection detection : currentDetections) {
+//                // Look to see if we have size info on this tag.
+//                if (detection.metadata != null) {
+//                    //  Check to see if we want to track towards this tag.
+//                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+//                        // Yes, we want to use this tag.
+//                        targetFound = true;
+//                        desiredTag = detection;
+//                        break;  // don't look any further.
+//                    } else {
+//                        // This tag is in the library, but we do not want to track it right now.
+//                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+//                    }
+//                } else {
+//                    // This tag is NOT in the library, so we don't have enough information to track to it.
+//                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+//                }
+//            }
+//            // Tell the driver what we see, and what to do.
+//            if (targetFound) {
+//                telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
+//                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+//                telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+//                telemetry.addData("elevation", "%3.0f degrees", desiredTag.ftcPose.elevation);
+//                telemetry.addData("pitch", "%3.0f degrees", desiredTag.ftcPose.pitch);
+//            } else {
+//                telemetry.addData("\n>", "Drive using joysticks to find valid target\n");
+//            }
+//            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+//
+//            if (gamepad1.left_bumper && targetFound) {
+//
+//                turn = turnController.calculate(targetTurn, desiredTag.ftcPose.pitch);
+////                strafe = (strafeController.calculate(targetStrafe, desiredTag.ftcPose.elevation));
+//                aprilTagDrive = speedController.calculate(targetDrive, desiredTag.ftcPose.range);
+//                strafe = gamepad1.left_stick_x;
+//
+//                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
+//                moveRobot(aprilTagDrive, strafe, turn);
+////                sleep(10);
+//            }
 
+            /* field centric
 
-            targetFound = false;
-            desiredTag = null;
+//            Pose2d poseEstimate = drive.getPoseEstimate();
+//
+//            Vector2d input = new Vector2d(
+//                    -gamepad2.left_stick_y,
+//                    -gamepad2.left_stick_x
+//            ).rotated(-poseEstimate.getHeading());
+//
+//            drive.setWeightedDrivePower(
+//                    new Pose2d(
+//                            input.getX(),
+//                            input.getY(),
+//                            -gamepad1.right_stick_x
+//                    )
+//            );
+//
+//            drive.update();
 
-            // Step through the list of detected tags and look for a matching tag
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        // Yes, we want to use this tag.
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;  // don't look any further.
-                    } else {
-                        // This tag is in the library, but we do not want to track it right now.
-                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                    }
-                } else {
-                    // This tag is NOT in the library, so we don't have enough information to track to it.
-                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-                }
-            }
-            // Tell the driver what we see, and what to do.
-            if (targetFound) {
-                telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
-                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-                telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("elevation", "%3.0f degrees", desiredTag.ftcPose.elevation);
-                telemetry.addData("pitch", "%3.0f degrees", desiredTag.ftcPose.pitch);
-            } else {
-                telemetry.addData("\n>", "Drive using joysticks to find valid target\n");
-            }
-            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+             */
 
-            if (gamepad1.left_bumper && targetFound) {
-
-                turn = turnController.calculate(targetTurn, desiredTag.ftcPose.pitch);
-//                strafe = (strafeController.calculate(targetStrafe, desiredTag.ftcPose.elevation));
-                aprilTagDrive = speedController.calculate(targetDrive, desiredTag.ftcPose.range);
-                strafe = gamepad1.left_stick_x;
-
-                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
-                moveRobot(aprilTagDrive, strafe, turn);
-//                sleep(10);
-            }
-
-            if(gamepad1.a)
-                boardIMU = navx_device.getYaw();
-
-            Pose2d poseEstimate = drive.getPoseEstimate();
-
-            Vector2d input = new Vector2d(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x
-            ).rotated(-poseEstimate.getHeading());
+//            ROBOT CENTRIC
 
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            input.getX(),
-                            input.getY(),
-                            -gamepad1.right_stick_x
+                            -(gamepad2.left_stick_y),
+                            -(gamepad2.left_stick_x),
+                            -gamepad2.right_stick_x
                     )
             );
 
@@ -244,131 +264,140 @@ public class NIKETeleopV3 extends LinearOpMode {
 
             if(gamepad2.dpad_down) {
                 pixelLevel -= 1;
-                sleep(50);
+                sleep(200);
             }
             if(gamepad2.dpad_up) {
                 pixelLevel += 1;
-                sleep(50);
+                sleep(200);
             }
             
-            if(pixelLevel < 1) 
-                pixelLevel = 1;
-            if(pixelLevel > 12)
-                pixelLevel = 12;
+            if(pixelLevel < 0)
+                pixelLevel = 0;
+            if(pixelLevel > 9)
+                pixelLevel = 9;
             
             if(gamepad2.a){
                 //Intaking
-                useWrist = false;
-                x=0;
-                y=0;
+                useWrist = true;
+                backdrop = false;
+                arm1Position=178;
+                arm2Position=-30;
+                armSpeed = 0.7;
             }
 
-            if(gamepad2.b){
-                //Scoring
-                intaking = false;
-                useWrist = true;
-                if(pixelLevel == 1){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 2){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 3){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 4){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 5){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 6){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 7){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 8){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 9){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 10){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 11){
-                    x=0;
-                    y=0;
-                }
-                else if(pixelLevel == 12){
-                    x=0;
-                    y=0;
-                }
+            if(gamepad2.b) {
+                backdrop = true;
+                if(pixelLevel < 1)
+                    pixelLevel = 1;
+                if(pixelLevel > 9)
+                    pixelLevel = 9;
             }
+
             if(gamepad2.dpad_left){
                 //Pre-Hang
+                backdrop = false;
                 intaking = false;
-                useWrist = true;
-                x=0;
-                y=0;
+                useWrist = false;
+                arm1Position=85;
+                arm2Position=180;
+                wristPosition=0.8;
+                armSpeed = 1;
             }
             if(gamepad2.dpad_right){
                 //Hang
+                backdrop = false;
                 intaking = false;
-                useWrist = true;
-                x=0;
-                y=0;
+                useWrist = false;
+                arm1Position=110;
+                arm2Position=220;
+                wristPosition=0.8;
+                armSpeed = 1;
             }
 
-            outake.IVKtoXY(x,y,useWrist,intaking,1);
+            if(backdrop){
+                //Scoring
+                intaking = false;
+                useWrist = false;
 
-//            if(gamepad1.dpad_up || gamepad2.dpad_up) {
-//                hanging = false;
-//                height = 27;
-//            }
-////            if(gamepad1.dpad_down)
-//
-//            if(height < 0)
-//                height = 0;
-//
-//            if(gamepad2.right_trigger>0) {
-//                hanging  = false;
-//                height += 0.3;
-//            }
-//            if(gamepad2.left_trigger>0) {
-//                hanging = false;
-//                height -= 0.3;
-//            }
-//
-//            if(gamepad2.a) {
-//                hanging = false;
-//                height = 0;
-//            }
-//
-//            if(gamepad2.dpad_down) {
-//                hanging = true;
-//            }
-//
-//            if(gamepad2.b) {
-//                hanging = false;
-//                height = 8.1;
-//            }
-//
-//            outake.BackdropHeightOffset10(height, intaking, hanging);
+                if(gamepad2.dpad_down) {
+                    pixelLevel -= 1;
+                    sleep(200);
+                }
+                if(gamepad2.dpad_up) {
+                    pixelLevel += 1;
+                    sleep(200);
+                }
+
+                if(pixelLevel < 1)
+                    pixelLevel = 1;
+                if(pixelLevel > 9)
+                    pixelLevel = 9;
+
+                if (gamepad2.left_bumper)
+                    door.setPosition(0);
+                else
+                    door.setPosition(0.95);
+
+                if(pixelLevel == 1){
+                    arm1Position=73;
+                    arm2Position=58;
+                    wristPosition=1.00;
+                    armSpeed = 0.6;
+                }
+                else if(pixelLevel == 2){
+                    arm1Position=101;
+                    arm2Position=33;
+                    wristPosition=0.85;
+                    armSpeed = 0.75;
+                }
+                else if(pixelLevel == 3){
+                    arm1Position=103;
+                    arm2Position=43;
+                    wristPosition=0.59;
+                    armSpeed = 0.85;
+                }
+                else if(pixelLevel == 4){
+                    arm1Position=99;
+                    arm2Position=58;
+                    wristPosition=0.47;
+                    armSpeed = 0.9;
+                }
+                else if(pixelLevel == 5){
+                    arm1Position=110;
+                    arm2Position=59;
+                    wristPosition=0.40;
+                    armSpeed = 1;
+                }
+                else if(pixelLevel == 6){
+                    arm1Position=107;
+                    arm2Position=69;
+                    wristPosition=0.33;
+                    armSpeed = 1;
+                }
+                else if(pixelLevel == 7){
+                    arm1Position=107;
+                    arm2Position=69;
+                    wristPosition=0.33;
+                    armSpeed = 1;
+                }
+                else if(pixelLevel == 8){
+                    arm1Position=107;
+                    arm2Position=69;
+                    wristPosition=0.33;
+                    armSpeed = 1;
+                }
+                else if(pixelLevel == 9){
+                    arm1Position=107;
+                    arm2Position=69;
+                    wristPosition=0.33;
+                    armSpeed = 1;
+                }
+
+            }
+
+            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
 
             telemetry.addData("Pixel Level:", pixelLevel);
-            telemetry.addData("Height:", height);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());
             telemetry.addData("Arm1 Pos:" , outake.getMotorArmPos());
             telemetry.addData("Arm2 Degrees:" , outake.getServoArmDeg());

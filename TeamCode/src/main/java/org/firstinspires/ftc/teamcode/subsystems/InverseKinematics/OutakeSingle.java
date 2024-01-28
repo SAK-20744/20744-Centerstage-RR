@@ -94,6 +94,31 @@ public class OutakeSingle {
         wrist.setPos(wristPos);
     };
 
+    public void IVKtoArmPoses(double arm1Pos, double arm2Pos, double wristPos, boolean useWrist, boolean intaking, double speed){
+        myAngle = angle;
+        myIVK = (new IVK());
+
+        ServoArmDeg = arm2Pos;
+        MotorArmDeg = arm1Pos;
+
+        if(useWrist) {
+            if (intaking) {
+                wristDeg = 0;
+                wristPos = (wristDeg / 190);
+            } else {
+                wristDeg = 95;
+                wristPos = (wristDeg / 190);
+            }
+        }
+
+        ServoArmPos = -ServoArmDeg * 1000 / 90;
+        MotorArmPos = MotorArmDeg * -1000 / 90;
+
+        arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
+        arm2.ArmToPos((int)Math.round(ServoArmPos), speed);
+        wrist.setPos(wristPos);
+    };
+
     public void BackdropHeightOffset10(double length, boolean intaking, boolean hang){
 
         myAngle = angle;

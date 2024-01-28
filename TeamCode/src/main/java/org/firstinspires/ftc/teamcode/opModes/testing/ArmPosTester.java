@@ -116,15 +116,14 @@ public class ArmPosTester extends LinearOpMode {
             wrist.setPosition(wristservoposition);
 
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
-//            telemetry.addData("Right Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
-//            telemetry.addData("Wrist Pos", wristservoposition);
+            telemetry.addData("Wrist Pos", wrist.getPosition());
             arm1Deg = (left_lift.getCurrentPosition()/(-1000 / 90));
             arm2Deg = (elbow.getCurrentPosition()/(-1000 / 90));
             telemetry.addData("Arm1 Degrees", arm1Deg);
             telemetry.addData("Arm2 Degrees", arm2Deg);
-            telemetry.addData("X: ", armKinematics.getXCoordinate(arm1Deg,arm2Deg));
-            telemetry.addData("Y: ", armKinematics.getYCoordinate(arm1Deg,arm2Deg));
+//            telemetry.addData("X: ", armKinematics.getXCoordinate(arm1Deg,arm2Deg));
+//            telemetry.addData("Y: ", armKinematics.getYCoordinate(arm1Deg,arm2Deg));
 
             double loop = System.nanoTime();
             telemetry.addData("hz ", 1000000000 / (loop - looptime));

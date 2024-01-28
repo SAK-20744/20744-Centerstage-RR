@@ -283,7 +283,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.68);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
@@ -325,7 +325,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.68);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 65);
                 intake.setPower(-1);
                 sleep(500);
@@ -367,7 +367,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.68);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);

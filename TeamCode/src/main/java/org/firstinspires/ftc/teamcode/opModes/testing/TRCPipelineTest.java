@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opModes.testing;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.blobFilterContourParams;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.blueBlobColorThresholds;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.colorConversion;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.getDetectedTeamPropPosition;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.getLastDetectedTeamPropPosition;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.greenPixelColorThresholds;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.pixelFilterContourParams;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.purplePixelColorThresholds;
@@ -107,7 +109,8 @@ public class TRCPipelineTest extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(pipeline, 30);
 
         while (opModeInInit()) {
-            Vision.getDetectedTeamPropPosition(false);
+//            getDetectedTeamPropPosition(true);
+            getDetectedTeamPropPosition(false);
             int pos = Vision.getLastDetectedTeamPropPosition();
             telemetry.addData("Location", pos);
             telemetry.update();
@@ -117,6 +120,8 @@ public class TRCPipelineTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 //            telemetry.addData("Location", propPipeline.getLocation());
+
+            getDetectedTeamPropPosition(false);
             int pos = Vision.getLastDetectedTeamPropPosition();
             telemetry.addData("Location", pos);
             telemetry.update();

@@ -33,7 +33,7 @@ public class NIKETeleopV3 extends LinearOpMode {
 
     public static double SPEED = 0.8;
     public static double ELBOWSPEED = 1;
-    //change x and y to match gamepad2.a positions
+    //change x and y to match gamepad1.a positions
     private double arm1Position, arm2Position,wristPosition;
     private double armSpeed = 1;
     private boolean useWrist = true;
@@ -207,8 +207,8 @@ public class NIKETeleopV3 extends LinearOpMode {
 //            Pose2d poseEstimate = drive.getPoseEstimate();
 //
 //            Vector2d input = new Vector2d(
-//                    -gamepad2.left_stick_y,
-//                    -gamepad2.left_stick_x
+//                    -gamepad1.left_stick_y,
+//                    -gamepad1.left_stick_x
 //            ).rotated(-poseEstimate.getHeading());
 //
 //            drive.setWeightedDrivePower(
@@ -227,15 +227,15 @@ public class NIKETeleopV3 extends LinearOpMode {
 
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -(gamepad2.left_stick_y),
-                            -(gamepad2.left_stick_x),
-                            -gamepad2.right_stick_x
+                            -(gamepad1.left_stick_y),
+                            -(gamepad1.left_stick_x),
+                            -gamepad1.right_stick_x
                     )
             );
 
             drive.update();
 
-            if (gamepad2.left_bumper)
+            if (gamepad1.left_bumper)
                 door.setPosition(0);
             else
                 door.setPosition(0.95);
@@ -246,14 +246,14 @@ public class NIKETeleopV3 extends LinearOpMode {
                 plane.setPosition(0.2);
             }
 
-            if(gamepad2.right_bumper) {
+            if(gamepad1.right_bumper || gamepad2.right_bumper) {
                 intake.setPower(-1);
                 intaking = true;
             }
-            else if(gamepad2.y) {
+            else if(gamepad1.y) {
                 intake.setPower(1);
             }
-            else if(gamepad2.x) {
+            else if(gamepad1.x) {
                 intake.setPower(1);
                 intaking = true;
             }
@@ -262,11 +262,11 @@ public class NIKETeleopV3 extends LinearOpMode {
                 intaking = false;
             }
 
-            if(gamepad2.dpad_down) {
+            if(gamepad1.dpad_down) {
                 pixelLevel -= 1;
                 sleep(200);
             }
-            if(gamepad2.dpad_up) {
+            if(gamepad1.dpad_up) {
                 pixelLevel += 1;
                 sleep(200);
             }
@@ -276,7 +276,7 @@ public class NIKETeleopV3 extends LinearOpMode {
             if(pixelLevel > 9)
                 pixelLevel = 9;
             
-            if(gamepad2.a){
+            if(gamepad1.a){
                 //Intaking
                 useWrist = true;
                 backdrop = false;
@@ -285,7 +285,7 @@ public class NIKETeleopV3 extends LinearOpMode {
                 armSpeed = 0.7;
             }
 
-            if(gamepad2.b) {
+            if(gamepad1.b) {
                 backdrop = true;
                 if(pixelLevel < 1)
                     pixelLevel = 1;
@@ -293,23 +293,23 @@ public class NIKETeleopV3 extends LinearOpMode {
                     pixelLevel = 9;
             }
 
-            if(gamepad2.dpad_left){
+            if(gamepad2.dpad_up){
                 //Pre-Hang
                 backdrop = false;
                 intaking = false;
                 useWrist = false;
-                arm1Position=85;
-                arm2Position=180;
-                wristPosition=0.8;
+                arm1Position=83;
+                arm2Position=254;
+                wristPosition=0.0;
                 armSpeed = 1;
             }
-            if(gamepad2.dpad_right){
+            if(gamepad2.dpad_down){
                 //Hang
                 backdrop = false;
                 intaking = false;
                 useWrist = false;
-                arm1Position=110;
-                arm2Position=220;
+                arm1Position=115;
+                arm2Position=152;
                 wristPosition=0.8;
                 armSpeed = 1;
             }
@@ -333,7 +333,7 @@ public class NIKETeleopV3 extends LinearOpMode {
                 if(pixelLevel > 9)
                     pixelLevel = 9;
 
-                if (gamepad2.left_bumper)
+                if (gamepad1.left_bumper)
                     door.setPosition(0);
                 else
                     door.setPosition(0.95);
@@ -352,7 +352,7 @@ public class NIKETeleopV3 extends LinearOpMode {
                 }
                 else if(pixelLevel == 3){
                     arm1Position=103;
-                    arm2Position=43;
+                    arm2Position=45;
                     wristPosition=0.59;
                     armSpeed = 0.85;
                 }

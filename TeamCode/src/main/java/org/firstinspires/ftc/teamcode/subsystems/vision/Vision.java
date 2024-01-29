@@ -59,7 +59,7 @@ public class Vision
     public static final double[] yellowPixelColorThresholds = {150.0, 250.0, 110.0, 160.0, 20.0, 100.0};
     public static final double[] whitePixelColorThresholds = {245.0, 250.0, 100.0, 130.0, 120.0, 140.0};
     public static final double[] redBlobColorThresholds = {20.0, 120.0, 180.0, 240.0, 90.0, 120.0};
-    public static final double[] blueBlobColorThresholds = {20.0, 250.0, 40.0, 250.0, 160.0, 240.0};
+    public static final double[] blueBlobColorThresholds = {20.0, 240.0, 40.0, 254.0, 160.0, 240.0};
 //    // HSV Color Space.
 //    private static final int colorConversion = Imgproc.COLOR_RGB2HSV_FULL;
 //    private static final double[] purplePixelColorThresholds = {170.0, 200.0, 40.0, 160.0, 100.0, 255.0};
@@ -85,7 +85,7 @@ public class Vision
             .setHeightRange(20.0, 1000.0)
             .setSolidityRange(0.0, 100.0)
             .setVerticesRange(0.0, 1000.0)
-            .setAspectRatioRange(0.8, 1.25);
+            .setAspectRatioRange(0.75, 1.25);
 
 //    private FtcRawEocvColorBlobPipeline rawColorBlobPipeline;
 //    public FtcRawEocvVision rawColorBlobVision;
@@ -128,27 +128,27 @@ public class Vision
         {
             if (redBlobVision != null)
             {
-                teamPropInfo = redBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0);
+                teamPropInfo = redBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 6);
             }
         }
         else
         {
             if (blueBlobVision != null)
             {
-                teamPropInfo = blueBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 0.0);
+                teamPropInfo = blueBlobVision.getBestDetectedTargetInfo(null, null, 0.0, 6);
             }
         }
 
         if (teamPropInfo != null)
         {
             double teamPropXPos = teamPropInfo.rect.x + teamPropInfo.rect.width/2.0;
-            double oneThirdScreenWidth = RobotParams.CAM_IMAGE_WIDTH/2.0;
+            double oneHalfScreenWidth = RobotParams.CAM_IMAGE_WIDTH/2.0;
 
-            if (teamPropXPos < oneThirdScreenWidth)
+            if (teamPropXPos < oneHalfScreenWidth && teamPropXPos > 0)
             {
                 pos = 1;
             }
-            else if (teamPropXPos < oneThirdScreenWidth*2)
+            else if (teamPropXPos > oneHalfScreenWidth && teamPropXPos < oneHalfScreenWidth*2)
             {
                 pos = 2;
             }

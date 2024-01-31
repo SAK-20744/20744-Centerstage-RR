@@ -63,9 +63,9 @@ public class RobotParams {
     //
     // Vision subsystem.
     //
-    public static final int CAM_IMAGE_WIDTH = 640;
-    public static final int CAM_IMAGE_HEIGHT = 480;
-    public static final OpenCvCameraRotation CAM_ORIENTATION = OpenCvCameraRotation.UPRIGHT;
+    public static final int CAM_IMAGE_WIDTH = 480;
+    public static final int CAM_IMAGE_HEIGHT = 640;
+    public static final OpenCvCameraRotation CAM_ORIENTATION = OpenCvCameraRotation.SIDEWAYS_LEFT;
     // Camera location on robot.
     public static final double FRONTCAM_X_OFFSET = 0.0;
     public static final double FRONTCAM_Y_OFFSET = -(ROBOT_LENGTH / 2.0 - 2.5);

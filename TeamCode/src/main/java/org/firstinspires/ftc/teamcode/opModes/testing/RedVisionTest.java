@@ -88,6 +88,8 @@ public class RedVisionTest extends LinearOpMode {
         redBlobProcessor = redBlobVision.getVisionProcessor();
 //        visionProcessorsList.add(redBlobProcessor);
 
+
+
 //        blueBlobVision = new FtcVisionEocvColorBlob(
 //                "BlueBlob", colorConversion, blueBlobColorThresholds, blobFilterContourParams, true,
 //                cameraRect, worldRect, true);
@@ -143,7 +145,7 @@ public class RedVisionTest extends LinearOpMode {
         int pos = 0;
         TrcVisionTargetInfo<TrcOpenCvColorBlobPipeline.DetectedObject> teamPropInfo = null;
 
-        if (redBlobVision != null) {
+        if (redBlobProcessor     != null) {
             teamPropInfo = redBlobVision.getBestDetectedTargetInfo(null, null, 1.5, 6.0);
             telemetry.addData("redblobprocessor is not null", true);
         }

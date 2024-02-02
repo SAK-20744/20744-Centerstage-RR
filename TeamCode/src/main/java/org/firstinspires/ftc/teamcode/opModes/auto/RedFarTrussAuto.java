@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -185,7 +185,7 @@ public class RedFarTrussAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddle);
                 drive.followTrajectorySequence(toBoardLeft);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
@@ -222,7 +222,7 @@ public class RedFarTrussAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddle);
                 drive.followTrajectorySequence(toBoardCenter);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
@@ -259,7 +259,7 @@ public class RedFarTrussAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddle);
                 drive.followTrajectorySequence(toBoardRight);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);

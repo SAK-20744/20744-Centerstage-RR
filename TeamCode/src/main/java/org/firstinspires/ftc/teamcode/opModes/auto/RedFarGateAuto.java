@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -24,9 +23,8 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.subsystems.util.Encoder;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -68,7 +66,7 @@ public class RedFarGateAuto extends LinearOpMode {
 
         aprilTag = new AprilTagProcessor.Builder().build();
         aprilTag.setDecimation(2);
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        setManualExposure(5, 250);  // Use low exposure time to reduce motion blur
 
         propPipeline = new PropPipeline();
 
@@ -94,7 +92,7 @@ public class RedFarGateAuto extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+//        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
@@ -140,7 +138,7 @@ public class RedFarGateAuto extends LinearOpMode {
         Pose2d park = new Pose2d(50, -83, Math.toRadians(-90));
         Pose2d prepare = new Pose2d(53,-82,Math.toRadians(45));
 
-        double waitTime = 0;
+        double waitTime = 3;
 
         TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(firstTile)
@@ -192,14 +190,14 @@ public class RedFarGateAuto extends LinearOpMode {
                 sleep(350);
             }
             if(gamepad2.dpad_down) {
-                waitTime += 0.5;
+                waitTime -= 0.5;
                 sleep(350);
             }
 
             if(waitTime < 0)
                 waitTime = 0;
-            if(waitTime > 3.7)
-                waitTime = 3.7;
+            if(waitTime > 4)
+                waitTime = 4;
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
@@ -292,7 +290,7 @@ public class RedFarGateAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.68);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
@@ -334,7 +332,7 @@ public class RedFarGateAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.68);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 65);
                 intake.setPower(-1);
                 sleep(500);
@@ -376,7 +374,7 @@ public class RedFarGateAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.68);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);

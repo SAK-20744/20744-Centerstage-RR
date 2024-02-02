@@ -7,7 +7,8 @@ public class OutakeSingle {
     private Arm1 arm1;
     private Elbow arm2;
     private Wrist wrist;
-    private IVKMath ivk;
+    private BackdropIVK ivk;
+    private IVK myIVK;
 
     private double ServoArmDeg;
     private double MotorArmDeg;
@@ -37,7 +38,7 @@ public class OutakeSingle {
     public void BackdropHeight(double length, boolean intaking){
 
         myAngle = angle;
-        ivk = (new IVKMath(myAngle));
+        ivk = (new BackdropIVK(myAngle));
 
         if(length>max)
             length = max;
@@ -67,10 +68,61 @@ public class OutakeSingle {
 
     }
 
+    public void IVKtoXY(double X, double Y, boolean backdrop, boolean intaking, double speed){
+        myAngle = angle;
+        myIVK = (new IVK());
+
+        ServoArmDeg = myIVK.q2(X,Y);
+        MotorArmDeg = myIVK.q1(X,Y);
+        wristDeg = myIVK.q3(X,Y);
+
+        if(backdrop) {
+            wristPos = (wristDeg / 190);
+        }
+        else {
+            if (intaking)
+                wristDeg = 0;
+            else
+                wristDeg = 95;
+        }
+
+        ServoArmPos = -ServoArmDeg * 1000 / 90;
+        MotorArmPos = MotorArmDeg * -1000 / 90;
+
+        arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
+        arm2.ArmToPos((int)Math.round(ServoArmPos), speed);
+        wrist.setPos(wristPos);
+    };
+
+    public void IVKtoArmPoses(double arm1Pos, double arm2Pos, double wristPos, boolean useWrist, boolean intaking, double speed){
+        myAngle = angle;
+        myIVK = (new IVK());
+
+        ServoArmDeg = arm2Pos;
+        MotorArmDeg = arm1Pos;
+
+        if(useWrist) {
+            if (intaking) {
+                wristDeg = 0;
+                wristPos = (wristDeg / 190);
+            } else {
+                wristDeg = 95;
+                wristPos = (wristDeg / 190);
+            }
+        }
+
+        ServoArmPos = -ServoArmDeg * 1000 / 90;
+        MotorArmPos = MotorArmDeg * -1000 / 90;
+
+        arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
+        arm2.ArmToPos((int)Math.round(ServoArmPos), speed);
+        wrist.setPos(wristPos);
+    };
+
     public void BackdropHeightOffset10(double length, boolean intaking, boolean hang){
 
         myAngle = angle;
-        ivk = (new IVKMath(myAngle));
+        ivk = (new BackdropIVK(myAngle));
 
         if(length>offset10Max)
             length = offset10Max;
@@ -115,7 +167,7 @@ public class OutakeSingle {
             else
                 wristDeg = 95;
         }
-        ServoArmPos = -ServoArmDeg * 1000 / 90;
+        ServoArmPos = ServoArmDeg * -1000 / 90;
         MotorArmPos = MotorArmDeg * -1000 / 90;
         wristPos = (wristDeg/190);
 

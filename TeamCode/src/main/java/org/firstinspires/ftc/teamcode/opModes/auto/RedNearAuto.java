@@ -234,7 +234,7 @@ public class RedNearAuto extends LinearOpMode {
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike1);
-                wrist.setPosition(0.24);
+                wrist.setPosition(0.18);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -274,7 +274,7 @@ public class RedNearAuto extends LinearOpMode {
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
-                wrist.setPosition(0.24);
+                wrist.setPosition(0.18);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -314,7 +314,7 @@ public class RedNearAuto extends LinearOpMode {
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike3);
-                wrist.setPosition(0.24);
+                wrist.setPosition(0.18);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);

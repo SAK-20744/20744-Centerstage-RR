@@ -17,6 +17,7 @@ buildscript {
         google()
         flatDir {
             dirs 'libs', 'C:\\Users\\Robot\\navx-mxp\\android\\libs'
+//            dirs 'libs', 'C:\\Users\\arunk\\navx-mxp\\android\\libs'
         }
     }
     dependencies {

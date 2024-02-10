@@ -174,6 +174,9 @@ public class RedFarTrussAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toSpike1);
                 wrist.setPosition(0.24);
                 sleep(500);
+
+                wrist.setPosition(0.24);
+
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
@@ -211,6 +214,9 @@ public class RedFarTrussAuto extends LinearOpMode {
                 drive.followTrajectorySequence(lineToFirstTile);
                 drive.followTrajectorySequence(toSpike2);
                 sleep(500);
+
+                wrist.setPosition(0.24);
+
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
@@ -248,6 +254,9 @@ public class RedFarTrussAuto extends LinearOpMode {
                 drive.followTrajectorySequence(lineToFirstTile);
                 drive.followTrajectorySequence(toSpike3);
                 sleep(500);
+
+                wrist.setPosition(0.24);
+
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);

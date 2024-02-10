@@ -269,11 +269,18 @@ public class RedFarGateAuto extends LinearOpMode {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
+
+
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike1);
                 wrist.setPosition(0.24);
                 sleep(500);
+
+                wrist.setPosition(0.24);
+
                 door.setPosition(0.1);
+
+//                door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);
@@ -312,10 +319,17 @@ public class RedFarGateAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
+
+
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike2);
                 sleep(500);
+
+                wrist.setPosition(0.24);
+
                 door.setPosition(0.1);
+
+//                door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);
@@ -357,7 +371,12 @@ public class RedFarGateAuto extends LinearOpMode {
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike3);
                 sleep(500);
+
+                wrist.setPosition(0.24);
+
                 door.setPosition(0.1);
+
+
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);

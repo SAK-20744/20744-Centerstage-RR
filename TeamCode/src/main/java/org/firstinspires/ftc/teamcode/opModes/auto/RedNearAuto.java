@@ -124,9 +124,9 @@ public class RedNearAuto extends LinearOpMode {
 
         Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
         Pose2d MiddleTileRight = new Pose2d(10, -4, Math.toRadians(0));
-        Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(28, -13.75, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(29.5, -4, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(29, 2, Math.toRadians(90));
+        Pose2d spike1 = new Pose2d(27.75, 2, Math.toRadians(90));
         Pose2d aprilTagPose = new Pose2d(26, -25, Math.toRadians(-90));
         Pose2d boardRight = new Pose2d(18.5, -27.7, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(26, -27.65, Math.toRadians(-90));
@@ -223,7 +223,7 @@ public class RedNearAuto extends LinearOpMode {
             wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(160, 1);
+            arm2.ArmToPos(210, 1);
 
             portal.setProcessorEnabled(aprilTag, true);
 
@@ -234,7 +234,7 @@ public class RedNearAuto extends LinearOpMode {
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike1);
-                wrist.setPosition(0.24);
+                wrist.setPosition(0.18);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -274,7 +274,7 @@ public class RedNearAuto extends LinearOpMode {
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
-                wrist.setPosition(0.24);
+                wrist.setPosition(0.18);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -314,7 +314,7 @@ public class RedNearAuto extends LinearOpMode {
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike3);
-                wrist.setPosition(0.24);
+                wrist.setPosition(0.18);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);

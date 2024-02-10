@@ -223,7 +223,7 @@ public class BlueNearAuto extends LinearOpMode {
             wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(160, 1);
+            arm2.ArmToPos(210, 1);
 
             portal.setProcessorEnabled(aprilTag, true);
 

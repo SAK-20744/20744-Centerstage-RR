@@ -251,10 +251,10 @@ public class BlueFarGateAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.24);
+            wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(160, 1);
+            arm2.ArmToPos(210, 1);
 
             if (location == LEFT) {
                 // Movements for left spot
@@ -264,8 +264,9 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike1);
+                wrist.setPosition(0.24);
                 sleep(500);
-                door.setPosition(0.1); // door is the backdoor: 0.1 is closed, and 0.95 is open
+                door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);

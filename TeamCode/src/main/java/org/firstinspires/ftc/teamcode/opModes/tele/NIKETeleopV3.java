@@ -339,57 +339,57 @@ public class NIKETeleopV3 extends LinearOpMode {
                     door.setPosition(0.95);
 
                 if(pixelLevel == 1){
-                    arm1Position=73;
-                    arm2Position=58;
+                    arm1Position=97;
+                    arm2Position=24;
                     wristPosition=1.00;
                     armSpeed = 0.6;
                 }
                 else if(pixelLevel == 2){
-                    arm1Position=101;
-                    arm2Position=33;
-                    wristPosition=0.85;
+                    arm1Position=89;
+                    arm2Position=44;
+                    wristPosition=0.59;
                     armSpeed = 0.75;
                 }
                 else if(pixelLevel == 3){
-                    arm1Position=103;
-                    arm2Position=45;
-                    wristPosition=0.59;
+                    arm1Position=108;
+                    arm2Position=39;
+                    wristPosition=0.49;
                     armSpeed = 0.85;
                 }
                 else if(pixelLevel == 4){
-                    arm1Position=99;
-                    arm2Position=58;
-                    wristPosition=0.47;
+                    arm1Position=103;
+                    arm2Position=53;
+                    wristPosition=0.42;
                     armSpeed = 0.9;
                 }
                 else if(pixelLevel == 5){
-                    arm1Position=110;
-                    arm2Position=59;
-                    wristPosition=0.40;
+                    arm1Position=108;
+                    arm2Position=56;
+                    wristPosition=0.34;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 6){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 7){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 8){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 9){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
 

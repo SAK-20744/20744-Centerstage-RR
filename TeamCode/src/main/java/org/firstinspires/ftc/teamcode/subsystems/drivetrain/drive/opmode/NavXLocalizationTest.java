@@ -45,8 +45,8 @@ public class NavXLocalizationTest extends LinearOpMode {
                     )
             );
 
-            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
-            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
+//            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
+//            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
             drive.update();
 
 

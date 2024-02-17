@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.DiffyWrist;
 public class DiffyWristTester extends LinearOpMode {
 
     private DiffyWrist diffyWrist;
-    public static double desiredPitch = 0;  // Example: 30 degrees
-    public static double desiredRoll = 180;
+    public static double desiredPitch = 30;  // Example: 30 degrees
+    public static double desiredRoll = 90;
 
 //    public static MultipleTelemetry telemetry;
 

@@ -34,21 +34,21 @@ public class DiffyWrist {
 
     private boolean moving, rightMoving, leftMoving;
 
-    public static double p = 0.0077875;
-    public static double i = 0.0145;
+    public static double p = 0.009;
+    public static double i = 0.01;
     public static double d = 0;
-    public static double f = 0;
+    public static double f = 0.0075;
 
-    public static double range = 1;
+    public static double range = 5;
 
     private double lastLeftPos, lastRightPos, currentLeftPos, currentRightPos, deltaLeftPos, deltaRightPos, universalRightPos, universalLeftPos;
 
     public DiffyWrist(HardwareMap hardwareMap) {
 
-        leftServo = hardwareMap.crservo.get("leftServo");
-        rightServo = hardwareMap.crservo.get("rightServo");
-        leftEncoder = hardwareMap.analogInput.get("leftEncoder");
-        rightEncoder = hardwareMap.analogInput.get("rightEncoder");
+        leftServo = hardwareMap.crservo.get("rightServo");
+        rightServo = hardwareMap.crservo.get("leftServo");
+        leftEncoder = hardwareMap.analogInput.get("rightEncoder");
+        rightEncoder = hardwareMap.analogInput.get("leftEncoder");
 
         controller = new PIDFController(p, i, d, f);
     }
@@ -165,6 +165,10 @@ public class DiffyWrist {
 
     public void runToProfile(double desiredRoll, double desiredPitch) {
         // Set your target angles based on desiredPitch and desiredRoll
+
+        desiredPitch = -desiredPitch;
+        desiredRoll = desiredRoll;
+
         targetLeft =  desiredPitch + desiredRoll;
         targetRight = desiredPitch - desiredRoll;
 

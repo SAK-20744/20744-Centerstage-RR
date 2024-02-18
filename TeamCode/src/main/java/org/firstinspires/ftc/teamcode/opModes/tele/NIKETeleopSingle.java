@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Outake;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.OutakeSingle;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.OutakeSinglePreDiffy;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 
 @Config
@@ -63,7 +64,7 @@ public class NIKETeleopSingle extends LinearOpMode {
         arm1 = (new Arm1(hardwareMap));
         arm2 = new Elbow(hardwareMap);
 
-        OutakeSingle outake = new OutakeSingle(hardwareMap);
+        OutakeSinglePreDiffy outake = new OutakeSinglePreDiffy(hardwareMap);
 
         IMU imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(

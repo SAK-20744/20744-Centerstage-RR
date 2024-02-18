@@ -36,7 +36,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(0, 0);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
@@ -52,7 +52,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(0, 180);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
@@ -68,7 +68,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(90, 180);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
@@ -84,7 +84,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(-90, 180);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
@@ -100,7 +100,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(45, 0);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
@@ -116,7 +116,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(75, 45);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
@@ -132,7 +132,7 @@ public class DiffyAutoTesting extends LinearOpMode {
             diffyWrist.runToProfile(-45, 135);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());

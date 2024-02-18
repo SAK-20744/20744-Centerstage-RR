@@ -30,7 +30,7 @@ public class DIffy2Tester extends LinearOpMode {
 //            diffyWrist.updateServoArm();
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());

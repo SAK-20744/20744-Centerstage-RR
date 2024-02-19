@@ -8,7 +8,7 @@ public class OutakeSingle {
 
     private Arm1 arm1;
     private Elbow arm2;
-    public DiffyWrist wrist;
+    public ServoDiffyWrist wrist;
     private BackdropIVK ivk;
     private IVK myIVK;
 
@@ -34,7 +34,7 @@ public class OutakeSingle {
     public OutakeSingle(HardwareMap hardwareMap) {
         arm1 = (new Arm1(hardwareMap));
         arm2 = new Elbow(hardwareMap);
-        wrist = (new DiffyWrist(hardwareMap));
+        wrist = (new ServoDiffyWrist(hardwareMap));
     }
 //
 //    public void BackdropHeight(double length, boolean intaking){
@@ -96,22 +96,34 @@ public class OutakeSingle {
 //        wrist.setPos(wristPos);
 //    };
 
-    public void IVKtoArmPoses(double arm1Pos, double arm2Pos, double wristPos, boolean useWrist, boolean intaking, double speed){
+    public void IVKtoArmPoses(double arm1Pos, double arm2Pos, double wristPos, boolean useWrist, boolean extended, boolean intaking, double speed){
         myAngle = angle;
         myIVK = (new IVK());
 
         ServoArmDeg = arm2Pos;
         MotorArmDeg = arm1Pos;
 
+        double rotated = 0;
+
         if(useWrist) {
             if (intaking) {
 //                wristDeg = 0;
-                wristPos = -30;
+                wristPos = 4;
 //                wristPos = (wristDeg / 190);
             } else {
 //                wristDeg = 95;
-                wristPos = 75;
+                wristPos = -125;
 //                wristPos = (wristDeg / 190);
+            }
+        }
+
+        if(extended) {
+            if (intaking) {
+                wristPos = -125;
+                rotated = -235;
+            } else {
+                wristPos = 50;
+                rotated = -225;
             }
         }
 
@@ -120,7 +132,7 @@ public class OutakeSingle {
 
         arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
         arm2.ArmToPos((int)Math.round(ServoArmPos), speed);
-        wrist.runToProfile(wristPos, -90);
+        wrist.runToProfile(wristPos, rotated);
 //        while(wrist.isBusy()) {
 //            wrist.updateDiffy();
 //            telemetry.addData("leftPos: ", wrist.getLeftPosition());
@@ -214,9 +226,7 @@ public class OutakeSingle {
     public double getWristPos() {
         return wristPos;
     }
-    public boolean ivkWristBusy() {
-        return wrist.isBusy();
-    };
+
 
 //    public double getA1(double length) {
 //        return ivk.getA1(length);

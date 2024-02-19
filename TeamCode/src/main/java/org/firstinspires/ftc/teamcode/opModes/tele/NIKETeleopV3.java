@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Config
+@Disabled
 @TeleOp(name= "NIKE Teleop V3" , group = "advanced")
 public class NIKETeleopV3 extends LinearOpMode {
 
@@ -395,7 +397,7 @@ public class NIKETeleopV3 extends LinearOpMode {
 
             }
 
-            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
+//            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
 
             telemetry.addData("Pixel Level:", pixelLevel);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());

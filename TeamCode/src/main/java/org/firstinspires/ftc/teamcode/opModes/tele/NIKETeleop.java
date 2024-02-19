@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumD
 
 @Disabled
 @Config
-@TeleOp(name= "NIKE Teleop" , group = "advanced")
+@TeleOp(name= "NIKE Teleop Old" , group = "advanced")
 public class NIKETeleop extends LinearOpMode {
 
     public static double SPEED = 0.8;

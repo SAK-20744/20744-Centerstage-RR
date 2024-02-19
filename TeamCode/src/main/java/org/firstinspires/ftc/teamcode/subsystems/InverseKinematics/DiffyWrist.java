@@ -34,19 +34,22 @@ public class DiffyWrist {
 
     private boolean moving, rightMoving, leftMoving;
 
-    public static double pL = 0.0086;
-    public static double iL = 0.02  ;
+    public static double pL = 0.015;
+    public static double iL = 0.015  ;
     public static double dL = 0;
     public static double fL = 0;
 
-    public static double pR = 0.01;
-    public static double iR = 0.05;
+    public static double pR = 0.015;
+    public static double iR = 0.0275;
     public static double dR = 0;
-    public static double fR = 0.015;
+    public static double fR = 0;
 
     public static double range = 5;
     public static double idealRange = 1.5;
     public static double offset = -13.5;
+
+    public static double leftFeedforward = -0.025;
+    public static double rightFeedforward = 0.0375;
 
     private double lastLeftPos, lastRightPos, currentLeftPos, currentRightPos, deltaLeftPos, deltaRightPos, universalRightPos, universalLeftPos;
 
@@ -128,6 +131,16 @@ public class DiffyWrist {
 //
         double leftPower = leftController.calculate(leftError, 0);
         double rightPower = rightController.calculate(rightError, 0);
+        
+        if(leftPower>0)
+            leftPower += leftFeedforward;
+        else
+            leftPower -= leftFeedforward;
+
+        if(rightPower>0)
+            rightPower += rightFeedforward;
+        else
+            rightPower -= rightFeedforward;
 
 //        double rightPower = controller.calculate(correctedRightPosition, targetRight);
 //        double leftPower = controller.calculate(correctedLeftPosition, targetLeft);

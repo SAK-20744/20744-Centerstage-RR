@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.vision.Vision.yellowPixe
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -31,7 +32,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.concurrent.TimeUnit;
 
-//@Disabled
+@Disabled
 @Autonomous(name = "RedVisionTest")
 public class RedVisionTest extends LinearOpMode {
 

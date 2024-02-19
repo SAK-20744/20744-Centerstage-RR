@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 @Config
+@Disabled
 @TeleOp(name= "NIKE Teleop Diffy" , group = "advanced")
 public class NIKETeleopDiffy extends LinearOpMode {
 
@@ -287,7 +289,7 @@ public class NIKETeleopDiffy extends LinearOpMode {
                 useWrist = true;
                 backdrop = false;
                 arm1Position=177;
-                arm2Position=-18;
+                arm2Position=-16;
                 armSpeed = 0.7;
             }
 
@@ -413,8 +415,8 @@ public class NIKETeleopDiffy extends LinearOpMode {
 
             }
 
-            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
-            outake.wrist.updateDiffy();
+//            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
+//            outake.wrist.updateDiffy();
 
 //            while(outake.ivkWristBusy() && !isStopRequested() ) {
 //                diffyWrist.updateDiffy();

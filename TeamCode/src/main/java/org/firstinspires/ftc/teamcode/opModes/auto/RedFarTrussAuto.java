@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,6 +29,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
+@Disabled
 @Autonomous(name = "Red Far Truss 2+0")
 public class RedFarTrussAuto extends LinearOpMode {
 

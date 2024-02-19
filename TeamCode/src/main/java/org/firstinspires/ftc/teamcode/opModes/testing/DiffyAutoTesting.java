@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.opModes.testing;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.DiffyWrist;
 
-//@Disabled
+@Disabled
 @Autonomous(name = "Diffy Test Auto")
 public class DiffyAutoTesting extends LinearOpMode {
 

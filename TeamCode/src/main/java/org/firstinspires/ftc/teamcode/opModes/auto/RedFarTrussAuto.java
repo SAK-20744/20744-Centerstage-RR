@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Disabled
-@Autonomous(name = "Red Far Truss 2+0")
+@Autonomous(name = "Old Red Far Truss 2+0")
 public class RedFarTrussAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;

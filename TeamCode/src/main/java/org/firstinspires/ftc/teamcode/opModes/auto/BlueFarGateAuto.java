@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Disabled
-@Autonomous(name = "Blue Far Gate 2+0")
+@Autonomous(name = "Old Blue Far Gate 2+0")
 public class BlueFarGateAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;

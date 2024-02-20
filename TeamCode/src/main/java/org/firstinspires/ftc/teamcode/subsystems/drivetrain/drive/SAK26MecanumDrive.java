@@ -95,7 +95,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
 //                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
 //        imu.initialize(parameters);
 
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData, (byte) 100);
 
 
         leftFront = hardwareMap.get(DcMotorEx.class, "fl");

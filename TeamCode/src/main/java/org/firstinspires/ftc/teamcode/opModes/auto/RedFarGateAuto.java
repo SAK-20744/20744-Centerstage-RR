@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Disabled
-@Autonomous(name = "Red Far Gate 2+0")
+@Autonomous(name = "Old Red Far Gate 2+0")
 public class RedFarGateAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;

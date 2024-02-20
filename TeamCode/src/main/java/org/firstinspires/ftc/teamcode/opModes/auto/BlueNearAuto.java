@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Disabled
-@Autonomous(name = "Blue Near 2+0")
+@Autonomous(name = "Old Blue Near 2+0")
 public class BlueNearAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;

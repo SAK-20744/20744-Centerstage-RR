@@ -15,6 +15,10 @@ buildscript {
     repositories {
         mavenCentral()
         google()
+        flatDir {
+            dirs 'libs', 'C:\\Users\\Robot\\navx-mxp\\android\\libs'
+//            dirs 'libs', 'C:\\Users\\arunk\\navx-mxp\\android\\libs'
+        }
     }
     dependencies {
         // Note for FTC Teams: Do not modify this yourself.
@@ -30,6 +34,7 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+
     }
 }
 

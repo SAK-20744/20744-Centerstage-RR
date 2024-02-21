@@ -53,6 +53,7 @@ MAGENTA = Parking Right
             upper_cyan_bounds    = new Scalar(60, 255, 255, 255),
             lower_magenta_bounds = new Scalar(155, 20, 60, 255),
             upper_magenta_bounds = new Scalar(255, 60, 100, 255);
+;
 
     // Color definitions
     private final Scalar
@@ -91,7 +92,7 @@ MAGENTA = Parking Right
 
         Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
 
-        Rect leftArea = new Rect(new Point(110,375), new Point(170,430));
+        Rect leftArea = new Rect(new Point(110,375), new Point(170,410));
         Rect middleArea = new Rect(new Point(445,380), new Point(480,445));
 
         // Noise reduction

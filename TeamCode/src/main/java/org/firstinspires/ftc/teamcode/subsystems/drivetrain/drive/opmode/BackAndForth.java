@@ -26,11 +26,11 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.FASTMecanumDri
  * is recommended that you use the FollowerPIDTuner opmode for further fine tuning.
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "drive")
 public class BackAndForth extends LinearOpMode {
 
-    public static double DISTANCE = 50;
+    public static double DISTANCE = 100;
 
     @Override
     public void runOpMode() throws InterruptedException {

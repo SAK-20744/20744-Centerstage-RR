@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.Arm1;
-import org.firstinspires.ftc.teamcode.subsystems.ServoArm;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoArm;
+import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 
 @Autonomous
 public class AutoStack extends LinearOpMode {

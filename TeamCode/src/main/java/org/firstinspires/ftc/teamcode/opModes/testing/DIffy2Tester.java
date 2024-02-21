@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.testing;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.DiffyWrist;
 
 @Config
 @TeleOp
+@Disabled
 public class DIffy2Tester extends LinearOpMode {
 
     private DiffyWrist diffyWrist;
@@ -30,7 +32,7 @@ public class DIffy2Tester extends LinearOpMode {
 //            diffyWrist.updateServoArm();
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());

@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -18,9 +19,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.DiffyWrist;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.OutakeSingle;
-import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoDiffyWrist;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SAK26MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -29,8 +30,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name= "NIKE Teleop" , group = "advanced")
-public class NIKETeleop extends LinearOpMode {
+@Disabled
+@TeleOp(name= "NIKE Teleop Diffy" , group = "advanced")
+public class NIKETeleopDiffy extends LinearOpMode {
 
     public static double SPEED = 0.8;
     public static double ELBOWSPEED = 1;
@@ -39,9 +41,8 @@ public class NIKETeleop extends LinearOpMode {
     private double armSpeed = 1;
     private boolean useWrist = true;
     private boolean backdrop = false;
-    private boolean extendoMode = false;
 
-    private ServoDiffyWrist diffyWrist;
+    private DiffyWrist diffyWrist;
 
     private double boardIMU = 0;
     private double pixelLevel = 1;
@@ -109,7 +110,7 @@ public class NIKETeleop extends LinearOpMode {
         boolean intaking = false;
         boolean hanging = false;
 
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData, (byte)120);
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
 
         SAK26MecanumDrive drive = new SAK26MecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -136,7 +137,7 @@ public class NIKETeleop extends LinearOpMode {
 
         OutakeSingle outake = new OutakeSingle(hardwareMap);
 
-        diffyWrist = new ServoDiffyWrist(hardwareMap);
+        diffyWrist = new DiffyWrist(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 //        IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -156,7 +157,6 @@ public class NIKETeleop extends LinearOpMode {
 
         useWrist = true;
         backdrop = false;
-        extendoMode = false;
         arm1Position=178;
         arm2Position=-30;
 
@@ -288,25 +288,13 @@ public class NIKETeleop extends LinearOpMode {
                 //Intaking
                 useWrist = true;
                 backdrop = false;
-                extendoMode = false;
                 arm1Position=177;
-                arm2Position=-14;
-                armSpeed = 0.7;
-            }
-
-            if(gamepad2.b){
-                //extended Intaking
-                useWrist = false;
-                backdrop = false;
-                extendoMode = true;
-                arm1Position=177;
-                arm2Position=180;
+                arm2Position=-16;
                 armSpeed = 0.7;
             }
 
             if(gamepad1.b) {
                 backdrop = true;
-                extendoMode = false;
                 if(pixelLevel < 1)
                     pixelLevel = 1;
                 if(pixelLevel > 9)
@@ -316,7 +304,6 @@ public class NIKETeleop extends LinearOpMode {
             if(gamepad2.y){
                 //Pre-Hang
                 backdrop = false;
-                extendoMode = false;
                 intaking = false;
                 useWrist = false;
                 arm1Position=83;
@@ -328,11 +315,10 @@ public class NIKETeleop extends LinearOpMode {
                 //Hang
                 backdrop = false;
                 intaking = false;
-                extendoMode = false;
                 useWrist = false;
                 arm1Position=115;
                 arm2Position=152;
-                wristPosition=0;
+                wristPosition=0.8;
                 armSpeed = 1;
             }
 
@@ -352,7 +338,6 @@ public class NIKETeleop extends LinearOpMode {
                 //Scoring
                 intaking = false;
                 useWrist = false;
-                extendoMode = false;
 
                 if(gamepad2.dpad_down) {
                     pixelLevel -= 1;
@@ -374,63 +359,63 @@ public class NIKETeleop extends LinearOpMode {
                     door.setPosition(0.95);
 
                 if(pixelLevel == 1){
-                    arm1Position=105;
-                    arm2Position=35;
-                    wristPosition=-115;
+                    arm1Position=97;
+                    arm2Position=24;
+                    wristPosition=70;
                     armSpeed = 0.6;
                 }
                 else if(pixelLevel == 2){
-                    arm1Position=108;
-                    arm2Position=40;
-                    wristPosition=-102;
+                    arm1Position=89;
+                    arm2Position=44;
+                    wristPosition=65;
                     armSpeed = 0.75;
                 }
                 else if(pixelLevel == 3){
-                    arm1Position=126;
-                    arm2Position=48;
-                    wristPosition=-85;
+                    arm1Position=108;
+                    arm2Position=39;
+                    wristPosition=60;
                     armSpeed = 0.85;
                 }
                 else if(pixelLevel == 4){
-                    arm1Position=121;
-                    arm2Position=52;
-                    wristPosition=-85;
+                    arm1Position=103;
+                    arm2Position=53;
+                    wristPosition=55;
                     armSpeed = 0.9;
                 }
                 else if(pixelLevel == 5){
-                    arm1Position=114;
-                    arm2Position=66;
-                    wristPosition=-75;
+                    arm1Position=108;
+                    arm2Position=56;
+                    wristPosition=50;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 6){
-                    arm1Position=99;
-                    arm2Position=88;
-                    wristPosition=-75;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=45;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 7){
                     arm1Position=104;
-                    arm2Position=78;
-                    wristPosition=-70;
+                    arm2Position=68;
+                    wristPosition=40;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 8){
-                    arm1Position=90;
-                    arm2Position=112;
-                    wristPosition=-65;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=35;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 9){
-                    arm1Position=90;
-                    arm2Position=120;
-                    wristPosition=-32;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=30;
                     armSpeed = 1;
                 }
 
             }
 
-            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, extendoMode, intaking,armSpeed);
+//            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
 //            outake.wrist.updateDiffy();
 
 //            while(outake.ivkWristBusy() && !isStopRequested() ) {

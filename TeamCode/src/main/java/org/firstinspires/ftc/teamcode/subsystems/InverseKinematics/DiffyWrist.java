@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
@@ -22,7 +21,8 @@ public class DiffyWrist {
     private double desiredPitch = 0.0;  // Set your desired pitch angle
     private double desiredRoll = 180;   // Set your desired roll angle
 
-    private PIDFController controller;
+    private PIDFController leftController;
+    private PIDFController rightController;
 
     private double leftPos;
     private double rightPos;
@@ -34,26 +34,37 @@ public class DiffyWrist {
 
     private boolean moving, rightMoving, leftMoving;
 
-    public static double p = 0.0077875;
-    public static double i = 0.0145;
-    public static double d = 0;
-    public static double f = 0;
+    public static double pL = 0.015;
+    public static double iL = 0.015  ;
+    public static double dL = 0;
+    public static double fL = 0;
 
-    public static double range = 1;
+    public static double pR = 0.015;
+    public static double iR = 0.0275;
+    public static double dR = 0;
+    public static double fR = 0;
+
+    public static double range = 5;
+    public static double idealRange = 1.5;
+    public static double offset = -13.5;
+
+    public static double leftFeedforward = -0.025;
+    public static double rightFeedforward = 0.0375;
 
     private double lastLeftPos, lastRightPos, currentLeftPos, currentRightPos, deltaLeftPos, deltaRightPos, universalRightPos, universalLeftPos;
 
     public DiffyWrist(HardwareMap hardwareMap) {
 
-        leftServo = hardwareMap.crservo.get("leftServo");
-        rightServo = hardwareMap.crservo.get("rightServo");
-        leftEncoder = hardwareMap.analogInput.get("leftEncoder");
-        rightEncoder = hardwareMap.analogInput.get("rightEncoder");
+        leftServo = hardwareMap.crservo.get("rightServo");
+        rightServo = hardwareMap.crservo.get("leftServo");
+        leftEncoder = hardwareMap.analogInput.get("rightEncoder");
+        rightEncoder = hardwareMap.analogInput.get("leftEncoder");
 
-        controller = new PIDFController(p, i, d, f);
+        leftController = new PIDFController(pL, iL, dL, fL);
+        rightController = new PIDFController(pR, iR, dR, fR);
     }
 
-    public boolean updateServoArm() {
+    public boolean updateDiffy() {
 
         lastLeftPos = currentLeftPos;
         lastRightPos = currentRightPos;
@@ -118,25 +129,54 @@ public class DiffyWrist {
         double leftError = targetLeft - correctedLeftPosition;
         double rightError = targetRight - correctedRightPosition;
 //
-        double leftPower = controller.calculate(leftError, 0);
-        double rightPower = controller.calculate(rightError, 0);
+        double leftPower = leftController.calculate(leftError, 0);
+        double rightPower = rightController.calculate(rightError, 0);
+        
+        if(leftPower>0)
+            leftPower += leftFeedforward;
+        else
+            leftPower -= leftFeedforward;
+
+        if(rightPower>0)
+            rightPower += rightFeedforward;
+        else
+            rightPower -= rightFeedforward;
 
 //        double rightPower = controller.calculate(correctedRightPosition, targetRight);
 //        double leftPower = controller.calculate(correctedLeftPosition, targetLeft);
 //
         if (moving) {
             if(leftMoving) {
-                if (((targetLeft - range) <= correctedLeftPosition) && (correctedLeftPosition <= (targetLeft + range))) {
+                if (((targetLeft - idealRange) <= correctedLeftPosition) && (correctedLeftPosition <= (targetLeft + idealRange))) {
                     leftPower = 0;
                     leftMoving = false;
                 }
+                else if (((targetLeft - range) <= correctedLeftPosition) && (correctedLeftPosition <= (targetLeft + range))) {
+                    leftMoving = false;
+                }
+                else{
+                    leftMoving = true;
+                }
             }
             if(rightMoving) {
-                if (((targetRight - range) <= correctedRightPosition) && (correctedRightPosition <= (targetRight + range))) {
+                if (((targetRight - idealRange) <= correctedRightPosition) && (correctedRightPosition <= (targetRight + idealRange))) {
                     rightPower = 0;
                     rightMoving = false;
                 }
+                else if (((targetRight - range) <= correctedRightPosition) && (correctedRightPosition <= (targetRight + range))) {
+                    rightMoving = false;
+                }
+                else {
+                    rightMoving = true;
+                }
             }
+        }
+        else {
+            rightPower = 0;
+            leftPower = 0;
+            moving = false;
+            rightMoving = false;
+            leftMoving = false;
         }
 
         if(rightMoving || leftMoving)
@@ -144,10 +184,11 @@ public class DiffyWrist {
         else
             moving = false;
 
-        leftServo.setPower(leftPower);
         rightServo.setPower(rightPower);
+        leftServo.setPower(leftPower);
 
         return moving;
+
     }
 
 //    public void updateServoArm() {
@@ -165,6 +206,10 @@ public class DiffyWrist {
 
     public void runToProfile(double desiredRoll, double desiredPitch) {
         // Set your target angles based on desiredPitch and desiredRoll
+
+        desiredPitch = -(desiredPitch - offset);
+        desiredRoll = -(desiredRoll);
+
         targetLeft =  desiredPitch + desiredRoll;
         targetRight = desiredPitch - desiredRoll;
 

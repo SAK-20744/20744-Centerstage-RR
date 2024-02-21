@@ -31,7 +31,7 @@ public class ArmPosTester extends LinearOpMode {
 
         CRServo intake;
         Servo door;
-        Servo wrist;
+//        Servo wrist;
         Servo plane;
 
         Arm1 arm1;
@@ -55,7 +55,7 @@ public class ArmPosTester extends LinearOpMode {
         elbow = hardwareMap.get(DcMotor.class, "elbow");
         intake = hardwareMap.get(CRServo.class, "intake");
         door = hardwareMap.get(Servo.class, "door");
-        wrist = hardwareMap.get(Servo.class, "wrist");
+//        wrist = hardwareMap.get(Servo.class, "wrist");
         plane = hardwareMap.get(Servo.class, "plane");
 
         arm1 = (new Arm1(hardwareMap));
@@ -77,7 +77,7 @@ public class ArmPosTester extends LinearOpMode {
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
-            wrist.setPosition(0.63);
+//            wrist.setPosition(0.63);
 
 //            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
 //            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
@@ -113,11 +113,11 @@ public class ArmPosTester extends LinearOpMode {
 
             wristservoposition = Math.min(Math.max(wristservoposition, 0), 1);
             telemetry.addData("servoPosition", wristservoposition);
-            wrist.setPosition(wristservoposition);
+//            wrist.setPosition(wristservoposition);
 
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
-            telemetry.addData("Wrist Pos", wrist.getPosition());
+//            telemetry.addData("Wrist Pos", wrist.getPosition());
             arm1Deg = (left_lift.getCurrentPosition()/(-1000 / 90));
             arm2Deg = (elbow.getCurrentPosition()/(-1000 / 90));
             telemetry.addData("Arm1 Degrees", arm1Deg);

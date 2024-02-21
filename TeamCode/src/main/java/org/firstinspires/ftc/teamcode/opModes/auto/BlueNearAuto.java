@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -33,7 +34,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Blue Near 2+0")
+@Disabled
+@Autonomous(name = "Old Blue Near 2+0")
 public class BlueNearAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
@@ -223,7 +225,7 @@ public class BlueNearAuto extends LinearOpMode {
             wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(160, 1);
+            arm2.ArmToPos(210, 1);
 
             portal.setProcessorEnabled(aprilTag, true);
 

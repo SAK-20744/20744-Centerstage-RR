@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,7 +31,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Blue Far Truss 2+0")
+@Disabled
+@Autonomous(name = "Old Blue Far Truss 2+0")
 public class BlueFarTrussAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
@@ -169,10 +171,10 @@ public class BlueFarTrussAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.24);
+            wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(160, 1);
+            arm2.ArmToPos(210, 1);
 
             if (location == LEFT) {
                 // Movements for left spot
@@ -181,6 +183,7 @@ public class BlueFarTrussAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(lineToFirstTile);
                 drive.followTrajectorySequence(toSpike1);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);

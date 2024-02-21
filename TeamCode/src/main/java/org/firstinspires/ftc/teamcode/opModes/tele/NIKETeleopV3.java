@@ -4,8 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
-//import com.kauailabs.navx.ftc.AHRS;
+import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Config
+@Disabled
 @TeleOp(name= "NIKE Teleop V3" , group = "advanced")
 public class NIKETeleopV3 extends LinearOpMode {
 
@@ -43,7 +45,7 @@ public class NIKETeleopV3 extends LinearOpMode {
     private double pixelLevel = 1;
 
     private double height = 0;
-    //private AHRS navx_device;
+    private AHRS navx_device;
 
     public static double pX = 0.045, iX = 0.02, dX = 0.05;
     public static double pY = 0.055, iY = 0, dY = 0.35;
@@ -105,7 +107,7 @@ public class NIKETeleopV3 extends LinearOpMode {
         boolean intaking = false;
         boolean hanging = false;
 
-        //navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
 
         SAK26MecanumDrive drive = new SAK26MecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -341,7 +343,7 @@ public class NIKETeleopV3 extends LinearOpMode {
                 if(pixelLevel == 1){
                     arm1Position=97;
                     arm2Position=24;
-                    wristPosition=1;
+                    wristPosition=1.00;
                     armSpeed = 0.6;
                 }
                 else if(pixelLevel == 2){
@@ -375,27 +377,27 @@ public class NIKETeleopV3 extends LinearOpMode {
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 7){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 8){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 9){
-                    arm1Position=107;
-                    arm2Position=69;
-                    wristPosition=0.33;
+                    arm1Position=104;
+                    arm2Position=68;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
 
             }
 
-            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
+//            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
 
             telemetry.addData("Pixel Level:", pixelLevel);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());

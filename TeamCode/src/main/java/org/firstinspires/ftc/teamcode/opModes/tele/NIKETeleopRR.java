@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumD
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 
 @Config
+@Disabled
 @TeleOp(name= "NIKE Teleop RR" , group = "advanced")
 public class NIKETeleopRR extends LinearOpMode {
 

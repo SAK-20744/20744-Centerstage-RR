@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,7 +31,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Blue Far Gate 2+0")
+@Disabled
+@Autonomous(name = "Old Blue Far Gate 2+0")
 public class BlueFarGateAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
@@ -251,10 +253,10 @@ public class BlueFarGateAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.24);
+            wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(160, 1);
+            arm2.ArmToPos(210, 1);
 
             if (location == LEFT) {
                 // Movements for left spot
@@ -264,8 +266,9 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike1);
+                wrist.setPosition(0.24);
                 sleep(500);
-                door.setPosition(0.1); // door is the backdoor: 0.1 is closed, and 0.95 is open
+                door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);

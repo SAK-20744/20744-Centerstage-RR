@@ -46,8 +46,8 @@ public class FASTDriveConstants {
      */
 //    public static double WHEEL_RADIUS = 1.88976378; // in
     public static double WHEEL_RADIUS = 0.68897638; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 20; // in
+    public static double GEAR_RATIO = 0.9943; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 20.97; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -55,9 +55,9 @@ public class FASTDriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.0147;
-    public static double kA = 0.0028;
-    public static double kStatic = 0.004;
+    public static double kV = 0.0136 ;
+    public static double kA = 0.0037;
+    public static double kStatic = 0.0054;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -66,10 +66,10 @@ public class FASTDriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 80;
+    public static double MAX_VEL = 70;
     public static double MAX_ACCEL = 45;
-    public static double MAX_ANG_VEL = 2.4180677413940432;
-    public static double MAX_ANG_ACCEL = Math.toRadians(60);
+    public static double MAX_ANG_VEL = 3;
+    public static double MAX_ANG_ACCEL = 1.76;
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.

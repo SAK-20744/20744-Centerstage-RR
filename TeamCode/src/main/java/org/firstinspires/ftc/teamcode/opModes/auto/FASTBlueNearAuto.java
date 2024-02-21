@@ -9,7 +9,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
-import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.FASTMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location;
@@ -34,9 +33,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Disabled
-@Autonomous(name = "Old Blue Near 2+0")
-public class BlueNearAuto extends LinearOpMode {
+@Autonomous(name = "FAST Blue Near 2+0")
+public class FASTBlueNearAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
     private VisionPortal portal;
@@ -113,7 +111,7 @@ public class BlueNearAuto extends LinearOpMode {
 
 
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        FASTMecanumDrive drive = new FASTMecanumDrive(hardwareMap);
         Arm1 arm1 = (new Arm1(hardwareMap));
         Elbow arm2 = new Elbow(hardwareMap);
 
@@ -253,9 +251,8 @@ public class BlueNearAuto extends LinearOpMode {
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
                 arm1.ArmToPos(-664, 0.5);
-//                wrist.setPosition(0.8);
-                wrist.setPosition(1);
-                arm2.ArmToPos(-807, 0.65);
+                wrist.setPosition(0.8);
+                arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);

@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.FASTDriveConstants;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.FASTMecanumDrive;
 
 import java.util.Objects;
@@ -30,17 +30,17 @@ import java.util.Objects;
  * you are using the Control Hub. Once you've successfully connected, start the program, and your
  * robot will begin moving forward and backward according to a motion profile. Your job is to graph
  * the velocity errors over time and adjust the feedforward coefficients. Once you've found a
- * satisfactory set of gains, add them to the appropriate fields in the DriveConstants.java file.
+ * satisfactory set of gains, add them to the appropriate fields in the FASTDriveConstants.java file.
  *
  * Pressing Y/Δ (Xbox/PS4) will pause the tuning process and enter driver override, allowing the
  * user to reset the position of the bot in the event that it drifts off the path.
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
 @Config
-@Disabled
+//@Disabled
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 24; // in
+    public static double DISTANCE = 150; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -56,12 +56,12 @@ public class ManualFeedforwardTuner extends LinearOpMode {
     private static MotionProfile generateProfile(boolean movingForward) {
         MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
-        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, DriveConstants.MAX_VEL, DriveConstants.MAX_ACCEL);
+        return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, FASTDriveConstants.MAX_VEL, FASTDriveConstants.MAX_ACCEL);
     }
 
     @Override
     public void runOpMode() {
-        if (DriveConstants.RUN_USING_ENCODER) {
+        if (FASTDriveConstants.RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
         }
@@ -109,7 +109,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), DriveConstants.kV, DriveConstants.kA, DriveConstants.kStatic);
+                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), FASTDriveConstants.kV, FASTDriveConstants.kA, FASTDriveConstants.kStatic);
 
                     final double NOMINAL_VOLTAGE = 12.0;
                     final double voltage = voltageSensor.getVoltage();

@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.FASTMecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.util.Encoder;
 
 /**
@@ -21,14 +19,14 @@ import org.firstinspires.ftc.teamcode.subsystems.util.Encoder;
 //@Disabled
 
 @TeleOp(group = "drive")
-public class LocalizationTest extends LinearOpMode {
+public class FASTLocalizationTest extends LinearOpMode {
 
     private Encoder parallelEncoder;
     private Encoder perpendicularEncoder;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        FASTMecanumDrive drive = new FASTMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

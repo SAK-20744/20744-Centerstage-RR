@@ -387,14 +387,14 @@ public class NIKETeleop extends LinearOpMode {
                 }
                 else if(pixelLevel == 3){
                     arm1Position=126;
-                    arm2Position=48;
-                    wristPosition=-85;
+                    arm2Position=40;
+                    wristPosition=-75;
                     armSpeed = 0.85;
                 }
                 else if(pixelLevel == 4){
                     arm1Position=121;
-                    arm2Position=52;
-                    wristPosition=-85;
+                    arm2Position=47;
+                    wristPosition=-75;
                     armSpeed = 0.9;
                 }
                 else if(pixelLevel == 5){
@@ -411,7 +411,7 @@ public class NIKETeleop extends LinearOpMode {
                 }
                 else if(pixelLevel == 7){
                     arm1Position=104;
-                    arm2Position=78;
+                    arm2Position=85;
                     wristPosition=-70;
                     armSpeed = 1;
                 }

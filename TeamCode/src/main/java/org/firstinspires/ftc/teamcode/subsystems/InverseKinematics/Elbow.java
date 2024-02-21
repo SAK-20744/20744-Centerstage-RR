@@ -20,7 +20,7 @@ public class Elbow {
         elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public boolean updateArm1(){
+    public boolean updateElbow(){
         elbowPosition = elbow.getCurrentPosition();
 
         if (moving){

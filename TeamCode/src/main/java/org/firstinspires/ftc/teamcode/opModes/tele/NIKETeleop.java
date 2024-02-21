@@ -445,6 +445,9 @@ public class NIKETeleop extends LinearOpMode {
 //                telemetry.update();
 //            }
 
+            arm1.updateArm1();
+            arm2.updateElbow();
+
             telemetry.addData("Pixel Level:", pixelLevel);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());
             telemetry.addData("Arm1 Pos:" , outake.getMotorArmPos());
@@ -456,8 +459,6 @@ public class NIKETeleop extends LinearOpMode {
             double loop = System.nanoTime();
             telemetry.addData("hz ", 1000000000 / (loop - looptime));
             looptime = loop;
-
-
             telemetry.update();
         }
     }

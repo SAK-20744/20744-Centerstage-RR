@@ -1,13 +1,20 @@
 package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+@Config
 
 public class Elbow {
 
     private DcMotor elbow;
 
     private double elbowPosition;
+
+    public static double range = 10;
+
+    private double target;
 
     private double elbowPower = 0;
 
@@ -20,7 +27,7 @@ public class Elbow {
         elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public boolean updateArm1(){
+    public boolean updateElbow(){
         elbowPosition = elbow.getCurrentPosition();
 
         if (moving){
@@ -29,8 +36,23 @@ public class Elbow {
             }
         }
 
-        elbow.setPower(elbowPower);
         return elbowPower != 0;
+    }
+
+    public void shutOff(){
+
+        if((elbowPosition-range)> target && target>(elbowPosition+range))
+        {
+            elbowPower = 0;
+        }
+
+        if(elbow.getCurrentPosition() >= target) {
+            elbow.setPower(elbowPower);
+        }
+        else {
+            elbow.setPower(-elbowPower);
+        }
+
     }
 
     public double getDegreesToTicksFactor(double degrees){
@@ -53,7 +75,9 @@ public class Elbow {
     }
 
     public boolean ArmToPos(int pos, double power){
+        elbowPower = power;
         moving = true;
+        target = pos;
         elbow.setTargetPosition(pos);
         elbow.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 

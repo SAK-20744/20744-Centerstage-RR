@@ -26,8 +26,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.hardware.IMU;
-import com.kauailabs.navx.ftc.AHRS;
-import com.kauailabs.navx.ftc.navXPIDController;
+//import com.kauailabs.navx.ftc.AHRS;
+//import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -68,8 +68,8 @@ public class SAK26MecanumDrive extends MecanumDrive {
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
-//    private IMU imu;
-    private AHRS navx_device;
+    //private IMU imu;
+    //private AHRS navx_device;
     private VoltageSensor batteryVoltageSensor;
 
     private List<Integer> lastEncPositions = new ArrayList<>();
@@ -95,7 +95,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
 //                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
 //        imu.initialize(parameters);
 
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData, (byte) 100);
+        //navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
 
 
         leftFront = hardwareMap.get(DcMotorEx.class, "fl");
@@ -291,21 +291,23 @@ public class SAK26MecanumDrive extends MecanumDrive {
     @Override
     public double getRawExternalHeading() {
 //        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        return Math.toRadians(-navx_device.getYaw());
+        //return Math.toRadians(-navx_device.getYaw());
+        return 0;
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        double velInitial = Math.toRadians(-navx_device.getYaw());
+        //double velInitial = Math.toRadians(-navx_device.getYaw());
         double timeInitial = System.nanoTime();
-        double velFinal = Math.toRadians(-navx_device.getYaw());
+        //double velFinal = Math.toRadians(-navx_device.getYaw());
         double timeFinal = System.nanoTime();
 
-        double deltaV = velFinal - velInitial;
+        //double deltaV = velFinal - velInitial;
         double deltaT = timeFinal - timeInitial;
-        double headingVel = deltaV/deltaT;
+        //double headingVel = deltaV/deltaT;
 
-        return headingVel;
+        //return headingVel;
+        return null;
     }
 
         public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

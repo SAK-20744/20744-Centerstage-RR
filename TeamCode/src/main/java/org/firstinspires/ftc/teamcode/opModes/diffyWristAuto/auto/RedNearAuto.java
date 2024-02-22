@@ -51,7 +51,7 @@ public class RedNearAuto extends LinearOpMode {
     private ServoDiffyWrist diffyWrist;
     private double initWrist = -140;
 
-    public static double backdropWrist = -76;
+    public static double backdropWrist = -85;
     public static double purpleWrist = -47.5;
 
     private static final int DESIRED_TAG_ID = 4; // LEFT April Tag - Aligns the robot to the Center
@@ -137,8 +137,8 @@ public class RedNearAuto extends LinearOpMode {
         Pose2d spike2 = new Pose2d(25.85, -5.5, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(27.5, -4.4, Math.toRadians(90));
         Pose2d aprilTagPose = new Pose2d(26, -25, Math.toRadians(-90));
-        Pose2d boardRight = new Pose2d(18.5, -24.3, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(27, -24.3, Math.toRadians(-90));
+        Pose2d boardRight = new Pose2d(20, -24.3, Math.toRadians(-90));
+        Pose2d boardMiddle = new Pose2d(28.5, -24.3, Math.toRadians(-90));
         Pose2d boardLeft = new Pose2d(34.8, -24.3, Math.toRadians(-90));
         Pose2d closePark = new Pose2d(0, -36, Math.toRadians(-90));
         Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
@@ -271,10 +271,10 @@ public class RedNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
-                arm1.ArmToPos(-664, 0.5);
+                arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-812, 0.65);
+                arm2.ArmToPos(-800, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -313,10 +313,10 @@ public class RedNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
-                arm1.ArmToPos(-664, 0.5);
+                arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-812, 65);
+                arm2.ArmToPos(-800, 65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -355,10 +355,10 @@ public class RedNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
-                arm1.ArmToPos(-664, 0.5);
+                arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-812, 0.65);
+                arm2.ArmToPos(-800, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);

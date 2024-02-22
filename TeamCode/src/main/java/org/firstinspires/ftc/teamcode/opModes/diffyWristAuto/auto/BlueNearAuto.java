@@ -49,7 +49,7 @@ public class BlueNearAuto extends LinearOpMode {
     private DcMotor leftBackDrive    = null;
     private DcMotor rightBackDrive   = null;
     
-    public static double backdropWrist = -75;
+    public static double backdropWrist = -85;
     public static double purpleWrist = -50;
 
     private static final int DESIRED_TAG_ID = 1; // LEFT April Tag - Aligns the robot to the Center
@@ -273,10 +273,10 @@ public class BlueNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
-                arm1.ArmToPos(-664, 0.5);
+                arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-812, 0.65);
+                arm2.ArmToPos(-800, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -315,10 +315,10 @@ public class BlueNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
-                arm1.ArmToPos(-664, 0.5);
+                arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-812, 65);
+                arm2.ArmToPos(-800, 65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -357,10 +357,10 @@ public class BlueNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
-                arm1.ArmToPos(-664, 0.5);
+                arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-812, 0.65);
+                arm2.ArmToPos(-800, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);

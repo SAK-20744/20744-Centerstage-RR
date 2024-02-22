@@ -96,7 +96,7 @@ public class OutakeSingle {
 //        wrist.setPos(wristPos);
 //    };
 
-    public void IVKtoArmPoses(double arm1Pos, double arm2Pos, double wristPos, boolean useWrist, boolean extended, boolean intaking, double speed){
+    public void IVKtoArmPoses(double arm1Pos, double arm2Pos, double wristPos, boolean useWrist, boolean extended, boolean intaking, double speed, boolean turned, double turnedValue){
         myAngle = angle;
         myIVK = (new IVK());
 
@@ -104,6 +104,9 @@ public class OutakeSingle {
         MotorArmDeg = arm1Pos;
 
         double rotated = 0;
+
+        if(turned)
+            rotated = turnedValue;
 
         if(useWrist) {
             if (intaking) {

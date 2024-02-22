@@ -192,6 +192,7 @@ public class BlueNearCycleAuto extends LinearOpMode {
                 .build();
 
         TrajectorySequence throughTrussCycle = drive.trajectorySequenceBuilder(preCycle)
+                .setReversed(true)
                 .splineToSplineHeading(preIntaking, (preIntaking.getHeading()))
                 .splineToSplineHeading(intaking, intaking.getHeading())
                 .build();

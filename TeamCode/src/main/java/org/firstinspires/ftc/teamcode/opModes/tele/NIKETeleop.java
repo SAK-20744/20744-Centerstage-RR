@@ -41,7 +41,7 @@ public class NIKETeleop extends LinearOpMode {
     private boolean backdrop = false;
     private boolean extendoMode = false;
     private boolean rotated = false;
-    private double rotVal = 180;
+    private double rotVal = -180;
 
     private ServoDiffyWrist diffyWrist;
 

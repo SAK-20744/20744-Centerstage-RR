@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.opModes.diffyWristAuto.auto;
 
 import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
+
+import static java.lang.Math.max;
+import static java.lang.Math.toRadians;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -21,6 +24,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
+import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoDiffyWrist;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
@@ -33,8 +37,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Red Far Gate 2+1")
-public class RedFarGateAuto extends LinearOpMode {
+@Config
+@Autonomous(name = "Blue Near 2+0")
+public class BlueNearCycleAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
     private VisionPortal portal;
@@ -45,8 +50,11 @@ public class RedFarGateAuto extends LinearOpMode {
     private DcMotor rightFrontDrive  = null;
     private DcMotor leftBackDrive    = null;
     private DcMotor rightBackDrive   = null;
+    
+    public static double backdropWrist = -85;
+    public static double purpleWrist = -50;
 
-    private static final int DESIRED_TAG_ID = 4; // LEFT April Tag - Aligns the robot to the Center
+    private static final int DESIRED_TAG_ID = 1; // LEFT April Tag - Aligns the robot to the Center
 
     private double pX = 0.045, iX = 0.02, dX = 0.05;
     private double pY = 0.055, iY = 0, dY = 0.35;
@@ -56,6 +64,14 @@ public class RedFarGateAuto extends LinearOpMode {
     private double aprilTagDrive = 0;
     private double strafe = 0;
     private double turn = 0;
+
+    private double initWrist = -140;
+    
+    private ServoDiffyWrist diffyWrist;
+    private Elbow arm2;
+    private Arm1 arm1;
+    private Servo door = null;
+    private CRServo intake = null;
 
     PIDFController speedController = new PIDFController(pX, iX, dX, 0);
     PIDFController strafeController = new PIDFController(pY, iY, dY, 0);
@@ -109,69 +125,92 @@ public class RedFarGateAuto extends LinearOpMode {
                 )
         );
 
-
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Arm1 arm1 = (new Arm1(hardwareMap));
-        Elbow arm2 = new Elbow(hardwareMap);
+        arm1 = (new Arm1(hardwareMap));
+        arm2 = new Elbow(hardwareMap);
+        diffyWrist = new ServoDiffyWrist(hardwareMap);
 
-        Servo wrist = hardwareMap.get(Servo.class, "wrist");
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
-        CRServo intake = hardwareMap.get(CRServo.class, "intake");
-        Servo door = hardwareMap.get(Servo.class, "door");
+        intake = hardwareMap.get(CRServo.class, "intake");
+        door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d firstTile = new Pose2d(15, -2, Math.toRadians(0));
+        //poses right here
 
-        Pose2d stackIntakingPos = new Pose2d(52,-3,Math.toRadians(-90));
+        Pose2d startPos = new Pose2d(12.00, 63.00, toRadians(-90.00));
+        Pose2d aprilPose = new Pose2d(44.00, 36.00, Math.toRadians(0.00));
 
-        Pose2d spike3Avoid = new Pose2d(31, 12,Math.toRadians(-90));
-        Pose2d spike2Avoid = new Pose2d(52,4 , Math.toRadians(180));
-        Pose2d spike1Avoid = new Pose2d(48, 6, Math.toRadians(180));
-        Pose2d MiddleTile = new Pose2d(52,-74, Math.toRadians(-90));
-        Pose2d spike1 = new Pose2d(37.5, 10.5, Math.toRadians(180));
-        Pose2d spike2 = new Pose2d(39, 4, Math.toRadians(-90));
-        Pose2d spike3 = new Pose2d(28.5, -8, Math.toRadians(-90));
-        Pose2d aprilTagPose = new Pose2d(25, -74, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(33.5, -75, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(25, -75, Math.toRadians(-90));
-        Pose2d boardRight = new Pose2d(12.75, -75, Math.toRadians(-90));
-        Pose2d park = new Pose2d(50, -83, Math.toRadians(-90));
-        Pose2d prepare = new Pose2d(53,-82,Math.toRadians(45));
+        Pose2d boardLeft = new Pose2d(43.00, 42.00, Math.toRadians(0.00));
+        Pose2d boardCenter = new Pose2d(43.00, 36.00, Math.toRadians(0.00));
+        Pose2d boardRight = new Pose2d(43.00, 30.00, Math.toRadians(0.00));
 
-        double waitTime = 3;
+        Pose2d leftPurple = new Pose2d(20.00, 34.00, Math.toRadians(0.00));
+        Pose2d centerPurple = new Pose2d(16.00, 30.00, Math.toRadians(-90.00));
+        Pose2d rightPurple = new Pose2d(18.00, 34.00, Math.toRadians(0.00));
 
-        TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(firstTile)
+        Pose2d preCycle = new Pose2d(12, 60, Math.toRadians(0));
+        Pose2d preIntaking = new Pose2d(-28.00, 60.00, Math.toRadians(0.00));
+        Pose2d intaking = new Pose2d(-48.00, 48.00, Math.toRadians(30.00));
+
+        Pose2d closePark = new Pose2d(48.00, 60.00, Math.toRadians(0.00));
+        Pose2d gatePark = new Pose2d(48.00 ,12.00, Math.toRadians(0.00));
+        Pose2d park = closePark;
+
+        TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(startPos)
+                .lineToLinearHeading(aprilPose)
                 .build();
-        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(firstTile)
-                .lineToLinearHeading(spike1)
+
+        TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilPose)
+                .lineToLinearHeading(boardLeft)
                 .build();
-        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(firstTile)
-                .lineToLinearHeading(spike2)
+        TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilPose)
+                .lineToLinearHeading(boardCenter)
                 .build();
-        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(firstTile)
-                .lineToLinearHeading(spike3)
+        TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilPose)
+                .lineToLinearHeading(boardRight)
                 .build();
-        TrajectorySequence avoid1 = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(spike1Avoid)
+
+        TrajectorySequence toLeftPurple = drive.trajectorySequenceBuilder(boardLeft)
+                .lineToLinearHeading(leftPurple)
                 .build();
-        TrajectorySequence avoid2 = drive.trajectorySequenceBuilder(spike2)
-                .lineToLinearHeading(spike2Avoid)
+        TrajectorySequence toCenterPurple = drive.trajectorySequenceBuilder(boardCenter)
+                .lineToLinearHeading(centerPurple)
                 .build();
-        TrajectorySequence avoid3 = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(spike3Avoid)
+        TrajectorySequence toRightPurple = drive.trajectorySequenceBuilder(boardRight)
+                .lineToLinearHeading(rightPurple)
                 .build();
-        TrajectorySequence toNextLeft = drive.trajectorySequenceBuilder(spike1Avoid)
-                .lineToLinearHeading(stackIntakingPos)
+
+        TrajectorySequence toCycleLeft = drive.trajectorySequenceBuilder(leftPurple)
+                .lineToLinearHeading(preCycle)
                 .build();
-        TrajectorySequence toNextCenter = drive.trajectorySequenceBuilder(spike2Avoid)
-                .lineToLinearHeading(stackIntakingPos)
+        TrajectorySequence toCycleCenter = drive.trajectorySequenceBuilder(centerPurple)
+                .lineToLinearHeading(preCycle)
                 .build();
-        TrajectorySequence toNextRight = drive.trajectorySequenceBuilder(spike3Avoid)
-                .lineToLinearHeading(stackIntakingPos)
+        TrajectorySequence toCycleRight = drive.trajectorySequenceBuilder(rightPurple)
+                .lineToLinearHeading(preCycle)
                 .build();
+
+        TrajectorySequence throughTrussCycle = drive.trajectorySequenceBuilder(preCycle)
+                .splineToSplineHeading(preIntaking, (preIntaking.getHeading()))
+                .splineToSplineHeading(intaking, intaking.getHeading())
+                .build();
+
+        TrajectorySequence throughTrussReturn = drive.trajectorySequenceBuilder(intaking)
+                .splineToSplineHeading(preIntaking, preIntaking.getHeading())
+                .splineToSplineHeading(preCycle, preCycle.getHeading())
+                .build();
+
+        TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
+                .lineToLinearHeading(park)
+                .build();
+        TrajectorySequence centerPark = drive.trajectorySequenceBuilder(boardCenter)
+                .lineToLinearHeading(park)
+                .build();
+        TrajectorySequence rightPark = drive.trajectorySequenceBuilder(boardRight)
+                .lineToLinearHeading(park)
+                .build();
+
 
         while (opModeInInit()) {
 
@@ -187,72 +226,39 @@ public class RedFarGateAuto extends LinearOpMode {
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            if(gamepad2.dpad_up) {
-                waitTime += 0.5;
-                sleep(350);
+            door.setPosition(0.95);
+
+            if(gamepad1.dpad_up){
+                park = gatePark;
             }
-            if(gamepad2.dpad_down) {
-                waitTime -= 0.5;
-                sleep(350);
+            if(gamepad1.dpad_down) {
+                park = closePark;
             }
 
-            if(waitTime < 0)
-                waitTime = 0;
-            if(waitTime > 4)
-                waitTime = 4;
+            if(park == gatePark)
+                telemetry.addData("Park Position: Gate Side ", 0);
+            else
+                telemetry.addData("Park Position: Near Side ", 0);
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
-            wrist.setPosition(0.63);
 
-//            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
-//            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
-            telemetry.addData("Wait", waitTime);
+            if(gamepad2.dpad_up)
+                initWrist -= 0.1;
+            if(gamepad2.dpad_down)
+                initWrist += 0.1;
+
+            diffyWrist.runToProfile(initWrist, 0);
+
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.addData("wrist Pos: ", initWrist);
             telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
-
             telemetry.update();
         }
-
-
-        TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(stackIntakingPos)
-                .lineToLinearHeading(MiddleTile)
-                .waitSeconds(waitTime)
-                .build();
-        TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(aprilTagPose)
-                .build();
-//        TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
-//                .lineToLinearHeading(boardLeft)
-//                .build();
-//        TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(MiddleTile)
-//                .lineToLinearHeading(boardMiddle)
-//                .build();
-//        TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(MiddleTile)
-//                .lineToLinearHeading(boardRight)
-//                .build();
-        TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
-                .lineToLinearHeading(park)
-                .build();
-        TrajectorySequence centerPark = drive.trajectorySequenceBuilder(boardMiddle)
-                .lineToLinearHeading(park)
-                .build();
-        TrajectorySequence rightPark = drive.trajectorySequenceBuilder(boardRight)
-                .lineToLinearHeading(park)
-                .build();
-        TrajectorySequence toPrepare = drive.trajectorySequenceBuilder(park)
-                .lineToLinearHeading(prepare)
-                .build();
-
-        boolean ButtonXBlock = false;
-        double wristservoposition = 0.63;
-        wrist.setPosition(wristservoposition);
-
-
 
         waitForStart();
 
@@ -260,161 +266,142 @@ public class RedFarGateAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.05);
-            door.setPosition(0.75);
-            arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(210, 1);
+            if (location == LEFT) {
+                telemetry.addData("Position: ", "Left");
+                telemetry.update();
+            }
+            else if(location == CENTER) {
+                telemetry.addData("Position: ", "Center");
+                telemetry.update();
+            }
+            else {
+                telemetry.addData("Position: ", "Right");
+                telemetry.update();
+            }
+
+            portal.setProcessorEnabled(aprilTag, true);
+
+            arm1.ArmToPos(-680, 0.5);
+            arm2.ArmToPos(-800, 65);
+            diffyWrist.runToProfile(backdropWrist, 0);
+
+            drive.followTrajectorySequence(toAprilTag);
+            alignToAprilTags();
+            drive.setPoseEstimate(aprilPose);
 
             if (location == LEFT) {
-                // Movements for left spot
-
-                telemetry.addData("Position", "Left");
+                telemetry.addData("Position: ", "Left");
                 telemetry.update();
-
-
-
-                drive.followTrajectorySequence(linetoFirstTile);
-                drive.followTrajectorySequence(toSpike1);
-                wrist.setPosition(0.24);
-                sleep(500);
-
-                wrist.setPosition(0.24);
-
-                door.setPosition(0.1);
-
-//                door.setPosition(0.1);
-                sleep(200);
-                arm2.ArmToPos(0,1);
-                sleep(500);
-                door.setPosition(0.95);
-                drive.followTrajectorySequence(avoid1);
-                drive.followTrajectorySequence(toNextLeft);
-                arm2.ArmToPos(200,1);
-                wrist.setPosition(0.3);
-                drive.followTrajectorySequence(toMiddle);
-                drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
-                        .lineToLinearHeading(boardLeft)
-                        .build();
                 drive.followTrajectorySequence(toBoardLeft);
-                arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.8);
-                arm2.ArmToPos(-812, 0.65);
-                intake.setPower(-1);
-                sleep(500);
-                intake.setPower(0);
-                sleep(1000);
-                door.setPosition(0.1);
-                sleep(100);
-//                arm2.ArmToPos(-1100, 0.5);
-//                sleep(1000);
-                arm1.ArmToPos(-1850, 0.5);
-                sleep(1000);
-                drive.followTrajectorySequence(leftPark);
-                arm2.ArmToPos(0,1);
-
             }
-            if (location == CENTER) {
-                // Movements for center spot
-                telemetry.addData("Position", "Center");
+            else if(location == CENTER) {
+                telemetry.addData("Position: ", "Center");
                 telemetry.update();
-
-
-
-                drive.followTrajectorySequence(linetoFirstTile);
-                drive.followTrajectorySequence(toSpike2);
-                sleep(500);
-
-                wrist.setPosition(0.24);
-
-                door.setPosition(0.1);
-
-//                door.setPosition(0.1);
-                sleep(200);
-                arm2.ArmToPos(0,1);
-                sleep(500);
-                door.setPosition(0.95);
-                drive.followTrajectorySequence(avoid2);
-                drive.followTrajectorySequence(toNextCenter);
-                arm2.ArmToPos(200,1);
-                wrist.setPosition(0.3);
-                drive.followTrajectorySequence(toMiddle);
-                drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
-                        .lineToLinearHeading(boardMiddle)
-                        .build();
                 drive.followTrajectorySequence(toBoardCenter);
-                arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.8);
-                arm2.ArmToPos(-812, 65);
-                intake.setPower(-1);
-                sleep(500);
-                intake.setPower(0);
-                sleep(1000);
-                door.setPosition(0.1);
-                sleep(100);
-//                arm2.ArmToPos(-1100, 0.5);
-//                sleep(1000);
-                arm1.ArmToPos(-1850, 0.5);
-                sleep(1000);
-                drive.followTrajectorySequence(centerPark);
-                arm2.ArmToPos(0,1);
             }
-            if (location == RIGHT) {
-                // Movements for Right spot
+            else {
+                telemetry.addData("Position: ", "Right");
+                telemetry.update();
+                drive.followTrajectorySequence(toBoardRight);
+            }
 
-                telemetry.addData("Position", "Right");
+            dropYellow();
+
+            if (location == LEFT) {
+                telemetry.addData("Position: ", "Left");
                 telemetry.update();
 
-                drive.followTrajectorySequence(linetoFirstTile);
-                drive.followTrajectorySequence(toSpike3);
-                sleep(500);
-
-                wrist.setPosition(0.24);
-
-                door.setPosition(0.1);
-
-
-                sleep(200);
-                arm2.ArmToPos(0,1);
-                sleep(500);
-                door.setPosition(0.95);
-                drive.followTrajectorySequence(avoid3);
-                drive.followTrajectorySequence(toNextRight);
-                arm2.ArmToPos(200,1);
-                wrist.setPosition(0.3);
-                drive.followTrajectorySequence(toMiddle);
-                drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
-                        .lineToLinearHeading(boardRight)
-                        .build();
-                drive.followTrajectorySequence(toBoardRight);
-                arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.8);
-                arm2.ArmToPos(-812, 0.65);
-                intake.setPower(-1);
-                sleep(500);
-                intake.setPower(0);
-                sleep(1000);
-                door.setPosition(0.1);
-                sleep(100);
-//                arm2.ArmToPos(-1100, 0.5);
-//                sleep(1000);
-                arm1.ArmToPos(-1850, 0.5);
-                sleep(1000);
-                drive.followTrajectorySequence(rightPark);
-                arm2.ArmToPos(0,1);
-
+                drive.followTrajectorySequence(toLeftPurple);
+                dropPurple();
             }
-//            drive.followTrajectorySequence(toPrepare);
+            else if(location == CENTER) {
+                telemetry.addData("Position: ", "Center");
+                telemetry.update();
+
+                drive.followTrajectorySequence(toCenterPurple);
+                dropPurple();
+            }
+            else {
+                telemetry.addData("Position: ", "Right");
+                telemetry.update();
+
+                drive.followTrajectorySequence(toRightPurple);
+                dropPurpleBackwards();
+            }
+
+            retractArms();
+
+            if (location == LEFT) {
+                telemetry.addData("Position: ", "Left");
+                telemetry.update();
+
+                drive.followTrajectorySequence(toCycleLeft);
+            }
+            else if(location == CENTER) {
+                telemetry.addData("Position: ", "Center");
+                telemetry.update();
+
+                drive.followTrajectorySequence(toCycleCenter);
+            }
+            else {
+                telemetry.addData("Position: ", "Right");
+                telemetry.update();
+
+                drive.followTrajectorySequence(toCycleRight);
+            }
+
+            drive.followTrajectorySequence(throughTrussCycle);
+            stackIntakeHeight1and2();
+            retractArms();
+            drive.followTrajectorySequence(throughTrussReturn);
+
             sleep(30000);
         }
+    }
+
+    public void dropPurple() {
+        diffyWrist.runToProfile(purpleWrist, 0);
+        sleep(500);
+        door.setPosition(0.1);
+        sleep(200);
+        arm2.ArmToPos(0,1);
+        sleep(500);
+        door.setPosition(0.95);
+    }
+
+    public void stackIntakeHeight1and2() {
+        intake.setPower(1);
+        arm2.ArmToPos(-1000, 1);
+        diffyWrist.runToProfile(0, -180);
+        arm2.ArmToPos(-2000, 1);
+        sleep(1000);
+        intake.setPower(0);
+    }
+
+    public void dropPurpleBackwards() {
+        diffyWrist.runToProfile(purpleWrist, 0);
+        sleep(500);
+        door.setPosition(0.1);
+        sleep(200);
+        arm2.ArmToPos(0,1);
+        sleep(500);
+        door.setPosition(0.95);
+    }
+
+    public void dropYellow() {
+        door.setPosition(0.1);
+        sleep(100);
+        arm1.ArmToPos(-1850, 0.5);
+        sleep(500);
+        door.setPosition(0.95);
+        sleep(250);
+    }
+
+    public void retractArms() {
+        door.setPosition(0.75);
+        arm1.ArmToPos(-2000, 0.7);
+        arm2.ArmToPos(138, 1);
+        diffyWrist.runToProfile(purpleWrist, 0);
     }
 
     private void    setManualExposure(int exposureMS, int gain) {
@@ -569,5 +556,6 @@ public class RedFarGateAuto extends LinearOpMode {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
     }
+
 
 }

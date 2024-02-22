@@ -1,30 +1,35 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.CENTER;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.LEFT;
-import static org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location.RIGHT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
+import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline;
-import org.firstinspires.ftc.teamcode.subsystems.vision.PropPipeline.Location;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
@@ -36,12 +41,32 @@ public class RedNearAuto extends LinearOpMode {
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;
 
+    private DcMotor leftFrontDrive   = null;
+    private DcMotor rightFrontDrive  = null;
+    private DcMotor leftBackDrive    = null;
+    private DcMotor rightBackDrive   = null;
+
+    private static final int DESIRED_TAG_ID = 4; // LEFT April Tag - Aligns the robot to the Center
+
+    private double pX = 0.045, iX = 0.02, dX = 0.05;
+    private double pY = 0.055, iY = 0, dY = 0.35;
+    private double pTurn = 0.045, iTurn = 0, dTurn = 0.05;
+
+    private boolean targetFound = false;
+    private double aprilTagDrive = 0;
+    private double strafe = 0;
+    private double turn = 0;
+
+    PIDFController speedController = new PIDFController(pX, iX, dX, 0);
+    PIDFController strafeController = new PIDFController(pY, iY, dY, 0);
+    PIDFController turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
+
     @Override
     public void runOpMode() throws InterruptedException {
 
         aprilTag = new AprilTagProcessor.Builder().build();
         aprilTag.setDecimation(2);
-        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+        setManualExposure(5, 250);  // Use low exposure time to reduce motion blur
 
         propPipeline = new PropPipeline();
 
@@ -55,6 +80,37 @@ public class RedNearAuto extends LinearOpMode {
 
         FtcDashboard.getInstance().startCameraStream(propPipeline, 30);
 
+//        initAprilTag();
+
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "fl");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "fr");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "bl");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "br");
+
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+//        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+
+        // Wait for driver to press start
+        telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch Play to start OpMode");
+
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+        imu.initialize(
+                new IMU.Parameters(
+//                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
+                        new RevHubOrientationOnRobot(
+                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                        )
+                )
+        );
+
+
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Arm1 arm1 = (new Arm1(hardwareMap));
         Elbow arm2 = new Elbow(hardwareMap);
@@ -67,12 +123,14 @@ public class RedNearAuto extends LinearOpMode {
         Servo door = hardwareMap.get(Servo.class, "door");
 
         Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
+        Pose2d MiddleTileRight = new Pose2d(10, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(28, -13, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(32, -4, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(30.5, 6, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(18.5, -27, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(26, -27, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(34.5, -27, Math.toRadians(-90));
+        Pose2d spike2 = new Pose2d(29.5, -4, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(29, 2, Math.toRadians(90));
+        Pose2d aprilTagPose = new Pose2d(26, -25, Math.toRadians(-90));
+        Pose2d boardRight = new Pose2d(18.5, -27.7, Math.toRadians(-90));
+        Pose2d boardMiddle = new Pose2d(26, -27.65, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(34.5, -27.7, Math.toRadians(-90));
         Pose2d closePark = new Pose2d(0, -36, Math.toRadians(-90));
         Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
         Pose2d park = closePark;
@@ -112,6 +170,7 @@ public class RedNearAuto extends LinearOpMode {
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
             telemetry.update();
         }
 
@@ -134,16 +193,10 @@ public class RedNearAuto extends LinearOpMode {
                 .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(MiddleTile)
+                .lineToLinearHeading(MiddleTileRight)
                 .build();
-        TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(boardLeft)
-                .build();
-        TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(boardMiddle)
-                .build();
-        TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(boardRight)
+        TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
+                .lineToLinearHeading(aprilTagPose)
                 .build();
         TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
                 .lineToLinearHeading(park)
@@ -165,18 +218,23 @@ public class RedNearAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            wrist.setPosition(0.24);
+            drive.followTrajectorySequence(lineToMiddleTile);
+
+            wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
             arm2.ArmToPos(160, 1);
+
+            portal.setProcessorEnabled(aprilTag, true);
 
             if (location == LEFT) {
                 // Movements for left spot
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike1);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -185,21 +243,26 @@ public class RedNearAuto extends LinearOpMode {
                 door.setPosition(0.95);
                 drive.followTrajectorySequence(toMiddleLeft);
                 sleep(500);
+                drive.followTrajectorySequence(toAprilTag);
+                alignToAprilTags();
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
+                        .lineToLinearHeading(boardLeft)
+                        .build();
                 drive.followTrajectorySequence(toBoardLeft);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
-                sleep(749);
-                arm2.ArmToPos(-900, 0.5);
-                sleep(500);
-                door.setPosition(0.95);
-                sleep(1000);
+                sleep(100);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
+                sleep(1000);
                 drive.followTrajectorySequence(leftPark);
                 arm2.ArmToPos(0,1);
 
@@ -209,8 +272,9 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -219,21 +283,26 @@ public class RedNearAuto extends LinearOpMode {
                 door.setPosition(0.95);
                 drive.followTrajectorySequence(toMiddleCenter);
                 sleep(500);
+                drive.followTrajectorySequence(toAprilTag);
+                alignToAprilTags();
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
+                        .lineToLinearHeading(boardMiddle)
+                        .build();
                 drive.followTrajectorySequence(toBoardCenter);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
-                sleep(749);
-                arm2.ArmToPos(-900, 0.5);
-                sleep(500);
-                door.setPosition(0.95);
-                sleep(1000);
+                sleep(100);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
+                sleep(1000);
                 drive.followTrajectorySequence(centerPark);
                 arm2.ArmToPos(0,1);
 
@@ -243,8 +312,9 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-                drive.followTrajectorySequence(lineToMiddleTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike3);
+                wrist.setPosition(0.24);
                 sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
@@ -253,24 +323,30 @@ public class RedNearAuto extends LinearOpMode {
                 door.setPosition(0.95);
                 drive.followTrajectorySequence(toMiddleRight);
                 sleep(500);
+                drive.followTrajectorySequence(toAprilTag);
+                alignToAprilTags();
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
+                        .lineToLinearHeading(boardRight)
+                        .build();
                 drive.followTrajectorySequence(toBoardRight);
                 arm1.ArmToPos(-664, 0.5);
-                wrist.setPosition(0.6);
+                wrist.setPosition(0.8);
                 arm2.ArmToPos(-812, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
-                sleep(749);
-                arm2.ArmToPos(-900, 0.5);
-                sleep(500);
-                door.setPosition(0.95);
-                sleep(1000);
+                sleep(100);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
                 arm1.ArmToPos(-1850, 0.5);
+                sleep(1000);
                 drive.followTrajectorySequence(rightPark);
                 arm2.ArmToPos(0,1);
             }
+            door.setPosition(0.95);
             sleep(30000);
         }
     }
@@ -307,6 +383,125 @@ public class RedNearAuto extends LinearOpMode {
             gainControl.setGain(gain);
             sleep(20);
         }
+    }
+
+    private void alignToAprilTags() {
+
+        if (!isStopRequested()) {
+            targetFound = false;
+            desiredTag = null;
+
+            // Step through the list of detected tags and look for a matching tag
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                // Look to see if we have size info on this tag.
+                if (detection.metadata != null) {
+                    //  Check to see if we want to track towards this tag.
+                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                        // Yes, we want to use this tag.
+                        targetFound = true;
+                        desiredTag = detection;
+                        break;  // don't look any further.
+                    } else {
+                        // This tag is in the library, but we do not want to track it right now.
+                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                    }
+                } else {
+                    // This tag is NOT in the library, so we don't have enough information to track to it.
+                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+                }
+            }
+
+            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+            if (targetFound) {
+                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
+                strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
+                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
+
+                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
+                telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
+                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+                telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+                telemetry.addData("elevation", "%3.0f degrees", desiredTag.ftcPose.elevation);
+                telemetry.addData("pitch", "%3.0f degrees", desiredTag.ftcPose.pitch);
+
+            }
+            telemetry.update();
+        }
+
+        while (Math.abs(aprilTagDrive) > 0.1) {
+
+            targetFound = false;
+            desiredTag = null;
+
+            // Step through the list of detected tags and look for a matching tag
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                // Look to see if we have size info on this tag.
+                if (detection.metadata != null) {
+                    //  Check to see if we want to track towards this tag.
+                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
+                        // Yes, we want to use this tag.
+                        targetFound = true;
+                        desiredTag = detection;
+                        break;  // don't look any further.
+                    } else {
+                        // This tag is in the library, but we do not want to track it right now.
+                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
+                    }
+                } else {
+                    // This tag is NOT in the library, so we don't have enough information to track to it.
+                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
+                }
+            }
+            // Tell the driver what we see, and what to do.
+            if (targetFound) {
+                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
+                strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
+                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
+
+                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
+                telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
+                telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
+                telemetry.addData("Range", "%5.1f inches", desiredTag.ftcPose.range);
+                telemetry.addData("elevation", "%3.0f degrees", desiredTag.ftcPose.elevation);
+                telemetry.addData("pitch", "%3.0f degrees", desiredTag.ftcPose.pitch);
+
+            }
+            telemetry.update();
+
+            // Apply desired axes motions to the drivetrain.
+            moveRobot(aprilTagDrive, strafe, turn);
+            sleep(10);
+        }
+    }
+
+    public void moveRobot(double x, double y, double yaw) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x -y -yaw;
+        double rightFrontPower   =  x +y +yaw;
+        double leftBackPower     =  x +y -yaw;
+        double rightBackPower    =  x -y +yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
     }
 
 }

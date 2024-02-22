@@ -288,6 +288,7 @@ public class NIKETeleopAprilTag extends LinearOpMode {
             }
 
             wristservoposition = Math.min(Math.max(wristservoposition, 0), 1);
+            wristservoposition = Range.clip(wristservoposition, 0, 1);
             telemetry.addData("servoPosition", wristservoposition);
             wrist.setPosition(wristservoposition);
 

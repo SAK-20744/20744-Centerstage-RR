@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.auto;
+package org.firstinspires.ftc.teamcode.opModes.diffyWristAuto.auto.oldAutos;
 
 import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.CENTER;
 import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.LEFT;
@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Disabled
-@Autonomous(name = "Old Red Far Gate 2+0")
-public class RedFarGateAuto extends LinearOpMode {
+@Autonomous(name = "Old Blue Near 2+0")
+public class BlueNearAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
     private VisionPortal portal;
@@ -48,7 +48,7 @@ public class RedFarGateAuto extends LinearOpMode {
     private DcMotor leftBackDrive    = null;
     private DcMotor rightBackDrive   = null;
 
-    private static final int DESIRED_TAG_ID = 4; // LEFT April Tag - Aligns the robot to the Center
+    private static final int DESIRED_TAG_ID = 1; // LEFT April Tag - Aligns the robot to the Center
 
     private double pX = 0.045, iX = 0.02, dX = 0.05;
     private double pY = 0.055, iY = 0, dY = 0.35;
@@ -124,54 +124,18 @@ public class RedFarGateAuto extends LinearOpMode {
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d firstTile = new Pose2d(15, -2, Math.toRadians(0));
-        Pose2d nextTile = new Pose2d(52,-3,Math.toRadians(-90));
-        Pose2d spike3Avoid = new Pose2d(31, 12,Math.toRadians(-90));
-        Pose2d spike2Avoid = new Pose2d(52,4 , Math.toRadians(180));
-        Pose2d spike1Avoid = new Pose2d(48, 6, Math.toRadians(180));
-        Pose2d MiddleTile = new Pose2d(52,-74, Math.toRadians(-90));
-        Pose2d spike1 = new Pose2d(37.5, 10.5, Math.toRadians(180));
-        Pose2d spike2 = new Pose2d(39, 4, Math.toRadians(-90));
-        Pose2d spike3 = new Pose2d(28.5, -8, Math.toRadians(-90));
-        Pose2d aprilTagPose = new Pose2d(25, -74, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(33.5, -75, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(25, -75, Math.toRadians(-90));
-        Pose2d boardRight = new Pose2d(12.75, -75, Math.toRadians(-90));
-        Pose2d park = new Pose2d(50, -83, Math.toRadians(-90));
-        Pose2d prepare = new Pose2d(53,-82,Math.toRadians(45));
-
-        double waitTime = 3;
-
-        TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(firstTile)
-                .build();
-        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(firstTile)
-                .lineToLinearHeading(spike1)
-                .build();
-        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(firstTile)
-                .lineToLinearHeading(spike2)
-                .build();
-        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(firstTile)
-                .lineToLinearHeading(spike3)
-                .build();
-        TrajectorySequence avoid1 = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(spike1Avoid)
-                .build();
-        TrajectorySequence avoid2 = drive.trajectorySequenceBuilder(spike2)
-                .lineToLinearHeading(spike2Avoid)
-                .build();
-        TrajectorySequence avoid3 = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(spike3Avoid)
-                .build();
-        TrajectorySequence toNextLeft = drive.trajectorySequenceBuilder(spike1Avoid)
-                .lineToLinearHeading(nextTile)
-                .build();
-        TrajectorySequence toNextCenter = drive.trajectorySequenceBuilder(spike2Avoid)
-                .lineToLinearHeading(nextTile)
-                .build();
-        TrajectorySequence toNextRight = drive.trajectorySequenceBuilder(spike3Avoid)
-                .lineToLinearHeading(nextTile)
-                .build();
+        Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
+        Pose2d MiddleTileLeft = new Pose2d(6, -2, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(28, 9.8, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(29.5, -4, Math.toRadians(0));
+        Pose2d spike3 = new Pose2d(29, -6.75, Math.toRadians(-90));
+        Pose2d aprilPose = new Pose2d(25, 24, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(17, 23.45, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(25, 23.45, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(34, 22.5, Math.toRadians(90));
+        Pose2d closePark = new Pose2d(0, 32,Math.toRadians(90));
+        Pose2d gatePark = new Pose2d(53.5 ,32,Math.toRadians(90));
+        Pose2d park = closePark;
 
         while (opModeInInit()) {
 
@@ -187,54 +151,55 @@ public class RedFarGateAuto extends LinearOpMode {
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            if(gamepad2.dpad_up) {
-                waitTime += 0.5;
-                sleep(350);
+            if(gamepad2.dpad_up){
+                park = gatePark;
             }
             if(gamepad2.dpad_down) {
-                waitTime -= 0.5;
-                sleep(350);
+                park = closePark;
             }
 
-            if(waitTime < 0)
-                waitTime = 0;
-            if(waitTime > 4)
-                waitTime = 4;
+            if(park == gatePark)
+                telemetry.addData("Park Position: Gate Side ", 0);
+            else
+                telemetry.addData("Park Position: Near Side ", 0);
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
             wrist.setPosition(0.63);
 
-//            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
-//            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
-            telemetry.addData("Wait", waitTime);
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
             telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
-
             telemetry.update();
         }
 
-
-        TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(nextTile)
+        TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(MiddleTile)
-                .waitSeconds(waitTime)
+                .build();
+        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(MiddleTile)
+                .lineToLinearHeading(spike1)
+                .build();
+        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(MiddleTile)
+                .lineToLinearHeading(spike2)
+                .build();
+        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(MiddleTile)
+                .lineToLinearHeading(spike3)
+                .build();
+        TrajectorySequence toMiddleLeft = drive.trajectorySequenceBuilder(spike1)
+                .lineToLinearHeading(MiddleTile)
+                .build();
+        TrajectorySequence toMiddleCenter = drive.trajectorySequenceBuilder(spike2)
+                .lineToLinearHeading(MiddleTile)
+                .build();
+        TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
+                .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(aprilTagPose)
+                .lineToLinearHeading(aprilPose)
                 .build();
-//        TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
-//                .lineToLinearHeading(boardLeft)
-//                .build();
-//        TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(MiddleTile)
-//                .lineToLinearHeading(boardMiddle)
-//                .build();
-//        TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(MiddleTile)
-//                .lineToLinearHeading(boardRight)
-//                .build();
         TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
                 .lineToLinearHeading(park)
                 .build();
@@ -244,15 +209,10 @@ public class RedFarGateAuto extends LinearOpMode {
         TrajectorySequence rightPark = drive.trajectorySequenceBuilder(boardRight)
                 .lineToLinearHeading(park)
                 .build();
-        TrajectorySequence toPrepare = drive.trajectorySequenceBuilder(park)
-                .lineToLinearHeading(prepare)
-                .build();
 
         boolean ButtonXBlock = false;
         double wristservoposition = 0.63;
         wrist.setPosition(wristservoposition);
-
-
 
         waitForStart();
 
@@ -260,42 +220,35 @@ public class RedFarGateAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
+            drive.followTrajectorySequence(lineToMiddleTile);
+
             wrist.setPosition(0.05);
             door.setPosition(0.75);
             arm1.ArmToPos(-2000, 0.5);
             arm2.ArmToPos(210, 1);
 
+            portal.setProcessorEnabled(aprilTag, true);
+
             if (location == LEFT) {
                 // Movements for left spot
-
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-
-
-                drive.followTrajectorySequence(linetoFirstTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike1);
                 wrist.setPosition(0.24);
                 sleep(500);
-
-                wrist.setPosition(0.24);
-
                 door.setPosition(0.1);
-
-//                door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);
                 door.setPosition(0.95);
-                drive.followTrajectorySequence(avoid1);
-                drive.followTrajectorySequence(toNextLeft);
-                arm2.ArmToPos(200,1);
-                wrist.setPosition(0.3);
-                drive.followTrajectorySequence(toMiddle);
+                drive.followTrajectorySequence(toMiddleLeft);
+                sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
+                drive.setPoseEstimate(aprilPose);
+                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
@@ -321,30 +274,21 @@ public class RedFarGateAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-
-
-                drive.followTrajectorySequence(linetoFirstTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
-                sleep(500);
-
                 wrist.setPosition(0.24);
-
+                sleep(500);
                 door.setPosition(0.1);
-
-//                door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);
                 door.setPosition(0.95);
-                drive.followTrajectorySequence(avoid2);
-                drive.followTrajectorySequence(toNextCenter);
-                arm2.ArmToPos(200,1);
-                wrist.setPosition(0.3);
-                drive.followTrajectorySequence(toMiddle);
+                drive.followTrajectorySequence(toMiddleCenter);
+                sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
+                drive.setPoseEstimate(aprilPose);
+                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
@@ -363,35 +307,28 @@ public class RedFarGateAuto extends LinearOpMode {
                 sleep(1000);
                 drive.followTrajectorySequence(centerPark);
                 arm2.ArmToPos(0,1);
+
             }
             if (location == RIGHT) {
-                // Movements for Right spot
-
+                // Movements for right spot
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-                drive.followTrajectorySequence(linetoFirstTile);
+//                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike3);
-                sleep(500);
-
                 wrist.setPosition(0.24);
-
+                sleep(500);
                 door.setPosition(0.1);
-
-
                 sleep(200);
                 arm2.ArmToPos(0,1);
                 sleep(500);
                 door.setPosition(0.95);
-                drive.followTrajectorySequence(avoid3);
-                drive.followTrajectorySequence(toNextRight);
-                arm2.ArmToPos(200,1);
-                wrist.setPosition(0.3);
-                drive.followTrajectorySequence(toMiddle);
+                drive.followTrajectorySequence(toMiddleRight);
+                sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
+                drive.setPoseEstimate(aprilPose);
+                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
@@ -410,9 +347,8 @@ public class RedFarGateAuto extends LinearOpMode {
                 sleep(1000);
                 drive.followTrajectorySequence(rightPark);
                 arm2.ArmToPos(0,1);
-
             }
-//            drive.followTrajectorySequence(toPrepare);
+            door.setPosition(0.95);
             sleep(30000);
         }
     }
@@ -569,5 +505,6 @@ public class RedFarGateAuto extends LinearOpMode {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
     }
+
 
 }

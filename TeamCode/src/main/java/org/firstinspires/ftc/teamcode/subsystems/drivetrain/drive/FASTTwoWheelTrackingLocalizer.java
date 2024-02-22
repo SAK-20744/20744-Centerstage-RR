@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-
 import org.firstinspires.ftc.teamcode.subsystems.util.Encoder;
 
 import java.util.Arrays;
@@ -34,7 +33,7 @@ import java.util.List;
  *    \--------------/
  *
  */
-public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
+public class FASTTwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 0.68897638; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
@@ -42,8 +41,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double PARALLEL_X = -0.5; // X is the up and down direction
     public static double PARALLEL_Y = 7.75; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = -5.5;
-    public static double PERPENDICULAR_Y = 3.5;
+    public static double PERPENDICULAR_X = -6.5;
+    public static double PERPENDICULAR_Y = 1.5;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -53,9 +52,9 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     private Encoder parallelEncoder, perpendicularEncoder;
 
-    private SampleMecanumDrive drive;
+    private FASTMecanumDrive drive;
 
-    public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive) {
+    public FASTTwoWheelTrackingLocalizer(HardwareMap hardwareMap, FASTMecanumDrive drive) {
         super(Arrays.asList(
             new Pose2d(PARALLEL_X, PARALLEL_Y, 0),
             new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))

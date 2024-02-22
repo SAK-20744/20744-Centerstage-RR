@@ -57,8 +57,6 @@ public class TRCPipelineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        sleep(20000);
-//
 //        pipeline = new Pipeline();
 //
 //        aprilTag = new AprilTagProcessor.Builder().build();

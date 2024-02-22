@@ -17,22 +17,16 @@ import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
-import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-//import com.qualcomm.robotcore.hardware.IMU;
-//import com.kauailabs.navx.ftc.AHRS;
-//import com.kauailabs.navx.ftc.navXPIDController;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-
-
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
@@ -48,7 +42,7 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SAK26MecanumDrive extends MecanumDrive {
+public class FASTMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.52, 0.05, 0.67);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(14.65, 0.0875, 0.86);
 
@@ -60,23 +54,22 @@ public class SAK26MecanumDrive extends MecanumDrive {
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(NavXDriveConstants.MAX_VEL, NavXDriveConstants.MAX_ANG_VEL, NavXDriveConstants.TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(NavXDriveConstants.MAX_ACCEL);
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(FASTDriveConstants.MAX_VEL, FASTDriveConstants.MAX_ANG_VEL, FASTDriveConstants.TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(FASTDriveConstants.MAX_ACCEL);
 
     private TrajectoryFollower follower;
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
-    //private IMU imu;
-    //private AHRS navx_device;
+    private IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public SAK26MecanumDrive(HardwareMap hardwareMap) {
-        super(NavXDriveConstants.kV, NavXDriveConstants.kA, NavXDriveConstants.kStatic, NavXDriveConstants.TRACK_WIDTH, NavXDriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
+    public FASTMecanumDrive(HardwareMap hardwareMap) {
+        super(FASTDriveConstants.kV, FASTDriveConstants.kA, FASTDriveConstants.kStatic, FASTDriveConstants.TRACK_WIDTH, FASTDriveConstants.TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.25, 0.25, Math.toRadians(2.5)), 0.25);
@@ -90,13 +83,10 @@ public class SAK26MecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-//        imu = hardwareMap.get(IMU.class, "imu");
-//        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-//                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-//        imu.initialize(parameters);
-
-        //navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
-
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                FASTDriveConstants.LOGO_FACING_DIR, FASTDriveConstants.USB_FACING_DIR));
+        imu.initialize(parameters);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "fl");
         leftRear = hardwareMap.get(DcMotorEx.class, "bl");
@@ -111,14 +101,14 @@ public class SAK26MecanumDrive extends MecanumDrive {
             motor.setMotorType(motorConfigurationType);
         }
 
-        if (NavXDriveConstants.RUN_USING_ENCODER) {
+        if (FASTDriveConstants.RUN_USING_ENCODER) {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (NavXDriveConstants.RUN_USING_ENCODER && NavXDriveConstants.MOTOR_VELO_PID != null) {
-            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, NavXDriveConstants.MOTOR_VELO_PID);
+        if (FASTDriveConstants.RUN_USING_ENCODER && FASTDriveConstants.MOTOR_VELO_PID != null) {
+            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, FASTDriveConstants.MOTOR_VELO_PID);
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
@@ -128,7 +118,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         List<Integer> lastTrackingEncVels = new ArrayList<>();
 
         // TODO: if desired, use setLocalizer() to change the localization method
-        setLocalizer(new SAK26TwoWheelTrackingLocalizer(hardwareMap, this));
+        setLocalizer(new FASTTwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(
                 follower, HEADING_PID, batteryVoltageSensor,
@@ -152,7 +142,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         return new TrajectorySequenceBuilder(
                 startPose,
                 VEL_CONSTRAINT, ACCEL_CONSTRAINT,
-                NavXDriveConstants.MAX_ANG_VEL, NavXDriveConstants.MAX_ANG_ACCEL
+                FASTDriveConstants.MAX_ANG_VEL, FASTDriveConstants.MAX_ANG_ACCEL
         );
     }
 
@@ -262,7 +252,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         for (DcMotorEx motor : motors) {
             int position = motor.getCurrentPosition();
             lastEncPositions.add(position);
-            wheelPositions.add(NavXDriveConstants.encoderTicksToInches(position));
+            wheelPositions.add(FASTDriveConstants.encoderTicksToInches(position));
         }
         return wheelPositions;
     }
@@ -275,7 +265,7 @@ public class SAK26MecanumDrive extends MecanumDrive {
         for (DcMotorEx motor : motors) {
             int vel = (int) motor.getVelocity();
             lastEncVels.add(vel);
-            wheelVelocities.add(NavXDriveConstants.encoderTicksToInches(vel));
+            wheelVelocities.add(FASTDriveConstants.encoderTicksToInches(vel));
         }
         return wheelVelocities;
     }
@@ -290,24 +280,12 @@ public class SAK26MecanumDrive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-//        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        //return Math.toRadians(-navx_device.getYaw());
-        return 0;
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
-        //double velInitial = Math.toRadians(-navx_device.getYaw());
-        double timeInitial = System.nanoTime();
-        //double velFinal = Math.toRadians(-navx_device.getYaw());
-        double timeFinal = System.nanoTime();
-
-        //double deltaV = velFinal - velInitial;
-        double deltaT = timeFinal - timeInitial;
-        //double headingVel = deltaV/deltaT;
-
-        //return headingVel;
-        return null;
+        return (double) imu.getRobotAngularVelocity(AngleUnit.RADIANS).zRotationRate;
     }
 
         public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

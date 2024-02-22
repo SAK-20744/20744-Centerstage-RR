@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.DiffyWrist;
 
 @Config
@@ -14,7 +14,7 @@ public class DiffyWristTester extends LinearOpMode {
 
     private DiffyWrist diffyWrist;
     public static double desiredPitch = 0;  // Example: 30 degrees
-    public static double desiredRoll = 180;
+    public static double desiredRoll = -90;
 
 //    public static MultipleTelemetry telemetry;
 
@@ -33,7 +33,7 @@ public class DiffyWristTester extends LinearOpMode {
             diffyWrist.runToProfile(desiredPitch, desiredRoll);
 
             while(diffyWrist.isBusy() && !isStopRequested() ) {
-                diffyWrist.updateServoArm();
+                diffyWrist.updateDiffy();
                 telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
                 telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
                 telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());

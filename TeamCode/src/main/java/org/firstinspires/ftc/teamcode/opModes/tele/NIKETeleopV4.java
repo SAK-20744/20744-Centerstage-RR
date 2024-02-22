@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.opModes.tele;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -20,7 +19,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainCon
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.OutakeSingle;
-import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoDiffyWrist;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SAK26MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -29,8 +27,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.concurrent.TimeUnit;
 
 @Config
-@TeleOp(name= "NIKE Teleop" , group = "advanced")
-public class NIKETeleop extends LinearOpMode {
+@Disabled
+@TeleOp(name= "NIKE Teleop V4" , group = "advanced")
+public class NIKETeleopV4 extends LinearOpMode {
 
     public static double SPEED = 0.8;
     public static double ELBOWSPEED = 1;
@@ -39,11 +38,6 @@ public class NIKETeleop extends LinearOpMode {
     private double armSpeed = 1;
     private boolean useWrist = true;
     private boolean backdrop = false;
-    private boolean extendoMode = false;
-    private boolean rotated = false;
-    private double rotVal = 180;
-
-    private ServoDiffyWrist diffyWrist;
 
     private double boardIMU = 0;
     private double pixelLevel = 1;
@@ -97,7 +91,7 @@ public class NIKETeleop extends LinearOpMode {
 
         CRServo intake;
         Servo door;
-//        Servo wrist;
+        Servo wrist;
         Servo plane;
 
         Arm1 arm1;
@@ -111,7 +105,7 @@ public class NIKETeleop extends LinearOpMode {
         boolean intaking = false;
         boolean hanging = false;
 
-        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData, (byte)120);
+        navx_device = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"), AHRS.DeviceDataType.kProcessedData);
 
         SAK26MecanumDrive drive = new SAK26MecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -130,16 +124,13 @@ public class NIKETeleop extends LinearOpMode {
         elbow = hardwareMap.get(DcMotor.class, "elbow");
         intake = hardwareMap.get(CRServo.class, "intake");
         door = hardwareMap.get(Servo.class, "door");
-//        wrist = hardwareMap.get(Servo.class, "wrist");
+        wrist = hardwareMap.get(Servo.class, "wrist");
         plane = hardwareMap.get(Servo.class, "plane");
 
         arm1 = (new Arm1(hardwareMap));
         arm2 = new Elbow(hardwareMap);
 
         OutakeSingle outake = new OutakeSingle(hardwareMap);
-
-        diffyWrist = new ServoDiffyWrist(hardwareMap);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
 //        IMU imu = hardwareMap.get(IMU.class, "imu");
 //        imu.initialize(
@@ -158,10 +149,8 @@ public class NIKETeleop extends LinearOpMode {
 
         useWrist = true;
         backdrop = false;
-        extendoMode = false;
         arm1Position=178;
         arm2Position=-30;
-        rotated = false;
 
         while (opModeIsActive() && !isStopRequested()) {
 //
@@ -291,78 +280,44 @@ public class NIKETeleop extends LinearOpMode {
                 //Intaking
                 useWrist = true;
                 backdrop = false;
-                extendoMode = false;
-                arm1Position=177;
-                arm2Position=-14;
+                arm1Position=178;
+                arm2Position=-30;
                 armSpeed = 0.7;
-                rotated = false;
-            }
-
-            if(gamepad2.b){
-                //extended Intaking
-                useWrist = false;
-                backdrop = false;
-                extendoMode = true;
-                arm1Position=177;
-                arm2Position=180;
-                armSpeed = 0.7;
-                rotated = false;
             }
 
             if(gamepad1.b) {
                 backdrop = true;
-                extendoMode = false;
                 if(pixelLevel < 1)
                     pixelLevel = 1;
                 if(pixelLevel > 9)
                     pixelLevel = 9;
-                rotated = false;
             }
 
             if(gamepad2.y){
                 //Pre-Hang
                 backdrop = false;
-                extendoMode = false;
                 intaking = false;
                 useWrist = false;
                 arm1Position=83;
                 arm2Position=254;
                 wristPosition=0.0;
                 armSpeed = 1;
-                rotated = true;
-                rotVal = 200;
             }
             if(gamepad2.a){
                 //Hang
                 backdrop = false;
                 intaking = false;
-                extendoMode = false;
                 useWrist = false;
                 arm1Position=115;
                 arm2Position=152;
-                wristPosition=0;
+                wristPosition=0.8;
                 armSpeed = 1;
-                rotated = true;
-                rotVal = 200;
             }
 
             if(backdrop){
-
-                drive.setWeightedDrivePower(
-                        new Pose2d(
-                                -(gamepad1.left_stick_y),
-                                -(gamepad1.left_stick_x),
-                                -gamepad1.right_stick_x
-                        )
-                );
-
-                drive.update();
-
-
                 //Scoring
                 intaking = false;
                 useWrist = false;
-                extendoMode = false;
 
                 if(gamepad2.dpad_down) {
                     pixelLevel -= 1;
@@ -386,74 +341,61 @@ public class NIKETeleop extends LinearOpMode {
                 if(pixelLevel == 1){
                     arm1Position=120;
                     arm2Position=26;
-                    wristPosition=-111;
+                    wristPosition=1.00;
                     armSpeed = 0.6;
                 }
                 else if(pixelLevel == 2){
                     arm1Position=120;
                     arm2Position=36;
-                    wristPosition=-99;
+                    wristPosition=0.59;
                     armSpeed = 0.75;
                 }
                 else if(pixelLevel == 3){
                     arm1Position=120;
                     arm2Position=43;
-                    wristPosition=-85;
+                    wristPosition=0.49;
                     armSpeed = 0.85;
                 }
                 else if(pixelLevel == 4){
                     arm1Position=118;
                     arm2Position=51;
-                    wristPosition=-85;
+                    wristPosition=0.42;
                     armSpeed = 0.9;
                 }
                 else if(pixelLevel == 5){
                     arm1Position=117;
                     arm2Position=61;
-                    wristPosition=-72;
+                    wristPosition=0.34;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 6){
                     arm1Position=120;
                     arm2Position=69;
-                    wristPosition=-75;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 7){
                     arm1Position=109;
                     arm2Position=85;
-                    wristPosition=-65;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 8){
                     arm1Position=100;
                     arm2Position=98;
-                    wristPosition=-65;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 9){
                     arm1Position=95;
                     arm2Position=106;
-                    wristPosition=-32;
+                    wristPosition=0.31;
                     armSpeed = 1;
                 }
 
             }
 
-            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, extendoMode, intaking,armSpeed, rotated, rotVal);
-//            outake.wrist.updateDiffy();
-
-//            while(outake.ivkWristBusy() && !isStopRequested() ) {
-//                diffyWrist.updateDiffy();
-//                telemetry.addData("leftPos: ", diffyWrist.getLeftPosition());
-//                telemetry.addData("rightPos: ", diffyWrist.getRightPosition());
-//                telemetry.addData("leftCorrectedPos: ", diffyWrist.getCorrectedLeftPos());
-//                telemetry.addData("rightCorrectedPos: ", diffyWrist.getCorrectedRightPos());
-//                telemetry.addData("leftTarget: ", diffyWrist.getLeftTarget());
-//                telemetry.addData("rightTarget: ", diffyWrist.getRightTarget());
-//                telemetry.addData("Moving?: ", diffyWrist.isBusy());
-//                telemetry.update();
-//            }
+//            outake.IVKtoArmPoses(arm1Position, arm2Position, wristPosition, useWrist, intaking,armSpeed);
 
             telemetry.addData("Pixel Level:", pixelLevel);
             telemetry.addData("Arm1 Degrees:" , outake.getMotorArmDeg());
@@ -462,13 +404,10 @@ public class NIKETeleop extends LinearOpMode {
             telemetry.addData("Arm2 Pos:" , outake.getServoArmPos());
             telemetry.addData("Wrist Degrees:" , outake.getWristDeg());
             telemetry.addData("Wrist Pos:" , outake.getWristPos());
-            telemetry.addData("Arm2 Power: ", elbow.getPower());
 
             double loop = System.nanoTime();
             telemetry.addData("hz ", 1000000000 / (loop - looptime));
             looptime = loop;
-
-//            arm2.shutOff();
 
 
             telemetry.update();

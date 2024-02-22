@@ -5,6 +5,8 @@ import static org.opencv.core.Core.ROTATE_90_COUNTERCLOCKWISE;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
@@ -20,6 +22,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+@Config
 public class PropPipeline implements VisionProcessor, CameraStreamSource {
 
     private final AtomicReference<Bitmap> lastFrame = new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
@@ -43,10 +46,10 @@ MAGENTA = Parking Right
     }
 
     // Lower and upper boundaries for colors
-    private static final Scalar
+    public static Scalar
             lower_gray_bounds  = new Scalar(140, 140, 140, 255),
             upper_gray_bounds  = new Scalar(170, 170, 167, 255),
-            lower_cyan_bounds    = new Scalar(0, 35, 112, 255),
+            lower_cyan_bounds    = new Scalar(0, 80, 120, 255),
             upper_cyan_bounds    = new Scalar(60, 255, 255, 255),
             lower_magenta_bounds = new Scalar(155, 20, 60, 255),
             upper_magenta_bounds = new Scalar(255, 60, 100, 255);
@@ -55,6 +58,7 @@ MAGENTA = Parking Right
     private final Scalar
             GRAY = new Scalar(155, 155, 155),
             CYAN    = new Scalar(0, 255, 255),
+//            CYAN    = new Scalar(0, 145, 255),
             MAGENTA = new Scalar(255, 0, 255);
 
     // Percent and mat definitions
@@ -87,11 +91,8 @@ MAGENTA = Parking Right
 
         Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
 
-        Rect leftArea = new Rect(new Point(110,395), new Point(170,475));
+        Rect leftArea = new Rect(new Point(110,375), new Point(170,430));
         Rect middleArea = new Rect(new Point(445,380), new Point(480,445));
-//
-//        Rect leftArea = new Rect(new Point(240,800), new Point(340,890));
-//        Rect middleArea = new Rect(new Point(760,720), new Point(880,810));
 
         // Noise reduction
         Imgproc.blur(input, blurredMatLeft, new Size(5, 5));

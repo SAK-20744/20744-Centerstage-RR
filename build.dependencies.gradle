@@ -4,8 +4,8 @@ repositories {
     maven { url = 'https://maven.brott.dev/' }
     flatDir {
         dirs rootProject.file('libs')
-        dirs 'libs', 'C:\\Users\\samse\\navx-micro\\android\\libs'
-        dirs 'libs', 'C:\\Users\\samse\\navx-mxp2\\android\\libs'
+//        dirs 'libs', 'C:\\Users\\arunk\\navx-micro\\android\\libs'
+//        dirs 'libs', 'C:\\Users\\arunk\\navx-mxp\\android\\libs'
     }
     maven { url 'https://jitpack.io' }
 }

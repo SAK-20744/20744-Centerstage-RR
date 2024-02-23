@@ -138,6 +138,8 @@ public class BlueNearCycleAuto extends LinearOpMode {
 
         //poses right here
 
+
+
         Pose2d startPos = new Pose2d(12.00, 63.00, toRadians(-90.00));
         Pose2d aprilPose = new Pose2d(44.00, 36.00, Math.toRadians(0.00));
 
@@ -156,6 +158,8 @@ public class BlueNearCycleAuto extends LinearOpMode {
         Pose2d closePark = new Pose2d(48.00, 60.00, Math.toRadians(0.00));
         Pose2d gatePark = new Pose2d(48.00 ,12.00, Math.toRadians(0.00));
         Pose2d park = closePark;
+
+        drive.setPoseEstimate(startPos);
 
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(startPos)
                 .lineToLinearHeading(aprilPose)
@@ -375,6 +379,7 @@ public class BlueNearCycleAuto extends LinearOpMode {
         arm2.ArmToPos(-1000, 1);
         diffyWrist.runToProfile(0, -180);
         arm2.ArmToPos(-2000, 1);
+        diffyWrist.runToProfile(-20, -180);
         sleep(1000);
         intake.setPower(0);
     }

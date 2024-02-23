@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+/*package org.firstinspires.ftc.teamcode.auto;
 
 import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.CENTER;
 import static org.firstinspires.ftc.teamcode.subsystems.CenterStageDetection.Location.LEFT;
@@ -551,3 +551,5 @@ public class VisionBlueAuto extends LinearOpMode {
     }
 
 }
+
+ */

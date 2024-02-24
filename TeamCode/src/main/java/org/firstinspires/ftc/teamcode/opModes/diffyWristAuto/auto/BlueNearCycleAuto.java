@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Config
-@Autonomous(name = "Blue Near 2+0")
+@Autonomous(name = "Blue Near 2+2")
 public class BlueNearCycleAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;

@@ -220,8 +220,8 @@ public class RedFarGateAuto extends LinearOpMode {
 
 
         TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(stackIntakingPos)
-                .lineToLinearHeading(MiddleTile)
                 .waitSeconds(waitTime)
+                .lineToLinearHeading(MiddleTile)
                 .build();
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(aprilTagPose)

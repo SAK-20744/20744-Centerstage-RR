@@ -43,8 +43,8 @@ import java.util.List;
  */
 @Config
 public class FASTMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.52, 0.05, 0.67);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(14.65, 0.0875, 0.86);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0.15, 1.3);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(15.87, 0.13, 1.45);
 
     public static double LATERAL_MULTIPLIER = 1.348;
 

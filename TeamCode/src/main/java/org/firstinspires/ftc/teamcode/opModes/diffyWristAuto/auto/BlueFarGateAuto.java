@@ -60,6 +60,10 @@ public class BlueFarGateAuto extends LinearOpMode {
 
     private double initWrist = -140;
     private ServoDiffyWrist diffyWrist;
+    private Elbow arm2;
+    private Arm1 arm1;
+    private CRServo intake;
+    private Servo door;
 
     public static double backdropWrist = -85;
     public static double purpleWrist = -50;
@@ -121,22 +125,22 @@ public class BlueFarGateAuto extends LinearOpMode {
 
         FASTMecanumDrive drive = new FASTMecanumDrive(hardwareMap);
         diffyWrist = new ServoDiffyWrist(hardwareMap);
-        Arm1 arm1 = (new Arm1(hardwareMap));
-        Elbow arm2 = new Elbow(hardwareMap);
+        arm1 = (new Arm1(hardwareMap));
+        arm2 = new Elbow(hardwareMap);
 
         diffyWrist.runToProfile(initWrist, 0);
 
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
-        CRServo intake = hardwareMap.get(CRServo.class, "intake");
-        Servo door = hardwareMap.get(Servo.class, "door");
+        intake = hardwareMap.get(CRServo.class, "intake");
+        door = hardwareMap.get(Servo.class, "door");
 
         Pose2d firstTile = new Pose2d(15, -6, Math.toRadians(0));
 
         Pose2d stackIntakingPos = new Pose2d(52,-3,Math.toRadians(90));
 
-        Pose2d spike3Avoid = new Pose2d(48, -12,Math.toRadians(180));
+        Pose2d spike3Avoid = new Pose2d(48, -8,Math.toRadians(180));
         Pose2d spike2Avoid = new Pose2d(48, -8, Math.toRadians(150));
         Pose2d spike1Avoid = new Pose2d(30.5, -6, Math.toRadians(90));
         Pose2d MiddleTile = new Pose2d(52,70, Math.toRadians(90));
@@ -347,9 +351,9 @@ public class BlueFarGateAuto extends LinearOpMode {
                 arm1.ArmToPos(-1840,1);
                 sleep(1000);
                 //cycle
-                arm2.ArmToPos(-2130,1);
+                arm2.ArmToPos(-2130,0.7);
                 sleep(2500);
-                arm2.ArmToPos(100,1);
+                arm2.ArmToPos(100,0.7);
                 diffyWrist.runToProfile(intakingWrist, -235);
                 sleep(2000);
                 intake.setPower(-1);
@@ -391,29 +395,28 @@ public class BlueFarGateAuto extends LinearOpMode {
 
                 drive.followTrajectorySequence(linetoFirstTile);
                 drive.followTrajectorySequence(toSpike3);
-                sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
-                sleep(500);
                 door.setPosition(0.95);
                 drive.followTrajectorySequence(avoid3);
                 drive.followTrajectorySequence(toNextRight);
                 arm1.ArmToPos(-1840,1);
-                sleep(1000);
-                //cycle
-                arm2.ArmToPos(-2130,1);
-                sleep(2500);
-                diffyWrist.runToProfile(intakingWrist, -235);
-                sleep(2000);
-                intake.setPower(-1);
-                sleep(1000);
-                intake.setPower(0);
-                sleep(2000);
-                arm2.ArmToPos(100,1);
+                stackIntake();
+                retractArms();
+//                arm2.ArmToPos(-2130,0.6);
+//                sleep(2500);
+//                diffyWrist.runToProfile(intakingWrist, -235);
+//                sleep(2000);
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(2000);
+//                arm2.ArmToPos(100,0.6);
                 //wrist.setPosition(0.3);
                 diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toMiddle);
+                sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
                 drive.setPoseEstimate(aprilTagPose);
@@ -595,6 +598,30 @@ public class BlueFarGateAuto extends LinearOpMode {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    public void stackIntake() {
+        intake.setPower(1);
+        arm2.ArmToPos(-1000, 1);
+        while (arm2.isBusy()){
+            arm2.updateElbow();
+            telemetry.addData("moving", 0);
+        }
+        diffyWrist.runToProfile(0, -180);
+        arm2.ArmToPos(-2100, 0.7);
+        diffyWrist.runToProfile(-20, -180);
+        while (arm2.isBusy()){
+            arm2.updateElbow();
+            telemetry.addData("moving", 0);
+        }
+        intake.setPower(0);
+    }
+
+    public void retractArms() {
+        door.setPosition(0.75);
+        arm1.ArmToPos(-2000, 0.7);
+        arm2.ArmToPos(138, 1);
+        diffyWrist.runToProfile(purpleWrist, 0);
     }
 
 }

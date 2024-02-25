@@ -68,7 +68,7 @@ public class BlueFarGateAuto extends LinearOpMode {
 
     public static double backdropWrist = -85;
     public static double purpleWrist = -50;
-    public static double intakingWrist = -47;
+    public static double intakingWrist = -37;
 
     public static double firstWrist = -60;
 
@@ -141,13 +141,13 @@ public class BlueFarGateAuto extends LinearOpMode {
 
         Pose2d firstTile = new Pose2d(15, -6, Math.toRadians(0));
 
-        Pose2d stackIntakingPos = new Pose2d(52,-4.1,Math.toRadians(90));
+        Pose2d stackIntakingPos = new Pose2d(54,-4.1,Math.toRadians(90));
 
 
         Pose2d spike3Avoid = new Pose2d(52, -8,Math.toRadians(180));
         Pose2d spike2Avoid = new Pose2d(48, -25, Math.toRadians(105));
         Pose2d spike1Avoid = new Pose2d(30.5, -6, Math.toRadians(90));
-        Pose2d MiddleTile = new Pose2d(52,70, Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(52,68, Math.toRadians(90));
         Pose2d spike3 = new Pose2d(43, -14, Math.toRadians(180));
         Pose2d spike2 = new Pose2d(52, -6, Math.toRadians(180));
         Pose2d spike1 = new Pose2d(32, -2, Math.toRadians(90));
@@ -222,6 +222,12 @@ public class BlueFarGateAuto extends LinearOpMode {
             if(gamepad2.left_bumper) {
                 door.setPosition(0.85);
             }
+            if(gamepad2.dpad_right) {
+                intake.setPower(-1);
+            }
+            else {
+                intake.setPower(0);
+            }
 
             if(waitTime < 0)
                 waitTime = 0;
@@ -285,11 +291,11 @@ public class BlueFarGateAuto extends LinearOpMode {
             Location location = propPipeline.getLocation();
 
             //wrist.setPosition(0.05);
-            door.setPosition(0.75);
-            arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(210, 1);
-            diffyWrist.runToProfile(firstWrist, 0);
-            diffyWrist.runToProfile(purpleWrist, 0);
+//            door.setPosition(0.9);
+//            arm1.ArmToPos(-2000, 0.5);
+//            arm2.ArmToPos(210, 1);
+//            diffyWrist.runToProfile(firstWrist, 0);
+//            diffyWrist.runToProfile(purpleWrist, 0);
 
             if (location == LEFT) {
                 // Movements for left spot
@@ -298,6 +304,11 @@ public class BlueFarGateAuto extends LinearOpMode {
                 telemetry.update();
 
                 drive.followTrajectorySequence(linetoFirstTile);
+                door.setPosition(0.9);
+                arm1.ArmToPos(-2000, 0.5);
+                arm2.ArmToPos(210, 1);
+                diffyWrist.runToProfile(firstWrist, 0);
+                diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toSpike1);
                 diffyWrist.runToProfile(purpleWrist, 0);
                 //wrist.setPosition(0.24);
@@ -354,6 +365,11 @@ public class BlueFarGateAuto extends LinearOpMode {
                 telemetry.update();
 
                 drive.followTrajectorySequence(linetoFirstTile);
+                door.setPosition(0.9);
+                arm1.ArmToPos(-2000, 0.5);
+                arm2.ArmToPos(210, 1);
+                diffyWrist.runToProfile(firstWrist, 0);
+                diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toSpike2);
                 sleep(500);
                 door.setPosition(0.1);
@@ -409,6 +425,11 @@ public class BlueFarGateAuto extends LinearOpMode {
                 telemetry.update();
 
                 drive.followTrajectorySequence(linetoFirstTile);
+                door.setPosition(0.9);
+                arm1.ArmToPos(-2000, 0.5);
+                arm2.ArmToPos(210, 1);
+                diffyWrist.runToProfile(firstWrist, 0);
+                diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toSpike3);
                 door.setPosition(0.1);
                 sleep(200);
@@ -631,7 +652,7 @@ public class BlueFarGateAuto extends LinearOpMode {
         diffyWrist.runToProfile(15, -225);
         arm2.ArmToPos(-2100, 0.7);
         sleep(1000);
-        diffyWrist.runToProfile(-25, -225);
+        diffyWrist.runToProfile(15, -250);
         while (arm2.isBusy()){
             arm2.updateElbow();
             telemetry.addData("moving", 0);

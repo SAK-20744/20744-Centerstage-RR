@@ -43,6 +43,41 @@ public class NIKETeleop extends LinearOpMode {
     private boolean rotated = false;
     private double rotVal = -180;
 
+    public static double h1arm1 = 120;
+    public static double h1arm2 = 26;
+    public static double h1wrist = -100;
+
+    public static double h2arm1 = 120;
+    public static double h2arm2 = 36;
+    public static double h2wrist = -88;
+
+    public static double h3arm1 = 120;
+    public static double h3arm2 = 43;
+    public static double h3wrist = -85;
+
+    public static double h4arm1 = 118;
+    public static double h4arm2 = 51;
+    public static double h4wrist = -75;
+
+    public static double h5arm1 = 117;
+    public static double h5arm2 = 61;
+    public static double h5wrist = -65;
+
+    public static double h6arm1 = 120;
+    public static double h6arm2 = 66;
+    public static double h6wrist = -55;
+
+    public static double h7arm1 = 109;
+    public static double h7arm2 = 85;
+    public static double h7wrist = -50;
+
+    public static double h8arm1 = 100;
+    public static double h8arm2 = 98;
+    public static double h8wrist = -45;
+
+    public static double h9arm1 = 95;
+    public static double h9arm2 = 106;
+    public static double h9wrist = -32;
     private ServoDiffyWrist diffyWrist;
 
     private double boardIMU = 0;
@@ -293,7 +328,7 @@ public class NIKETeleop extends LinearOpMode {
                 backdrop = false;
                 extendoMode = false;
                 arm1Position=177;
-                arm2Position=-14;
+                arm2Position=-17;
                 armSpeed = 0.7;
                 rotated = false;
             }
@@ -343,7 +378,7 @@ public class NIKETeleop extends LinearOpMode {
                 wristPosition=0;
                 armSpeed = 1;
                 rotated = true;
-                rotVal = 200;
+                rotVal = -200;
             }
 
             if(backdrop){
@@ -384,57 +419,57 @@ public class NIKETeleop extends LinearOpMode {
                     door.setPosition(0.95);
 
                 if(pixelLevel == 1){
-                    arm1Position=120;
-                    arm2Position=26;
-                    wristPosition=-111;
+                    arm1Position=h1arm1;
+                    arm2Position=h1arm2;
+                    wristPosition=h1wrist;
                     armSpeed = 0.6;
                 }
                 else if(pixelLevel == 2){
-                    arm1Position=120;
-                    arm2Position=36;
-                    wristPosition=-99;
+                    arm1Position=h2arm1;
+                    arm2Position=h2arm2;
+                    wristPosition=h2wrist;
                     armSpeed = 0.75;
                 }
                 else if(pixelLevel == 3){
-                    arm1Position=120;
-                    arm2Position=43;
-                    wristPosition=-85;
+                    arm1Position=h3arm1;
+                    arm2Position=h3arm2;
+                    wristPosition=h3wrist;
                     armSpeed = 0.85;
                 }
                 else if(pixelLevel == 4){
-                    arm1Position=118;
-                    arm2Position=51;
-                    wristPosition=-85;
+                    arm1Position=h4arm1;
+                    arm2Position=h4arm2;
+                    wristPosition=h4wrist;
                     armSpeed = 0.9;
                 }
                 else if(pixelLevel == 5){
-                    arm1Position=117;
-                    arm2Position=61;
-                    wristPosition=-72;
+                    arm1Position=h5arm1;
+                    arm2Position=h5arm2;
+                    wristPosition=h5wrist;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 6){
-                    arm1Position=120;
-                    arm2Position=69;
-                    wristPosition=-75;
+                    arm1Position=h6arm1;
+                    arm2Position=h6arm2;
+                    wristPosition=h6wrist;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 7){
-                    arm1Position=109;
-                    arm2Position=85;
-                    wristPosition=-65;
+                    arm1Position=h7arm1;
+                    arm2Position=h7arm2;
+                    wristPosition=h7wrist;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 8){
-                    arm1Position=100;
-                    arm2Position=98;
-                    wristPosition=-65;
+                    arm1Position=h8arm1;
+                    arm2Position=h8arm2;
+                    wristPosition=h8wrist;
                     armSpeed = 1;
                 }
                 else if(pixelLevel == 9){
-                    arm1Position=95;
-                    arm2Position=106;
-                    wristPosition=-32;
+                    arm1Position=h9arm1;
+                    arm2Position=h9arm2;
+                    wristPosition=h9wrist;
                     armSpeed = 1;
                 }
 

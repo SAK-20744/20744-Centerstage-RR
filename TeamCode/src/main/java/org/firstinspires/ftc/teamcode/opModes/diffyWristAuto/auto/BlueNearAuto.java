@@ -168,6 +168,18 @@ public class BlueNearAuto extends LinearOpMode {
             if(gamepad1.dpad_down) {
                 park = closePark;
             }
+            if(gamepad2.right_bumper) {
+                door.setPosition(0.1);
+            }
+            if(gamepad2.left_bumper) {
+                door.setPosition(0.85);
+            }
+            if(gamepad2.dpad_right) {
+                intake.setPower(-1);
+            }
+            else {
+                intake.setPower(0);
+            }
 
             if(park == gatePark)
                 telemetry.addData("Park Position: Gate Side ", 0);

@@ -128,6 +128,7 @@ public class RedNearAuto extends LinearOpMode {
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
+        DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
@@ -156,6 +157,8 @@ public class RedNearAuto extends LinearOpMode {
             if(gamepad2.b) {
                 elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
             door.setPosition(0.95);
@@ -182,11 +185,13 @@ public class RedNearAuto extends LinearOpMode {
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
+            elbow2.setPower(gamepad2.left_stick_y);
 
 
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
+            telemetry.addData("Elbow2 Encoder", elbow2.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
             telemetry.addData("wrist pos: ", initWrist);
             telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));

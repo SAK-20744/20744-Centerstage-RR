@@ -80,6 +80,18 @@ public class NIKETeleop extends LinearOpMode {
     public static double h9wrist = -32;
     private ServoDiffyWrist diffyWrist;
 
+    public static double phangarm1 = 83;
+    public static double phangarm2 = 254;
+    public static double phangRotVal = 200;
+
+    public static double hangarm1 = 115;
+    public static double hangarm2 = 152;
+    public static double hangRotVal = -200;
+
+    public static double extIntarm1 = 177;
+    public static double extIntarm2 = 180;
+
+
     private double boardIMU = 0;
     private double pixelLevel = 1;
 
@@ -338,8 +350,8 @@ public class NIKETeleop extends LinearOpMode {
                 useWrist = false;
                 backdrop = false;
                 extendoMode = true;
-                arm1Position=177;
-                arm2Position=180;
+                arm1Position=extIntarm1;
+                arm2Position=extIntarm2;
                 armSpeed = 0.7;
                 rotated = false;
             }
@@ -360,12 +372,12 @@ public class NIKETeleop extends LinearOpMode {
                 extendoMode = false;
                 intaking = false;
                 useWrist = false;
-                arm1Position=83;
-                arm2Position=254;
+                arm1Position=phangarm1;
+                arm2Position=phangarm2;
                 wristPosition=0.0;
                 armSpeed = 1;
                 rotated = true;
-                rotVal = 200;
+                rotVal = phangRotVal;
             }
             if(gamepad2.a){
                 //Hang
@@ -373,12 +385,12 @@ public class NIKETeleop extends LinearOpMode {
                 intaking = false;
                 extendoMode = false;
                 useWrist = false;
-                arm1Position=115;
-                arm2Position=152;
+                arm1Position=hangarm1;
+                arm2Position=hangarm2;
                 wristPosition=0;
                 armSpeed = 1;
                 rotated = true;
-                rotVal = -200;
+                rotVal = hangRotVal;
             }
 
             if(backdrop){

@@ -136,6 +136,7 @@ public class BlueFarGateAuto extends LinearOpMode {
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
+        DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
         intake = hardwareMap.get(CRServo.class, "intake");
         door = hardwareMap.get(Servo.class, "door");
 
@@ -204,11 +205,13 @@ public class BlueFarGateAuto extends LinearOpMode {
             if(gamepad2.b) {
                 elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            if(gamepad2.dpad_up)
+            if(gamepad1.dpad_up)
                 initWrist -= 0.1;
-            if(gamepad2.dpad_down)
+            if(gamepad1.dpad_down)
                 initWrist += 0.1;
 
             diffyWrist.runToProfile(initWrist, 0);
@@ -242,6 +245,7 @@ public class BlueFarGateAuto extends LinearOpMode {
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
+            elbow2.setPower(gamepad2.left_stick_y);
             //wrist.setPosition(0.63);
 
 //            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
@@ -250,7 +254,11 @@ public class BlueFarGateAuto extends LinearOpMode {
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
+            telemetry.addData("Elbow2 Encoder", elbow2.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
+
+
+            telemetry.addData("Elbow2 Power: ", elbow2.getPower());
 //            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
 
             telemetry.update();

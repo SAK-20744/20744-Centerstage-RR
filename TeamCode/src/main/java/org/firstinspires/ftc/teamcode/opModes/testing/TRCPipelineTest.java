@@ -57,103 +57,94 @@ public class TRCPipelineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-//        pipeline = new Pipeline();
-//
-//        aprilTag = new AprilTagProcessor.Builder().build();
-//        aprilTag.setDecimation(2);
-//        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
-//
-//        sleep(5000);
-//        telemetry.addData("after instantiating pipelines", 0);
-//        telemetry.update();
+        pipeline = new Pipeline();
 
-//        purplePixelVision = new FtcVisionEocvColorBlob(
-//                "PurplePixel", colorConversion, purplePixelColorThresholds, pixelFilterContourParams, true,
-//                cameraRect, worldRect, true);
-//        purplePixelProcessor = purplePixelVision.getVisionProcessor();
-////        visionProcessorsList.add(purplePixelProcessor);
-//
-//        greenPixelVision = new FtcVisionEocvColorBlob(
-//                "GreenPixel", colorConversion, greenPixelColorThresholds, pixelFilterContourParams, true,
-//                cameraRect, worldRect, true);
-//        greenPixelProcessor = greenPixelVision.getVisionProcessor();
-////        visionProcessorsList.add(greenPixelProcessor);
-//
-//        yellowPixelVision = new FtcVisionEocvColorBlob(
-//                "YellowPixel", colorConversion, yellowPixelColorThresholds, pixelFilterContourParams, true,
-//                cameraRect, worldRect, true);
-//        yellowPixelProcessor = yellowPixelVision.getVisionProcessor();
-////        visionProcessorsList.add(yellowPixelProcessor);
-//
-//        whitePixelVision = new FtcVisionEocvColorBlob(
-//                "WhitePixel", colorConversion, whitePixelColorThresholds, pixelFilterContourParams, true,
-//                cameraRect, worldRect, true);
-//        whitePixelProcessor = whitePixelVision.getVisionProcessor();
-////        visionProcessorsList.add(whitePixelProcessor);
-//
-//        redBlobVision = new FtcVisionEocvColorBlob(
-//                "RedBlob", colorConversion, redBlobColorThresholds, blobFilterContourParams, true,
-//                cameraRect, worldRect, true);
-//        redBlobProcessor = redBlobVision.getVisionProcessor();
-////        visionProcessorsList.add(redBlobProcessor);
-//
-//        blueBlobVision = new FtcVisionEocvColorBlob(
-//                "BlueBlob", colorConversion, blueBlobColorThresholds, blobFilterContourParams, true,
-//                cameraRect, worldRect, true);
-//        blueBlobProcessor = blueBlobVision.getVisionProcessor();
-////        visionProcessorsList.add(blueBlobProcessor);
-//
-//
-//        sleep(5000);
-//        telemetry.addData("after initializing blob vision", 0);
-//        telemetry.update();
-//
-//
-//        FtcDashboard.getInstance().startCameraStream(pipeline, 30);
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(2);
+        setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
-//        portal = new VisionPortal.Builder()
-//                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-////                .setCameraResolution(new Size(720, 1280))
-////                .addProcessor(propPipeline)
-//                .addProcessor(pipeline)
-//                .addProcessor(redBlobProcessor)
-//                .addProcessor(blueBlobProcessor)
-//                .addProcessor(aprilTag)
-//                .addProcessor(whitePixelProcessor)
-//                .addProcessor(greenPixelProcessor)
-//                .addProcessor(yellowPixelProcessor)
-//                .addProcessor(purplePixelProcessor)
-//                .enableLiveView(true)
-//                .setAutoStopLiveView(true)
-//                .build();
-//
-//        FtcDashboard.getInstance().startCameraStream(pipeline, 30);
-//
-//        while (opModeInInit()) {
-////            getDetectedTeamPropPosition(true);
+        purplePixelVision = new FtcVisionEocvColorBlob(
+                "PurplePixel", colorConversion, purplePixelColorThresholds, pixelFilterContourParams, true,
+                cameraRect, worldRect, true);
+        purplePixelProcessor = purplePixelVision.getVisionProcessor();
+//        visionProcessorsList.add(purplePixelProcessor);
+
+        greenPixelVision = new FtcVisionEocvColorBlob(
+                "GreenPixel", colorConversion, greenPixelColorThresholds, pixelFilterContourParams, true,
+                cameraRect, worldRect, true);
+        greenPixelProcessor = greenPixelVision.getVisionProcessor();
+//        visionProcessorsList.add(greenPixelProcessor);
+
+        yellowPixelVision = new FtcVisionEocvColorBlob(
+                "YellowPixel", colorConversion, yellowPixelColorThresholds, pixelFilterContourParams, true,
+                cameraRect, worldRect, true);
+        yellowPixelProcessor = yellowPixelVision.getVisionProcessor();
+//        visionProcessorsList.add(yellowPixelProcessor);
+
+        whitePixelVision = new FtcVisionEocvColorBlob(
+                "WhitePixel", colorConversion, whitePixelColorThresholds, pixelFilterContourParams, true,
+                cameraRect, worldRect, true);
+        whitePixelProcessor = whitePixelVision.getVisionProcessor();
+//        visionProcessorsList.add(whitePixelProcessor);
+
+        redBlobVision = new FtcVisionEocvColorBlob(
+                "RedBlob", colorConversion, redBlobColorThresholds, blobFilterContourParams, true,
+                cameraRect, worldRect, true);
+        redBlobProcessor = redBlobVision.getVisionProcessor();
+//        visionProcessorsList.add(redBlobProcessor);
+
+        blueBlobVision = new FtcVisionEocvColorBlob(
+                "BlueBlob", colorConversion, blueBlobColorThresholds, blobFilterContourParams, true,
+                cameraRect, worldRect, true);
+        blueBlobProcessor = blueBlobVision.getVisionProcessor();
+//        visionProcessorsList.add(blueBlobProcessor);
+
+
+        FtcDashboard.getInstance().startCameraStream(pipeline, 30);
+
+        portal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+//                .setCameraResolution(new Size(720, 1280))
+//                .addProcessor(propPipeline)
+                .addProcessor(pipeline)
+                .addProcessor(redBlobProcessor)
+                .addProcessor(blueBlobProcessor)
+                .addProcessor(aprilTag)
+                .addProcessor(whitePixelProcessor)
+                .addProcessor(greenPixelProcessor)
+                .addProcessor(yellowPixelProcessor)
+                .addProcessor(purplePixelProcessor)
+                .enableLiveView(true)
+                .setAutoStopLiveView(true)
+                .build();
+
+        FtcDashboard.getInstance().startCameraStream(pipeline, 30);
+
+        while (opModeInInit()) {
+//            getDetectedTeamPropPosition(true);
 //            getDetectedTeamPropPosition(true);
 //            int location = getLastDetectedTeamPropPosition();
-//            telemetry.addData("Location", location);
-//            telemetry.update();
-//        }
-//
-//        waitForStart();
-//
-//        while (opModeIsActive()) {
-////            telemetry.addData("Location", propPipeline.getLocation());
+            telemetry.addData("Running", true);
+            telemetry.update();
+        }
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+//            telemetry.addData("Location", propPipeline.getLocation());
 //
 //            getDetectedTeamPropPosition(true);
 //            int location = getLastDetectedTeamPropPosition();
-//            telemetry.addData("Location", location);
-//            telemetry.update();
-//        }
+            telemetry.addData("Running", true);
+            telemetry.update();
+        }
     }
 
 //    private int getLastDetectedTeamPropPosition()
 //    {
 //        return lastTeamPropPos;
 //    }   //getLastDetectedTeamPropPosition
-//
+
 //    private int getDetectedTeamPropPosition(boolean red)
 //    {
 //        int pos = 0;
@@ -201,39 +192,39 @@ public class TRCPipelineTest extends LinearOpMode {
 //
 //        return pos;
 //    }
-//
-//    private void    setManualExposure(int exposureMS, int gain) {
-//        // Wait for the camera to be open, then use the controls
-//
-//        if (portal == null) {
-//            return;
-//        }
-//
-//        // Make sure camera is streaming before we try to set the exposure controls
-//        if (portal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-//            telemetry.addData("Camera", "Waiting");
-//            telemetry.update();
-//            while (!isStopRequested() && (portal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-//                sleep(20);
-//            }
-//            telemetry.addData("Camera", "Ready");
-//            telemetry.update();
-//        }
-//
-//        // Set camera controls unless we are stopping.
-//        if (!isStopRequested())
-//        {
-//            ExposureControl exposureControl = portal.getCameraControl(ExposureControl.class);
-//            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-//                exposureControl.setMode(ExposureControl.Mode.Manual);
-//                sleep(50);
-//            }
-//            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-//            sleep(20);
-//            GainControl gainControl = portal.getCameraControl(GainControl.class);
-//            gainControl.setGain(gain);
-//            sleep(20);
-//        }
-//    }
+
+    private void    setManualExposure(int exposureMS, int gain) {
+        // Wait for the camera to be open, then use the controls
+
+        if (portal == null) {
+            return;
+        }
+
+        // Make sure camera is streaming before we try to set the exposure controls
+        if (portal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (portal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            ExposureControl exposureControl = portal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+            GainControl gainControl = portal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+        }
+    }
 
 }

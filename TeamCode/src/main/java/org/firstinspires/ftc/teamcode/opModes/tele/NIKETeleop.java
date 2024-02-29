@@ -80,16 +80,18 @@ public class NIKETeleop extends LinearOpMode {
     public static double h9wrist = -32;
     private ServoDiffyWrist diffyWrist;
 
-    public static double phangarm1 = 83;
-    public static double phangarm2 = 254;
-    public static double phangRotVal = 200;
+    public static double phangarm1 = 84;
+    public static double phangarm2 = -130;
+    public static double phangRotVal = 0;
+    public static double phangwrist = -130;
 
-    public static double hangarm1 = 115;
-    public static double hangarm2 = 152;
-    public static double hangRotVal = -200;
+    public static double hangarm1 = 125;
+    public static double hangarm2 = -180          ;
+    public static double hangRotVal = 0;
+    public static double hangwrist = 30;
 
-    public static double extIntarm1 = 177;
-    public static double extIntarm2 = 180;
+    public static double extIntarm1 = 180;
+    public static double extIntarm2 = 182;
 
 
     private double boardIMU = 0;
@@ -356,7 +358,7 @@ public class NIKETeleop extends LinearOpMode {
                 rotated = false;
             }
 
-            if(gamepad1.b) {
+            if(gamepad1.b || gamepad2.x) {
                 backdrop = true;
                 extendoMode = false;
                 if(pixelLevel < 1)
@@ -372,12 +374,12 @@ public class NIKETeleop extends LinearOpMode {
                 extendoMode = false;
                 intaking = false;
                 useWrist = false;
-                arm1Position=phangarm1;
                 arm2Position=phangarm2;
-                wristPosition=0.0;
+                arm1Position=phangarm1;
+                wristPosition=phangwrist;
                 armSpeed = 1;
                 rotated = true;
-                rotVal = phangRotVal;
+                rotVal = -phangRotVal;
             }
             if(gamepad2.a){
                 //Hang
@@ -387,7 +389,7 @@ public class NIKETeleop extends LinearOpMode {
                 useWrist = false;
                 arm1Position=hangarm1;
                 arm2Position=hangarm2;
-                wristPosition=0;
+                wristPosition=hangwrist;
                 armSpeed = 1;
                 rotated = true;
                 rotVal = hangRotVal;

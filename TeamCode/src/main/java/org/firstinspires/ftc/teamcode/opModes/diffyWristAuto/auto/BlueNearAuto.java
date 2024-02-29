@@ -137,11 +137,11 @@ public class BlueNearAuto extends LinearOpMode {
         Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
         Pose2d MiddleTileLeft = new Pose2d(6, -2, Math.toRadians(0));
         Pose2d spike1 = new Pose2d(25, 9.8, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(27.5, -4, Math.toRadians(0));
+        Pose2d spike2 = new Pose2d(27.5, -1, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(30, 2, Math.toRadians(-90));
         Pose2d aprilPose = new Pose2d(25, 24, Math.toRadians(90));
         Pose2d boardLeft = new Pose2d(17, 21, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(25, 21, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(23, 21, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(34, 21, Math.toRadians(90));
         Pose2d closePark = new Pose2d(0, 32,Math.toRadians(90));
         Pose2d gatePark = new Pose2d(53.5 ,32,Math.toRadians(90));
@@ -293,7 +293,7 @@ public class BlueNearAuto extends LinearOpMode {
                 arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 0.65);
+                arm2.ArmToPos(-900, 0.65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -314,6 +314,7 @@ public class BlueNearAuto extends LinearOpMode {
                 telemetry.update();
 
 //                drive.followTrajectorySequence(lineToMiddleTile);
+                diffyWrist.runToProfile(30,0);
                 drive.followTrajectorySequence(toSpike2);
 //                wrist.setPosition(0.24);
                 diffyWrist.runToProfile(purpleWrist, 0);
@@ -335,7 +336,7 @@ public class BlueNearAuto extends LinearOpMode {
                 arm1.ArmToPos(-680, 0.5);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 65);
+                arm2.ArmToPos(-800, .65);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);

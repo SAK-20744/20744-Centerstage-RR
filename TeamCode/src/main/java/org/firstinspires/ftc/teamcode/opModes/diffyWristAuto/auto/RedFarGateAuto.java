@@ -78,11 +78,11 @@ public class RedFarGateAuto extends LinearOpMode {
     public static double spke1y = 7.5;
     public static double spke1hding = 180;
 
-    public static double spke2x = 35;
-    public static double spke2y = 4;
+    public static double spke2x = 40;
+    public static double spke2y = -4;
     public static double spke2hding = -90;
 
-    public static double spke3x = 28.5;
+    public static double spke3x = 22.5;
     public static double spke3y = -8;
     public static double spke3hding = 180;
     PIDFController speedController = new PIDFController(pX, iX, dX, 0);
@@ -155,13 +155,13 @@ public class RedFarGateAuto extends LinearOpMode {
 
         Pose2d stackIntakingPos = new Pose2d(52,-3,Math.toRadians(-90));
 
-        Pose2d spike3Avoid = new Pose2d(31, 12,Math.toRadians(-90));
-        Pose2d spike2Avoid = new Pose2d(52,4 , Math.toRadians(180));
-        Pose2d spike1Avoid = new Pose2d(48, 6, Math.toRadians(180));
+        Pose2d spike3Avoid = new Pose2d(31, 15,Math.toRadians(-90));
+        Pose2d spike2Avoid = new Pose2d(52,6 , Math.toRadians(180));
+        Pose2d spike1Avoid = new Pose2d(48, 8, Math.toRadians(180));
         Pose2d MiddleTile = new Pose2d(52,-74, Math.toRadians(-90));
-        Pose2d spike1 = new Pose2d(37.5, 10.5, Math.toRadians(180));
-        Pose2d spike2 = new Pose2d(39, 4, Math.toRadians(-90));
-        Pose2d spike3 = new Pose2d(28.5, -8, Math.toRadians(-90));
+        Pose2d spike1 = new Pose2d(spke1x, spke1y, Math.toRadians(spke1hding));
+        Pose2d spike2 = new Pose2d(spke2x, spke2y, Math.toRadians(spke2hding));
+        Pose2d spike3 = new Pose2d(spke3x, spke3y, Math.toRadians(spke3hding));
         Pose2d aprilTagPose = new Pose2d(25, -74, Math.toRadians(-90));
         Pose2d boardLeft = new Pose2d(33.5, -75, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(25, -75, Math.toRadians(-90));

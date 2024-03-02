@@ -347,7 +347,7 @@ public class NIKETeleop extends LinearOpMode {
                 rotated = false;
             }
 
-            if(gamepad2.b){
+            if(gamepad2.x){
                 //extended Intaking
                 useWrist = false;
                 backdrop = false;
@@ -358,7 +358,7 @@ public class NIKETeleop extends LinearOpMode {
                 rotated = false;
             }
 
-            if(gamepad1.b || gamepad2.x) {
+            if(gamepad1.b || gamepad2.b) {
                 backdrop = true;
                 extendoMode = false;
                 if(pixelLevel < 1)

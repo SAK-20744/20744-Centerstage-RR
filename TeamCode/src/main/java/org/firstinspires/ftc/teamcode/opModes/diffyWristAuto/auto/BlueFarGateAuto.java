@@ -72,6 +72,14 @@ public class BlueFarGateAuto extends LinearOpMode {
 
     public static double firstWrist = -60;
 
+    public static int yellowArm1Pos = -710;
+
+    public static double yellowArm1Power = 0.35;
+
+    public static int yellowArm2Pos = -870;
+
+    public static double yellowArm2Power = 0.35;
+
     PIDFController speedController = new PIDFController(pX, iX, dX, 0);
     PIDFController strafeController = new PIDFController(pY, iY, dY, 0);
     PIDFController turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
@@ -152,9 +160,9 @@ public class BlueFarGateAuto extends LinearOpMode {
         Pose2d spike3 = new Pose2d(43, -14, Math.toRadians(180));
         Pose2d spike2 = new Pose2d(52, -6, Math.toRadians(180));
         Pose2d spike1 = new Pose2d(32, -2, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(34.5, 72.3, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(23.5, 72.3, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(15.2, 72.3, Math.toRadians(90));
+        Pose2d boardRight = new Pose2d(34.5, 71.8, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(23.5, 71.8, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(15.2, 71.8, Math.toRadians(90));
         Pose2d park = new Pose2d(52, 86, Math.toRadians(90));
         Pose2d aprilTagPose = new Pose2d(23, 70, Math.toRadians(90));
         Pose2d boardRightWhite = new Pose2d(28, 72.3, Math.toRadians(90));
@@ -209,9 +217,9 @@ public class BlueFarGateAuto extends LinearOpMode {
                 elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            if(gamepad1.dpad_up)
+            if(gamepad2.dpad_up)
                 initWrist -= 0.1;
-            if(gamepad1.dpad_down)
+            if(gamepad2.dpad_down)
                 initWrist += 0.1;
 
             diffyWrist.runToProfile(initWrist, 0);
@@ -233,20 +241,24 @@ public class BlueFarGateAuto extends LinearOpMode {
             if(gamepad2.dpad_right) {
                 intake.setPower(-1);
             }
+            else if(gamepad2.dpad_left) {
+                intake.setPower(1);
+            }
             else {
                 intake.setPower(0);
             }
 
+
             if(waitTime < 0)
                 waitTime = 0;
-            if(waitTime > 4)
-                waitTime = 4;
+            if(waitTime > 6)
+                waitTime = 6;
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
             elbow2.setPower(gamepad2.left_stick_y);
-            //wrist.setPosition(0.63);
+//            wrist.setPosition(0.63);
 
 //            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
 //            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
@@ -256,9 +268,6 @@ public class BlueFarGateAuto extends LinearOpMode {
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Elbow2 Encoder", elbow2.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
-
-
-            telemetry.addData("Elbow2 Power: ", elbow2.getPower());
 //            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
 
             telemetry.update();
@@ -303,26 +312,38 @@ public class BlueFarGateAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            door.setPosition(0.9);
-            arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(190, 1);
-//            diffyWrist.runToProfile(firstWrist, 0);
-            diffyWrist.runToProfile(purpleWrist, 0);
+//            door.setPosition(0.9);
+//            arm1.ArmToPos(-2000, 0.5);
+//            arm2.ArmToPos(190, 1);
+////            diffyWrist.runToProfile(firstWrist, 0);
+            diffyWrist.runToProfile(initWrist, 0);
 
             if (location == LEFT) {
                 telemetry.addData("Position", "Left");
                 telemetry.update();
+
                 drive.followTrajectorySequence(linetoFirstTile);
-                door.setPosition(0.9);
+                door.setPosition(0.75);
                 arm1.ArmToPos(-2000, 0.5);
-                arm2.ArmToPos(190, 1);
+                arm2.ArmToPos(140, 1);
 //                diffyWrist.runToProfile(firstWrist, 0);
-                diffyWrist.runToProfile(purpleWrist, 0);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toSpike1);
+
                 drive.followTrajectorySequence(toSpike1);
+//                wrist.setPosition(0.24);
+                diffyWrist.runToProfile(purpleWrist, 0);
+                sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
-                door.setPosition(0.85);
+                sleep(500);
+                door.setPosition(0.95);
+
+//                door.setPosition(0.1);
+//                sleep(200);
+//                arm2.ArmToPos(0,1);
+//                door.setPosition(0.85);
                 drive.followTrajectorySequence(avoid1);
                 drive.followTrajectorySequence(toNextLeft);
                 arm1.ArmToPos(-1840,1);
@@ -339,36 +360,64 @@ public class BlueFarGateAuto extends LinearOpMode {
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
-                arm1.ArmToPos(-680, 0.5);
+//                Original Values
+//                arm1.ArmToPos(yellowArm1Pos, 1);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, 1);
+////                arm2.updateElbow();
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+//                arm2.ArmToPos(-890, 0.6);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(1000);
+//                arm1.ArmToPos(-1000, 0.5);
+                //Blue Near
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 0.65);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(100);
-                arm2.ArmToPos(-890, 0.6);
-                intake.setPower(-1);
-                sleep(500);
-                intake.setPower(0);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
+                arm1.ArmToPos(-1850, 0.5);
                 sleep(1000);
-                arm1.ArmToPos(-1000, 0.5);
+                drive.followTrajectorySequence(centerPark);
+                arm2.ArmToPos(0,1);
             }
             if (location == CENTER) {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
+
+
                 drive.followTrajectorySequence(linetoFirstTile);
-                door.setPosition(0.9);
+                door.setPosition(0.75);
                 arm1.ArmToPos(-2000, 0.5);
-                arm2.ArmToPos(190, 1);
+                arm2.ArmToPos(140, 1);
 //                diffyWrist.runToProfile(firstWrist, 0);
-                diffyWrist.runToProfile(purpleWrist, 0);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toSpike1);
+
                 drive.followTrajectorySequence(toSpike2);
+//                wrist.setPosition(0.24);
+                diffyWrist.runToProfile(purpleWrist, 0);
+                sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
-                door.setPosition(0.85);
+                sleep(500);
+                door.setPosition(0.95);
+
                 drive.followTrajectorySequence(avoid2);
                 drive.followTrajectorySequence(toNextCenter);
                 arm1.ArmToPos(-1840,1);
@@ -385,36 +434,63 @@ public class BlueFarGateAuto extends LinearOpMode {
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardMiddle);
-                arm1.ArmToPos(-680, 0.5);
+//              Original Values
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+////                arm2.updateElbow();
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+//                arm2.ArmToPos(-890, 0.6);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(1000);
+//                arm1.ArmToPos(-1000, 0.5);
+                //Blue Near
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 0.65);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
-                sleep(500);
+                sleep(1000);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(100);
-                arm2.ArmToPos(-890, 0.6);
-                intake.setPower(-1);
-                sleep(500);
-                intake.setPower(0);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
+                arm1.ArmToPos(-1850, 0.5);
                 sleep(1000);
-                arm1.ArmToPos(-1000, 0.5);
+                drive.followTrajectorySequence(centerPark);
+                arm2.ArmToPos(0,1);
             }
             if (location == RIGHT) {
                 telemetry.addData("Position", "Right");
                 telemetry.update();
+
                 drive.followTrajectorySequence(linetoFirstTile);
-                door.setPosition(0.9);
+                door.setPosition(0.75);
                 arm1.ArmToPos(-2000, 0.5);
-                arm2.ArmToPos(190, 1);
+                arm2.ArmToPos(140, 1);
 //                diffyWrist.runToProfile(firstWrist, 0);
-                diffyWrist.runToProfile(purpleWrist, 0);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toSpike1);
+
                 drive.followTrajectorySequence(toSpike3);
+//                wrist.setPosition(0.24);
+                diffyWrist.runToProfile(purpleWrist, 0);
+                sleep(500);
                 door.setPosition(0.1);
                 sleep(200);
                 arm2.ArmToPos(0,1);
-                door.setPosition(0.85);
+                sleep(500);
+                door.setPosition(0.95);
+
                 drive.followTrajectorySequence(avoid3);
                 drive.followTrajectorySequence(toNextRight);
                 arm1.ArmToPos(-1840,1);
@@ -431,21 +507,41 @@ public class BlueFarGateAuto extends LinearOpMode {
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
-                arm1.ArmToPos(-680, 0.5);
+//               Original
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+////                arm2.updateElbow();
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+//                arm2.ArmToPos(-890, 0.6);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(1000);
+//                arm1.ArmToPos(-1000, 0.5);
+//
+//               Blue Near Values
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 0.65);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
-                sleep(500);
+                sleep(1000);
                 intake.setPower(0);
                 sleep(1000);
                 door.setPosition(0.1);
                 sleep(100);
-                arm2.ArmToPos(-890, 0.6);
-                intake.setPower(-1);
-                sleep(500);
-                intake.setPower(0);
+//                arm2.ArmToPos(-1100, 0.5);
+//                sleep(1000);
+                arm1.ArmToPos(-1850, 0.5);
                 sleep(1000);
-                arm1.ArmToPos(-1000, 0.5);
+                drive.followTrajectorySequence(centerPark);
+                arm2.ArmToPos(0,1);
             }
             sleep(30000);
         }

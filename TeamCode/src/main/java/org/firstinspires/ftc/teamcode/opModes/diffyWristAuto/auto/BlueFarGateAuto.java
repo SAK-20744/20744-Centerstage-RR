@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
+@Config
 @Autonomous(name = "New Blue Far Gate 2+0")
 public class BlueFarGateAuto extends LinearOpMode {
 
@@ -66,19 +67,38 @@ public class BlueFarGateAuto extends LinearOpMode {
     private CRServo intake;
     private Servo door;
 
-    public static double backdropWrist = -85;
+    public static double backdropWrist = -100;
     public static double purpleWrist = -50;
     public static double intakingWrist = -37;
 
     public static double firstWrist = -60;
 
-    public static int yellowArm1Pos = -710;
+    public static int yellowArm1Pos = -1400;
 
     public static double yellowArm1Power = 0.35;
 
-    public static int yellowArm2Pos = -870;
+    public static int yellowArm2Pos = -260;
 
     public static double yellowArm2Power = 0.35;
+
+    public static double spke1x = 29;
+    public static double spke1y = -4;
+    public static double spke1hding = 90;
+
+    public static double spke2x = 52;
+    public static double spke2y = -6;
+    public static double spke2hding = 180;
+
+    public static double spke3x = 43;
+    public static double spke3y = -14;
+    public static double spke3hding = 180;
+
+    public static double boardMidX = 24.5;
+    public static double boardMidY = 85.5;
+    public static double boardLeftX = 9.5;
+    public static double boardLeftY = 85.5;
+    public static double boardRightX = 35.5;
+    public static double boardRightY = 85.5;
 
     PIDFController speedController = new PIDFController(pX, iX, dX, 0);
     PIDFController strafeController = new PIDFController(pY, iY, dY, 0);
@@ -154,16 +174,16 @@ public class BlueFarGateAuto extends LinearOpMode {
 
 
         Pose2d spike3Avoid = new Pose2d(52, -8,Math.toRadians(180));
-        Pose2d spike2Avoid = new Pose2d(48, -25, Math.toRadians(105));
-        Pose2d spike1Avoid = new Pose2d(30.5, -6, Math.toRadians(90));
+        Pose2d spike2Avoid = new Pose2d(50, -26, Math.toRadians(105));
+        Pose2d spike1Avoid = new Pose2d(30.5, -9, Math.toRadians(90));
         Pose2d MiddleTile = new Pose2d(52,68, Math.toRadians(90));
-        Pose2d spike3 = new Pose2d(43, -14, Math.toRadians(180));
-        Pose2d spike2 = new Pose2d(52, -6, Math.toRadians(180));
-        Pose2d spike1 = new Pose2d(32, -2, Math.toRadians(90));
-        Pose2d boardRight = new Pose2d(34.5, 71.8, Math.toRadians(90));
-        Pose2d boardMiddle = new Pose2d(23.5, 71.8, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(15.2, 71.8, Math.toRadians(90));
-        Pose2d park = new Pose2d(52, 86, Math.toRadians(90));
+        Pose2d spike3 = new Pose2d(spke3x, spke3y, Math.toRadians(spke3hding));
+        Pose2d spike2 = new Pose2d(spke2x, spke2y, Math.toRadians(spke2hding));
+        Pose2d spike1 = new Pose2d(spke1x, spke1y, Math.toRadians(spke1hding));
+        Pose2d boardRight = new Pose2d(boardRightX, boardRightY, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(boardMidX, boardMidY, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(boardLeftX, boardLeftY, Math.toRadians(90));
+        Pose2d park = new Pose2d(52, 76, Math.toRadians(90));
         Pose2d aprilTagPose = new Pose2d(23, 70, Math.toRadians(90));
         Pose2d boardRightWhite = new Pose2d(28, 72.3, Math.toRadians(90));
         Pose2d boardWhite = new Pose2d(33, 72.3, Math.toRadians(90));
@@ -353,8 +373,15 @@ public class BlueFarGateAuto extends LinearOpMode {
                 diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toMiddle);
                 sleep(500);
+
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
+                diffyWrist.runToProfile(backdropWrist, 0);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
+
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardLeft)
@@ -378,10 +405,10 @@ public class BlueFarGateAuto extends LinearOpMode {
 //                sleep(1000);
 //                arm1.ArmToPos(-1000, 0.5);
                 //Blue Near
-                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
-//                wrist.setPosition(0.8);
-                diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -427,8 +454,15 @@ public class BlueFarGateAuto extends LinearOpMode {
                 diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toMiddle);
                 sleep(500);
+
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
+                diffyWrist.runToProfile(backdropWrist, 0);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
+
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardMiddle = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardMiddle)
@@ -452,10 +486,10 @@ public class BlueFarGateAuto extends LinearOpMode {
 //                sleep(1000);
 //                arm1.ArmToPos(-1000, 0.5);
                 //Blue Near
-                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
-//                wrist.setPosition(0.8);
-                diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
                 sleep(1000);
                 intake.setPower(0);
@@ -500,8 +534,15 @@ public class BlueFarGateAuto extends LinearOpMode {
                 diffyWrist.runToProfile(purpleWrist, 0);
                 drive.followTrajectorySequence(toMiddle);
                 sleep(500);
+
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
+                diffyWrist.runToProfile(backdropWrist, 0);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+
                 drive.followTrajectorySequence(toAprilTag);
                 alignToAprilTags();
+
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardRight)
@@ -526,10 +567,10 @@ public class BlueFarGateAuto extends LinearOpMode {
 //                arm1.ArmToPos(-1000, 0.5);
 //
 //               Blue Near Values
-                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
-//                wrist.setPosition(0.8);
-                diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
                 sleep(1000);
                 intake.setPower(0);
@@ -613,7 +654,7 @@ public class BlueFarGateAuto extends LinearOpMode {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
                 strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
-                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
+                aprilTagDrive = speedController.calculate(30, desiredTag.ftcPose.range);
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
                 telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");

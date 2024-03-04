@@ -6,19 +6,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.vision.old.SlotPipeline;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 //@Disabled
 @Autonomous(name = "PipelineTest")
 public class PipelineTest extends LinearOpMode {
 
-    private PropPipeline propPipeline;
+    private SlotPipeline propPipeline;
     private VisionPortal myPortal;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        propPipeline = new PropPipeline();
+        propPipeline = new SlotPipeline();
         myPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
 //                .setCameraResolution(new Size(720, 1280))
@@ -39,6 +40,8 @@ public class PipelineTest extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addData("Location", propPipeline.getLocation());
             telemetry.update();
+
+
         }
     }
 }

@@ -66,7 +66,7 @@ public class SlotPipeline implements VisionProcessor, CameraStreamSource {
     public Object processFrame(Mat input, long captureTimeNanos) {
 
         Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
-        Rect leftArea = new Rect(new Point(110,375), new Point(170,430));
+        Rect leftArea = new Rect(new Point(90,130), new Point(150,170));
 
         // Noise reduction
         Imgproc.blur(input, blurredMatLeft, new Size(5, 5));

@@ -5,12 +5,15 @@
 //import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 //
 //import com.acmerobotics.dashboard.FtcDashboard;
+//import com.acmerobotics.dashboard.config.Config;
 //import com.acmerobotics.roadrunner.geometry.Pose2d;
 //import com.arcrobotics.ftclib.controller.PIDFController;
+//import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 //import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //import com.qualcomm.robotcore.hardware.CRServo;
 //import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.hardware.IMU;
 //import com.qualcomm.robotcore.hardware.Servo;
 //
 //import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -31,8 +34,9 @@
 //import java.util.concurrent.TimeUnit;
 //
 ////@Disabled
-//@Autonomous(name = "Blue Far Gate 2+0")
-//public class BlueFarGate20 extends LinearOpMode {
+//@Autonomous(name = " Red Far Gate 2+0")
+//@Config
+//public class OldRedFarGate extends LinearOpMode {
 //
 //    private PropPipeline propPipeline;
 //    private VisionPortal portal;
@@ -44,7 +48,7 @@
 //    private DcMotor leftBackDrive    = null;
 //    private DcMotor rightBackDrive   = null;
 //
-//    private static final int DESIRED_TAG_ID = 1; // LEFT April Tag - Aligns the robot to the Center
+//    private static final int DESIRED_TAG_ID = 4; // LEFT April Tag - Aligns the robot to the Center
 //
 //    private double pX = 0.045, iX = 0.02, dX = 0.05;
 //    private double pY = 0.055, iY = 0, dY = 0.35;
@@ -55,7 +59,6 @@
 //    private double strafe = 0;
 //    private double turn = 0;
 //
-//    private double initWrist = -140;
 //    private ServoDiffyWrist diffyWrist;
 //    private Elbow arm2;
 //    private Arm1 arm1;
@@ -64,7 +67,41 @@
 //
 //    public static double backdropWrist = -85;
 //    public static double purpleWrist = -50;
-//    public static double intakingWrist = -50;
+//    public static double intakingWrist = -37;
+//
+//    public static double firstWrist = -60;
+//
+//    private double initWrist = -140;
+//
+//    public static double spke1x = 47.5;
+//    public static double spke1y = 9;
+//    public static double spke1hding = 180;
+//
+//    public static double spke2x = 43;
+//    public static double spke2y = 10;
+//    public static double spke2hding = -90;
+//
+//    public static double spke3x = 30;
+//    public static double spke3y = 2;
+//    public static double spke3hding = -90;
+//
+//    public static int yellowArm1Pos = -710;
+//
+//    public static double yellowArm1Power = 0.35;
+//
+//    public static int yellowArm2Pos = -870;
+//
+//    public static double yellowArm2Power = 0.35;
+//
+//    public static double boardLeftX = 34.5;
+//    public static double boardLeftY = -71.5;
+//    public static double boardMidX = 30;
+//    public static double boardMidY = -71.5;
+//    public static double boardRightX = 20.2;
+//    public static double boardRightY = -71.5;
+//    public static double stackIntX = 55;
+//    public static double stackIntY = 5;
+//
 //
 //    PIDFController speedController = new PIDFController(pX, iX, dX, 0);
 //    PIDFController strafeController = new PIDFController(pY, iY, dY, 0);
@@ -107,16 +144,16 @@
 //        telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
 //        telemetry.addData(">", "Touch Play to start OpMode");
 //
-////        IMU imu = hardwareMap.get(IMU.class, "imu");
-////        imu.initialize(
-////                new IMU.Parameters(
-//////                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
-////                        new RevHubOrientationOnRobot(
-////                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-////                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
-////                        )
-////                )
-////        );
+//        IMU imu = hardwareMap.get(IMU.class, "imu");
+//        imu.initialize(
+//                new IMU.Parameters(
+////                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
+//                        new RevHubOrientationOnRobot(
+//                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+//                        )
+//                )
+//        );
 //
 //
 //
@@ -125,32 +162,32 @@
 //        arm1 = (new Arm1(hardwareMap));
 //        arm2 = new Elbow(hardwareMap);
 //
-//        diffyWrist.runToProfile(initWrist, 0);
-//
 //        DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
 //        DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
 //        DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
+//        DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
 //        intake = hardwareMap.get(CRServo.class, "intake");
 //        door = hardwareMap.get(Servo.class, "door");
 //
-//        Pose2d firstTile = new Pose2d(15, -6, Math.toRadians(0));
+//        Pose2d firstTile = new Pose2d(15, -2, Math.toRadians(0));
 //
-//        Pose2d stackIntakingPos = new Pose2d(52,-3,Math.toRadians(90));
+//        Pose2d stackIntakingPos = new Pose2d(stackIntX,stackIntY,Math.toRadians(-90));
 //
-//        Pose2d spike3Avoid = new Pose2d(48, -8,Math.toRadians(180));
-//        Pose2d spike2Avoid = new Pose2d(48, -25, Math.toRadians(105));
-//        Pose2d spike1Avoid = new Pose2d(30.5, -6, Math.toRadians(90));
-//        Pose2d MiddleTile = new Pose2d(52,70, Math.toRadians(90));
-//        Pose2d spike3 = new Pose2d(43, -14, Math.toRadians(180));
-//        Pose2d spike2 = new Pose2d(52, -6, Math.toRadians(180));
-//        Pose2d spike1 = new Pose2d(32, -2, Math.toRadians(90));
-//        Pose2d boardRight = new Pose2d(32.5, 72.3, Math.toRadians(90));
-//        Pose2d boardMiddle = new Pose2d(23.5, 72.3, Math.toRadians(90));
-//        Pose2d boardLeft = new Pose2d(15.2, 72.3, Math.toRadians(90));
-//        Pose2d park = new Pose2d(52, 86, Math.toRadians(90));
-//        Pose2d aprilTagPose = new Pose2d(23, 70, Math.toRadians(90));
+//        Pose2d spike3Avoid = new Pose2d(31, 15,Math.toRadians(-90));
+//        Pose2d spike2Avoid = new Pose2d(52,6 , Math.toRadians(180));
+//        Pose2d spike1Avoid = new Pose2d(48, 8, Math.toRadians(180));
+//        Pose2d MiddleTile = new Pose2d(52,-74, Math.toRadians(-90));
+//        Pose2d spike1 = new Pose2d(spke1x, spke1y, Math.toRadians(spke1hding));
+//        Pose2d spike2 = new Pose2d(spke2x, spke2y, Math.toRadians(spke2hding));
+//        Pose2d spike3 = new Pose2d(spke3x, spke3y, Math.toRadians(spke3hding));
+//        Pose2d aprilTagPose = new Pose2d(25, -74, Math.toRadians(-90));
+//        Pose2d boardLeft = new Pose2d(boardLeftX, boardLeftY, Math.toRadians(-90));
+//        Pose2d boardMiddle = new Pose2d(boardMidX, boardMidY, Math.toRadians(-90));
+//        Pose2d boardRight = new Pose2d(boardRightX, boardRightY, Math.toRadians(-90));
+//        Pose2d park = new Pose2d(50, -83, Math.toRadians(-90));
+//        Pose2d prepare = new Pose2d(53,-82,Math.toRadians(45));
 //
-//        double waitTime = 3;
+//        double waitTime = 5;
 //
 //        TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
 //                .lineToLinearHeading(firstTile)
@@ -195,7 +232,16 @@
 //            if(gamepad2.b) {
 //                elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //                elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//                elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //            }
+//
+//            if(gamepad2.dpad_up)
+//                initWrist -= 0.1;
+//            if(gamepad2.dpad_down)
+//                initWrist += 0.1;
+//
+//            diffyWrist.runToProfile(initWrist, 0);
 //
 //            if(gamepad2.dpad_up) {
 //                waitTime += 0.5;
@@ -209,18 +255,29 @@
 //                door.setPosition(0.1);
 //            }
 //            if(gamepad2.left_bumper) {
-//                door.setPosition(0.90);
+//                door.setPosition(0.85);
 //            }
+//            if(gamepad2.dpad_right) {
+//                intake.setPower(-1);
+//            }
+//            else if(gamepad2.dpad_left) {
+//                intake.setPower(1);
+//            }
+//            else {
+//                intake.setPower(0);
+//            }
+//
 //
 //            if(waitTime < 0)
 //                waitTime = 0;
-//            if(waitTime > 4)
-//                waitTime = 4;
+//            if(waitTime > 6)
+//                waitTime = 6;
 //
 //            left_lift.setPower(-gamepad2.right_stick_y);
 //            right_lift.setPower(-gamepad2.right_stick_y);
 //            elbow.setPower(gamepad2.left_stick_y);
-//            //wrist.setPosition(0.63);
+//            elbow2.setPower(gamepad2.left_stick_y);
+////            wrist.setPosition(0.63);
 //
 ////            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
 ////            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
@@ -228,6 +285,7 @@
 //            telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
 //            telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
 //            telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
+//            telemetry.addData("Elbow2 Encoder", elbow2.getCurrentPosition());
 //            telemetry.addData("Location", propPipeline.getLocation());
 ////            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
 //
@@ -260,10 +318,9 @@
 //        TrajectorySequence rightPark = drive.trajectorySequenceBuilder(boardRight)
 //                .lineToLinearHeading(park)
 //                .build();
-//
-//        boolean ButtonXBlock = false;
-//        double wristservoposition = 0.63;
-//        //wrist.setPosition(wristservoposition);
+//        TrajectorySequence toPrepare = drive.trajectorySequenceBuilder(park)
+//                .lineToLinearHeading(prepare)
+//                .build();
 //
 //
 //
@@ -273,118 +330,82 @@
 //
 //            Location location = propPipeline.getLocation();
 //
-//            //wrist.setPosition(0.05);
 ////            door.setPosition(0.9);
 ////            arm1.ArmToPos(-2000, 0.5);
-////            arm2.ArmToPos(210, 1);
-////            diffyWrist.runToProfile(purpleWrist, 0);
+////            arm2.ArmToPos(190, 1);
+//////            diffyWrist.runToProfile(firstWrist, 0);
+//            diffyWrist.runToProfile(initWrist, 0);
 //
 //            if (location == LEFT) {
-//                // Movements for left spot
-//
 //                telemetry.addData("Position", "Left");
 //                telemetry.update();
 //
 //                drive.followTrajectorySequence(linetoFirstTile);
-//                door.setPosition(0.9);
+//                door.setPosition(0.75);
 //                arm1.ArmToPos(-2000, 0.5);
-//                arm2.ArmToPos(210, 1);
-//                diffyWrist.runToProfile(purpleWrist, 0);
+//                arm2.ArmToPos(140, 1);
+////                diffyWrist.runToProfile(firstWrist, 0);
+////                diffyWrist.runToProfile(purpleWrist, 0);
+////                drive.followTrajectorySequence(toSpike1);
+//
 //                drive.followTrajectorySequence(toSpike1);
+////                wrist.setPosition(0.24);
 //                diffyWrist.runToProfile(purpleWrist, 0);
-//                //wrist.setPosition(0.24);
 //                sleep(500);
 //                door.setPosition(0.1);
 //                sleep(200);
 //                arm2.ArmToPos(0,1);
 //                sleep(500);
-//                door.setPosition(0.90);
+//                door.setPosition(0.95);
+//
+////                door.setPosition(0.1);
+////                sleep(200);
+////                arm2.ArmToPos(0,1);
+////                door.setPosition(0.85);
 //                drive.followTrajectorySequence(avoid1);
 //                drive.followTrajectorySequence(toNextLeft);
 //                arm1.ArmToPos(-1840,1);
-//                sleep(1000);
-//                //cycle
-////                arm2.ArmToPos(-2130,1);
-////                sleep(2500);
-////                diffyWrist.runToProfile(intakingWrist, -235);
-////                sleep(2000);
-////                intake.setPower(-1);
-////                sleep(1000);
-////                intake.setPower(0);
-//                arm2.ArmToPos(100,1);
-//                //wrist.setPosition(0.3);
-//                diffyWrist.runToProfile(backdropWrist, 0);
+////                stackIntake();
+//                sleep(500);
+//                retractArms();
+//                diffyWrist.runToProfile(purpleWrist, 0);
 //                drive.followTrajectorySequence(toMiddle);
+//                sleep(500);
 //                drive.followTrajectorySequence(toAprilTag);
 //                alignToAprilTags();
+//
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//
 //                drive.setPoseEstimate(aprilTagPose);
 //                TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
 //                        .lineToLinearHeading(boardLeft)
 //                        .build();
 //                drive.followTrajectorySequence(toBoardLeft);
-//                arm1.ArmToPos(-680, 0.5);
-//                //wrist.setPosition(0.8);
-//                arm2.ArmToPos(-830, 0.65);
-//                intake.setPower(-1);
-//                sleep(500);
-//                intake.setPower(0);
-//                sleep(1000);
-//                sleep(1000);
-//                door.setPosition(0.1);
-//                sleep(100);
-////                arm2.ArmToPos(-1100, 0.5);
-////                sleep(1000);
-//                arm1.ArmToPos(-1850, 0.5);
-//                sleep(1000);
-//                drive.followTrajectorySequence(leftPark);
-//                arm2.ArmToPos(0,1);
-//
-//            }
-//            if (location == CENTER) {
-//                // Movements for center spot
-//                telemetry.addData("Position", "Center");
-//                telemetry.update();
-//
-//                drive.followTrajectorySequence(linetoFirstTile);
-//                door.setPosition(0.9);
-//                arm1.ArmToPos(-2000, 0.5);
-//                arm2.ArmToPos(210, 1);
-//                diffyWrist.runToProfile(purpleWrist, 0);
-//                drive.followTrajectorySequence(toSpike2);
-//                sleep(500);
-//                door.setPosition(0.1);
-//                sleep(200);
-//                arm2.ArmToPos(0,1);
-//                sleep(500);
-//                door.setPosition(0.90);
-//                drive.followTrajectorySequence(avoid2);
-//                drive.followTrajectorySequence(toNextCenter);
-//                arm1.ArmToPos(-1840,1);
-//                sleep(1000);
-//                //cycle
-////                arm2.ArmToPos(-2130,0.7);
-////                sleep(2500);
-////                arm2.ArmToPos(100,0.7);
-////                diffyWrist.runToProfile(intakingWrist, -235);
-////                sleep(2000);
+////                Original Values
+////                arm1.ArmToPos(yellowArm1Pos, 1);
+////                diffyWrist.runToProfile(backdropWrist, 0);
+////                arm2.ArmToPos(yellowArm2Pos, 1);
+//////                arm2.updateElbow();
 ////                intake.setPower(-1);
-//                sleep(1000);
-//                intake.setPower(0);
-//                sleep(1000);
-//                //wrist.setPosition(0.3);
-//                diffyWrist.runToProfile(purpleWrist, 0);
-//                drive.followTrajectorySequence(toMiddle);
-//                drive.followTrajectorySequence(toAprilTag);
-//                alignToAprilTags();
-//                drive.setPoseEstimate(aprilTagPose);
-//                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
-//                        .lineToLinearHeading(boardMiddle)
-//                        .build();
-//                drive.followTrajectorySequence(toBoardCenter);
-//                arm1.ArmToPos(-680, 0.5);
-//                //wrist.setPosition(0.8);
+////                sleep(1000);
+////                intake.setPower(0);
+////                sleep(1000);
+////                door.setPosition(0.1);
+////                sleep(100);
+////                arm2.ArmToPos(-890, 0.6);
+////                intake.setPower(-1);
+////                sleep(500);
+////                intake.setPower(0);
+////                sleep(1000);
+////                arm1.ArmToPos(-1000, 0.5);
+//                //Blue Near
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
 //                diffyWrist.runToProfile(backdropWrist, 0);
-//                arm2.ArmToPos(-830, 65);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
 //                intake.setPower(-1);
 //                sleep(500);
 //                intake.setPower(0);
@@ -398,53 +419,75 @@
 //                drive.followTrajectorySequence(centerPark);
 //                arm2.ArmToPos(0,1);
 //            }
-//            if (location == RIGHT) {
-//                // Movements for Right spot
-//
-//                telemetry.addData("Position", "Right");
+//            if (location == CENTER) {
+//                telemetry.addData("Position", "Center");
 //                telemetry.update();
 //
+//
 //                drive.followTrajectorySequence(linetoFirstTile);
-//                door.setPosition(0.9);
+//                door.setPosition(0.75);
 //                arm1.ArmToPos(-2000, 0.5);
-//                arm2.ArmToPos(210, 1);
+//                arm2.ArmToPos(140, 1);
+////                diffyWrist.runToProfile(firstWrist, 0);
+////                diffyWrist.runToProfile(purpleWrist, 0);
+////                drive.followTrajectorySequence(toSpike1);
+//
+//                drive.followTrajectorySequence(toSpike2);
+////                wrist.setPosition(0.24);
 //                diffyWrist.runToProfile(purpleWrist, 0);
-//                drive.followTrajectorySequence(toSpike3);
+//                sleep(500);
 //                door.setPosition(0.1);
 //                sleep(200);
 //                arm2.ArmToPos(0,1);
-//                door.setPosition(0.90);
-//                drive.followTrajectorySequence(avoid3);
-//                drive.followTrajectorySequence(toNextRight);
-//////               arm1.ArmToPos(-1840,1);
-//////               stackIntake();
-////                retractArms();
-////                arm2.ArmToPos(-2130,0.6);
-////                sleep(2500);
-////                diffyWrist.runToProfile(intakingWrist, -235);
-////                sleep(2000);
+//                sleep(500);
+//                door.setPosition(0.95);
+//
+//                drive.followTrajectorySequence(avoid2);
+//                drive.followTrajectorySequence(toNextCenter);
+//                arm1.ArmToPos(-1840,1);
+////                stackIntake();
+//                sleep(500);
+//                retractArms();
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toMiddle);
+//                sleep(500);
+//                drive.followTrajectorySequence(toAprilTag);
+//                alignToAprilTags();
+//
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//
+//                drive.setPoseEstimate(aprilTagPose);
+//                TrajectorySequence toBoardMiddle = drive.trajectorySequenceBuilder(aprilTagPose)
+//                        .lineToLinearHeading(boardMiddle)
+//                        .build();
+//                drive.followTrajectorySequence(toBoardMiddle);
+////              Original Values
+////                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                diffyWrist.runToProfile(backdropWrist, 0);
+////                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//////                arm2.updateElbow();
 ////                intake.setPower(-1);
 ////                sleep(1000);
 ////                intake.setPower(0);
-////                sleep(2000);
-//                arm2.ArmToPos(100,0.6);
-//                //wrist.setPosition(0.3);
-//                diffyWrist.runToProfile(purpleWrist, 0);
-//                drive.followTrajectorySequence(toMiddle);
+////                sleep(1000);
+////                door.setPosition(0.1);
+////                sleep(100);
+////                arm2.ArmToPos(-890, 0.6);
+////                intake.setPower(-1);
 ////                sleep(500);
-//                drive.followTrajectorySequence(toAprilTag);
-//                alignToAprilTags();
-//                drive.setPoseEstimate(aprilTagPose);
-//                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
-//                        .lineToLinearHeading(boardRight)
-//                        .build();
-//                drive.followTrajectorySequence(toBoardRight);
-//                arm1.ArmToPos(-680, 0.65);
-////                wrist.setPosition(0.8);
-//                diffyWrist.runToProfile(backdropWrist, 0);
-//                arm2.ArmToPos(-830, 0.65);
+////                intake.setPower(0);
+////                sleep(1000);
+////                arm1.ArmToPos(-1000, 0.5);
+//               //Blue Near
+////                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//////                wrist.setPosition(0.8);
+////                diffyWrist.runToProfile(backdropWrist, 0);
+////                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
 //                intake.setPower(-1);
-//                sleep(500);
+//                sleep(1000);
 //                intake.setPower(0);
 //                sleep(1000);
 //                door.setPosition(0.1);
@@ -453,11 +496,89 @@
 ////                sleep(1000);
 //                arm1.ArmToPos(-1850, 0.5);
 //                sleep(1000);
-//                drive.followTrajectorySequence(rightPark);
+//                drive.followTrajectorySequence(centerPark);
 //                arm2.ArmToPos(0,1);
 //            }
-//            door.setPosition(0.90);
-////            drive.followTrajectorySequence(toPrepare);
+//            if (location == RIGHT) {
+//                telemetry.addData("Position", "Right");
+//                telemetry.update();
+//
+//                drive.followTrajectorySequence(linetoFirstTile);
+//                door.setPosition(0.75);
+//                arm1.ArmToPos(-2000, 0.5);
+//                arm2.ArmToPos(140, 1);
+////                diffyWrist.runToProfile(firstWrist, 0);
+////                diffyWrist.runToProfile(purpleWrist, 0);
+////                drive.followTrajectorySequence(toSpike1);
+//
+//                drive.followTrajectorySequence(toSpike3);
+////                wrist.setPosition(0.24);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                sleep(500);
+//                door.setPosition(0.1);
+//                sleep(200);
+//                arm2.ArmToPos(0,1);
+//                sleep(500);
+//                door.setPosition(0.95);
+//
+//                drive.followTrajectorySequence(avoid3);
+//                drive.followTrajectorySequence(toNextRight);
+//                arm1.ArmToPos(-1840,1);
+////                stackIntake();
+//                sleep(500);
+//                retractArms();
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toMiddle);
+//                sleep(500);
+//                drive.followTrajectorySequence(toAprilTag);
+//                alignToAprilTags();
+//
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//
+//                drive.setPoseEstimate(aprilTagPose);
+//                TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
+//                        .lineToLinearHeading(boardRight)
+//                        .build();
+//                drive.followTrajectorySequence(toBoardRight);
+////               Original
+////                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                diffyWrist.runToProfile(backdropWrist, 0);
+////                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//////                arm2.updateElbow();
+////                intake.setPower(-1);
+////                sleep(1000);
+////                intake.setPower(0);
+////                sleep(1000);
+////                door.setPosition(0.1);
+////                sleep(100);
+////                arm2.ArmToPos(-890, 0.6);
+////                intake.setPower(-1);
+////                sleep(500);
+////                intake.setPower(0);
+////                sleep(1000);
+////                arm1.ArmToPos(-1000, 0.5);
+////
+////               Blue Near Values
+////                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//////                wrist.setPosition(0.8);
+////                diffyWrist.runToProfile(backdropWrist, 0);
+////                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+////                arm2.ArmToPos(-1100, 0.5);
+////                sleep(1000);
+//                arm1.ArmToPos(-1850, 0.5);
+//                sleep(1000);
+//                drive.followTrajectorySequence(centerPark);
+//                arm2.ArmToPos(0,1);
+//            }
 //            sleep(30000);
 //        }
 //    }
@@ -528,7 +649,7 @@
 //                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
 //                turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
 //                strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
-//                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
+//                aprilTagDrive = speedController.calculate(28, desiredTag.ftcPose.range);
 //
 //                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
 //                telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
@@ -616,15 +737,16 @@
 //    }
 //
 //    public void stackIntake() {
-//        intake.setPower(1);
+//        intake.setPower(-1);
 //        arm2.ArmToPos(-1000, 1);
 //        while (arm2.isBusy()){
 //            arm2.updateElbow();
 //            telemetry.addData("moving", 0);
 //        }
-//        diffyWrist.runToProfile(0, -180);
+//        diffyWrist.runToProfile(15, -250);
 //        arm2.ArmToPos(-2100, 0.7);
-//        diffyWrist.runToProfile(-20, -180);
+//        sleep(1000);
+//        diffyWrist.runToProfile(50, -250);
 //        while (arm2.isBusy()){
 //            arm2.updateElbow();
 //            telemetry.addData("moving", 0);
@@ -633,9 +755,9 @@
 //    }
 //
 //    public void retractArms() {
-//        door.setPosition(0.9);
-//        arm1.ArmToPos(-2000, 0.7);
-//        arm2.ArmToPos(138, 1);
+//        door.setPosition(0.85);
+//        arm1.ArmToPos(-2000, 1);
+//        arm2.ArmToPos(128, 1);
 //        diffyWrist.runToProfile(purpleWrist, 0);
 //    }
 //

@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 //@Disabled
 @Config
-@Autonomous(name = "New Blue Far Gate 2+0")
+@Autonomous(name = "Blue Far Gate 2+0")
 public class BlueFarGateAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
@@ -93,11 +93,11 @@ public class BlueFarGateAuto extends LinearOpMode {
     public static double spke3y = -14;
     public static double spke3hding = 180;
 
-    public static double boardMidX = 24.5;
+    public static double boardMidX = 23.5;
     public static double boardMidY = 85.5;
-    public static double boardLeftX = 9.5;
+    public static double boardLeftX = 16.9;
     public static double boardLeftY = 85.5;
-    public static double boardRightX = 35.5;
+    public static double boardRightX = 33.3;
     public static double boardRightY = 85.5;
 
     PIDFController speedController = new PIDFController(pX, iX, dX, 0);
@@ -184,7 +184,7 @@ public class BlueFarGateAuto extends LinearOpMode {
         Pose2d boardMiddle = new Pose2d(boardMidX, boardMidY, Math.toRadians(90));
         Pose2d boardLeft = new Pose2d(boardLeftX, boardLeftY, Math.toRadians(90));
         Pose2d park = new Pose2d(52, 76, Math.toRadians(90));
-        Pose2d aprilTagPose = new Pose2d(23, 70, Math.toRadians(90));
+        Pose2d aprilTagPose = new Pose2d(24.5, 70, Math.toRadians(90));
         Pose2d boardRightWhite = new Pose2d(28, 72.3, Math.toRadians(90));
         Pose2d boardWhite = new Pose2d(33, 72.3, Math.toRadians(90));
 

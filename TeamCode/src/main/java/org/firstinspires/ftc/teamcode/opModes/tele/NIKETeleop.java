@@ -81,9 +81,9 @@ public class NIKETeleop extends LinearOpMode {
     private ServoDiffyWrist diffyWrist;
 
     public static double phangarm1 = 75;
-    public static double phangarm2 = -112;
-    public static double phangRotVal = 250;
-    public static double phangwrist = 50;
+    public static double phangarm2 = -117;
+    public static double phangRotVal = 0;
+    public static double phangwrist = -80;
 
     public static double hangarm1 = 125;
     public static double hangarm2 = -205;

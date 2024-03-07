@@ -140,7 +140,7 @@ public class RedNearAuto extends LinearOpMode {
         Pose2d aprilTagPose = new Pose2d(25, -25, Math.toRadians(-90));
         Pose2d boardRight = new Pose2d(20, -24.3, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(30.5, -24.3, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(36.8, -24.9, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(34.8, -24.9, Math.toRadians(-90));
         Pose2d closePark = new Pose2d(-3, -36, Math.toRadians(-90));
         Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
         Pose2d park = closePark;

@@ -136,7 +136,7 @@ public class BlueNearAuto extends LinearOpMode {
 
         Pose2d MiddleTile = new Pose2d(12, -2, Math.toRadians(0));
         Pose2d MiddleTileLeft = new Pose2d(6, -2, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(25, 9.8, Math.toRadians(0));
+        Pose2d spike1 = new Pose2d(25, 10.8, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(27.5, -1, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(30.7, 2, Math.toRadians(-90));
         Pose2d aprilPose = new Pose2d(25, 24, Math.toRadians(90));

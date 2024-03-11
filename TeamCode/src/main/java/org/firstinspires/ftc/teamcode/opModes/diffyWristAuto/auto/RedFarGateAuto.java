@@ -100,7 +100,7 @@ public class RedFarGateAuto extends LinearOpMode {
 
     public static double boardLeftX = 34.8;
     public static double boardLeftY = -90.5;
-    public static double boardMidX = 31;
+    public static double boardMidX = 32;
     public static double boardMidY = -90.5;
     public static double boardRightX = 19.8;
     public static double boardRightY = -90.5;

@@ -28,11 +28,10 @@ public class TeleV1 extends LinearOpMode {
         backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-        double rx = 0;
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
-
+            double rx = 0;
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             if (gamepad1.left_bumper == true){

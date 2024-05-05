@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+@Config
 public class OutakeSingle {
 
     private Arm1 arm1;
@@ -30,6 +31,11 @@ public class OutakeSingle {
     private double max = 33.5;
     private double offset6Max = 30.095;
     private double offset10Max = 27.361;
+
+    public static double extIntWristPos = -110;
+    public static double extIntRot = -235;
+    public static double elseExtIntWristPos = 48;
+    public static double elseExtIntRot = -250;
 
     public OutakeSingle(HardwareMap hardwareMap) {
         arm1 = (new Arm1(hardwareMap));
@@ -122,11 +128,11 @@ public class OutakeSingle {
 
         if(extended) {
             if (intaking) {
-                wristPos = -125;
-                rotated = -235;
+                wristPos = extIntWristPos;
+                rotated = extIntRot;
             } else {
-                wristPos = 50;
-                rotated = -225;
+                wristPos = elseExtIntWristPos;
+                rotated = elseExtIntRot;
             }
         }
 
@@ -136,18 +142,6 @@ public class OutakeSingle {
         arm1.ArmToPos((int)Math.round(MotorArmPos), speed);
         arm2.ArmToPos((int)Math.round(ServoArmPos), speed);
         wrist.runToProfile(wristPos, rotated);
-//        while(wrist.isBusy()) {
-//            wrist.updateDiffy();
-//            telemetry.addData("leftPos: ", wrist.getLeftPosition());
-//            telemetry.addData("rightPos: ", wrist.getRightPosition());
-//            telemetry.addData("leftCorrectedPos: ", wrist.getCorrectedLeftPos());
-//            telemetry.addData("rightCorrectedPos: ", wrist.getCorrectedRightPos());
-//            telemetry.addData("leftTarget: ", wrist.getLeftTarget());
-//            telemetry.addData("rightTarget: ", wrist.getRightTarget());
-//            telemetry.addData("Moving?: ", wrist.isBusy());
-//            telemetry.update();
-//        }
-//        wrist.updateDiffy();
 
     };
 

@@ -45,6 +45,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Disabled
 /*
  * This OpMode illustrates using a camera to locate and drive towards a specific AprilTag.
  * The code assumes a Holonomic (Mecanum or X Drive) Robot.

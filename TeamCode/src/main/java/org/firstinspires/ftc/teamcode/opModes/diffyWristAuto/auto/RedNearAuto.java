@@ -128,6 +128,7 @@ public class RedNearAuto extends LinearOpMode {
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
+        DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
         Servo door = hardwareMap.get(Servo.class, "door");
 
@@ -135,12 +136,12 @@ public class RedNearAuto extends LinearOpMode {
         Pose2d MiddleTileRight = new Pose2d(10, -4, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(25, -15.45, Math.toRadians(0));
         Pose2d spike2 = new Pose2d(25.85, -5.5, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(27.5, -4.4, Math.toRadians(90));
-        Pose2d aprilTagPose = new Pose2d(26, -25, Math.toRadians(-90));
+        Pose2d spike1 = new Pose2d(29.5, -4.4, Math.toRadians(90));
+        Pose2d aprilTagPose = new Pose2d(25, -25, Math.toRadians(-90));
         Pose2d boardRight = new Pose2d(20, -24.3, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(28.5, -24.3, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(34.8, -24.3, Math.toRadians(-90));
-        Pose2d closePark = new Pose2d(0, -36, Math.toRadians(-90));
+        Pose2d boardMiddle = new Pose2d(30.5, -24.3, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(34.8, -24.9, Math.toRadians(-90));
+        Pose2d closePark = new Pose2d(-3, -36, Math.toRadians(-90));
         Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
         Pose2d park = closePark;
 
@@ -156,6 +157,8 @@ public class RedNearAuto extends LinearOpMode {
             if(gamepad2.b) {
                 elbow.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
             door.setPosition(0.95);
@@ -176,17 +179,31 @@ public class RedNearAuto extends LinearOpMode {
                 initWrist -= 0.1;
             if(gamepad2.dpad_down)
                 initWrist += 0.1;
+            if(gamepad2.right_bumper) {
+                door.setPosition(0.1);
+            }
+            if(gamepad2.left_bumper) {
+                door.setPosition(0.85);
+            }
+            if(gamepad2.dpad_right) {
+                intake.setPower(-1);
+            }
+            else {
+                intake.setPower(0);
+            }
 
             diffyWrist.runToProfile(initWrist, 0);
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
+            elbow2.setPower(gamepad2.left_stick_y);
 
 
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
+            telemetry.addData("Elbow2 Encoder", elbow2.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
             telemetry.addData("wrist pos: ", initWrist);
             telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
@@ -271,10 +288,10 @@ public class RedNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
-                arm1.ArmToPos(-680, 0.5);
+                arm1.ArmToPos(-680, 0.45);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 0.65);
+                arm2.ArmToPos(-820, 0.35);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -294,9 +311,13 @@ public class RedNearAuto extends LinearOpMode {
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
+                diffyWrist.runToProfile(28,0);
+                drive.followTrajectorySequence(toSpike2);
+
 //                drive.followTrajectorySequence(lineToMiddleTile);
                 drive.followTrajectorySequence(toSpike2);
 //                wrist.setPosition(0.18);
+
                 diffyWrist.runToProfile(purpleWrist, 0);
                 sleep(500);
                 door.setPosition(0.1);
@@ -313,10 +334,10 @@ public class RedNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardMiddle)
                         .build();
                 drive.followTrajectorySequence(toBoardCenter);
-                arm1.ArmToPos(-680, 0.5);
+                arm1.ArmToPos(-680, 0.45);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 65);
+                arm2.ArmToPos(-820, 0.35);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);
@@ -355,10 +376,10 @@ public class RedNearAuto extends LinearOpMode {
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
-                arm1.ArmToPos(-680, 0.5);
+                arm1.ArmToPos(-680, 0.45);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-800, 0.65);
+                arm2.ArmToPos(-820, 0.35);
                 intake.setPower(-1);
                 sleep(500);
                 intake.setPower(0);

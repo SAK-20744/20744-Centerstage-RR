@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.subsystems.vision.old.owen;
+/*package org.firstinspires.ftc.teamcode.subsystems.vision.old.owen;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+@Disabled
 @TeleOp
 public class calibrateVision extends LinearOpMode {
 
@@ -29,4 +30,4 @@ public class calibrateVision extends LinearOpMode {
             telemetry.update();
         }
     }
-}
+}*/

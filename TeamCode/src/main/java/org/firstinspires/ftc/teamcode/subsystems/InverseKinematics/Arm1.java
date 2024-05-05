@@ -63,19 +63,19 @@ public class Arm1 {
 //        left_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        right_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //    }
-
-    public boolean move(double Arm1SetPower){
-        if (Arm1SetPower == 0){
-            moving = false;
-        }
-        if(!moving) {
-            leftArm1Power = -Arm1SetPower;
-            rightArm1Power = Arm1SetPower;
-            left_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            right_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-        return Arm1SetPower != 0;
-    }
+//
+//    public boolean move(double Arm1SetPower){
+//        if (Arm1SetPower == 0){
+//            moving = false;
+//        }
+//        if(!moving) {
+//            leftArm1Power = Arm1SetPower;
+//            rightArm1Power = Arm1SetPower;
+//            left_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            right_Arm1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        }
+//        return Arm1SetPower != 0;
+//    }
 
     public boolean ArmToPos(int pos, double power){
         moving = true;

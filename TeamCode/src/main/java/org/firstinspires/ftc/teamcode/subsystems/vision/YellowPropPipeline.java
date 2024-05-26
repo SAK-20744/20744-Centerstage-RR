@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems.vision.old;
+package org.firstinspires.ftc.teamcode.subsystems.vision;
 
 import static org.opencv.core.Core.ROTATE_90_COUNTERCLOCKWISE;
 
@@ -23,7 +23,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Config
-public class PropPipeline implements VisionProcessor, CameraStreamSource {
+public class YellowPropPipeline implements VisionProcessor, CameraStreamSource {
 
     private final AtomicReference<Bitmap> lastFrame = new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
@@ -42,7 +42,7 @@ MAGENTA = Parking Right
     public enum Location {
         LEFT,
         CENTER,
-        RIGHT;
+        RIGHT
     }
 
     // Lower and upper boundaries for colors
@@ -61,18 +61,12 @@ MAGENTA = Parking Right
 //            CYAN    = new Scalar(0, 145, 255),
             MAGENTA = new Scalar(255, 0, 255);
 
-    // Percent and mat definitions
-    private double grayPercentLeft, grayPercentCenter, cyaPercentLeft, cyaPercentCenter, magPercentLeft, magPercentCenter;
-    private Mat grayMat = new Mat(), cyaMat = new Mat(), magMat = new Mat(), blurredMatLeft = new Mat(), blurredMatCenter = new Mat();
-//    private Mat rotgrayMat = new Mat(), rotcyaMat = new Mat(), rotmagMat = new Mat(), rotblurredMatLeft = new Mat(), rotblurredMatCenter = new Mat();
+    private final Mat grayMat = new Mat();
+    private final Mat cyaMat = new Mat();
+    private final Mat magMat = new Mat();
+    private Mat blurredMatLeft = new Mat();
+    private Mat blurredMatCenter = new Mat();
 
-//    // Anchor point definitions
-//    Point sleeve_pointA = new Point(
-//            SLEEVE_TOPLEFT_ANCHOR_POINT.x,
-//            SLEEVE_TOPLEFT_ANCHOR_POINT.y);
-//    Point sleeve_pointB = new Point(
-//            SLEEVE_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
-//            SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
     private volatile ColorDetected colorLeft;
@@ -107,9 +101,10 @@ MAGENTA = Parking Right
         Core.inRange(blurredMatLeft, lower_cyan_bounds, upper_cyan_bounds, cyaMat);
         Core.inRange(blurredMatLeft, lower_magenta_bounds, upper_magenta_bounds, magMat);
 
-        grayPercentLeft = Core.countNonZero(grayMat);
-        cyaPercentLeft = Core.countNonZero(cyaMat);
-        magPercentLeft = Core.countNonZero(magMat);
+        // Percent and mat definitions
+        double grayPercentLeft = Core.countNonZero(grayMat);
+        double cyaPercentLeft = Core.countNonZero(cyaMat);
+        double magPercentLeft = Core.countNonZero(magMat);
 
         Imgproc.blur(input, blurredMatCenter, new Size(5, 5));
         blurredMatCenter = blurredMatCenter.submat(middleArea);
@@ -124,9 +119,9 @@ MAGENTA = Parking Right
         Core.inRange(blurredMatCenter, lower_magenta_bounds, upper_magenta_bounds, magMat);
 
         // Gets color specific values
-        grayPercentCenter = Core.countNonZero(grayMat);
-        cyaPercentCenter = Core.countNonZero(cyaMat);
-        magPercentCenter = Core.countNonZero(magMat);
+        double grayPercentCenter = Core.countNonZero(grayMat);
+        double cyaPercentCenter = Core.countNonZero(cyaMat);
+        double magPercentCenter = Core.countNonZero(magMat);
 
         // Calculates the highest amount of pixels being covered on each side
         double maxPercentLeft = Math.max((grayPercentLeft), (Math.max(cyaPercentLeft, magPercentLeft)));
@@ -187,23 +182,14 @@ MAGENTA = Parking Right
             );
         }
 
-        if ((colorLeft == PropPipeline.ColorDetected.CYAN) || (colorLeft == PropPipeline.ColorDetected.MAGENTA))
+        if ((colorLeft == YellowPropPipeline.ColorDetected.CYAN) || (colorLeft == ColorDetected.MAGENTA)) {
             location = Location.LEFT;
-        else if ((colorMiddle == PropPipeline.ColorDetected.CYAN) || (colorMiddle == PropPipeline.ColorDetected.MAGENTA))
+        } else if ((colorMiddle == YellowPropPipeline.ColorDetected.CYAN) || (colorMiddle == YellowPropPipeline.ColorDetected.MAGENTA))
             location = Location.CENTER;
         else
             location = Location.RIGHT;
 
         return input;
-    }
-
-    // Returns an enum being the current position where the robot will park
-    public ColorDetected getColorLeft() {
-        return colorLeft;
-    }
-
-    public ColorDetected getColorMiddle() {
-        return colorMiddle;
     }
 
     public Location getLocation() {return location;}

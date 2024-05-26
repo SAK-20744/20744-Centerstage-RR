@@ -23,6 +23,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.concurrent.atomic.AtomicReference;
 // This code is for yellow
 //This is Vision Testing
+
 @Config
 public class YellowPropPipeline implements VisionProcessor, CameraStreamSource {
 
@@ -46,7 +47,7 @@ MAGENTA = Parking Right
         RIGHT
     }
 
-    // Lower and upper boundaries for colors
+    // Lower and upper boundaries for colors, Gray, Cyan and Magenta
     public static Scalar
             lower_gray_bounds  = new Scalar(140, 140, 140, 255),
             upper_gray_bounds  = new Scalar(170, 170, 167, 255),

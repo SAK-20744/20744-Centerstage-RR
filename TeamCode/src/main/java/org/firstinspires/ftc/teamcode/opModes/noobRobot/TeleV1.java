@@ -47,19 +47,10 @@ public class TeleV1 extends LinearOpMode {
             frontRight.setPower(y - x - rx);
             backRight.setPower(y + x - rx);
 
-
-            if (gamepad2.a){
-                backRight.setPower(1);
-            }
-            if (gamepad2.b){
-                backLeft.setPower(-1);
-            }
-            if (gamepad2.x){
-                frontRight.setPower(-1);
-            }
-            if (gamepad2.y){
-                frontLeft.setPower(1);
-            }
+            if (gamepad2.a) backRight.setPower(1);
+            if (gamepad2.b) backLeft.setPower(-1);
+            if (gamepad2.x) frontRight.setPower(-1);
+            if (gamepad2.y) frontLeft.setPower(1);
         }
     }
 }

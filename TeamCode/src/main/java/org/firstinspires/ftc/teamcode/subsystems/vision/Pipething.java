@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.vision;
 
+import static com.qualcomm.robotcore.hardware.usb.serial.SerialPort.close;
 import static org.opencv.core.Core.ROTATE_90_COUNTERCLOCKWISE;
 
 import android.graphics.Bitmap;
@@ -33,7 +34,7 @@ public class Pipething implements VisionProcessor, CameraStreamSource {
     public enum ColorDetected {
         GREEN,
         GRAY,
-        PURPLE;
+        PURPLE
     }
 
     public enum Location {
@@ -44,21 +45,22 @@ public class Pipething implements VisionProcessor, CameraStreamSource {
 
     // Lower and upper boundaries for colors
     private static final Scalar
-            lower_green_bounds  = new Scalar(40, 90, 20, 255),
-            upper_green_bounds  = new Scalar(130, 230, 70, 255),
-            lower_gray_bounds  = new Scalar(90, 90, 90, 255),
-            upper_gray_bounds  = new Scalar(150, 150, 150, 255),
-            lower_purple_bounds  = new Scalar(100, 90, 110, 255),
-            upper_purple_bounds  = new Scalar(235, 210, 250, 255);
+            lower_green_bounds = new Scalar(40, 90, 20, 255),
+            upper_green_bounds = new Scalar(130, 230, 70, 255),
+            lower_gray_bounds = new Scalar(90, 90, 90, 255),
+            upper_gray_bounds = new Scalar(150, 150, 150, 255),
+            lower_purple_bounds = new Scalar(100, 70, 110, 255),
+            upper_purple_bounds = new Scalar(255, 255, 255, 255);
 
     // Color definitions
     private final Scalar
             GREEN = new Scalar(0, 255, 0),
             GRAY = new Scalar(155, 155, 155),
-            PURPLE = new Scalar(216, 193, 235);
+            PURPLE = new Scalar(255, 255, 255);
 
     private Mat greenMat = new Mat();
     private Mat grayMat = new Mat();
+    private Mat purpleMat = new Mat();
     private Mat blurredMatCenter = new Mat();
 
     private volatile ColorDetected colorMiddle;
@@ -77,7 +79,7 @@ public class Pipething implements VisionProcessor, CameraStreamSource {
 
 //        Core.rotate(input, input, ROTATE_90_COUNTERCLOCKWISE);
 
-        Rect middleArea = new Rect(new Point(300,100), new Point(500,300));
+        Rect middleArea = new Rect(new Point(300, 100), new Point(500, 300));
 
         Imgproc.blur(input, blurredMatCenter, new Size(5, 5));
         blurredMatCenter = blurredMatCenter.submat(middleArea);
@@ -89,10 +91,12 @@ public class Pipething implements VisionProcessor, CameraStreamSource {
         // Gets channels from given source mat
         Core.inRange(blurredMatCenter, lower_green_bounds, upper_green_bounds, greenMat);
         Core.inRange(blurredMatCenter, lower_gray_bounds, upper_gray_bounds, grayMat);
+        Core.inRange(blurredMatCenter, lower_purple_bounds, upper_purple_bounds, purpleMat);
 
         // Gets color specific values
         double greenPercentCenter = Core.countNonZero(greenMat);
         double grayPercentCenter = Core.countNonZero(grayMat);
+        double purplePercentCenter = Core.countNonZero(purpleMat);
 
         double maxPercentCenter = Math.max((grayPercentCenter), (greenPercentCenter));
 
@@ -105,6 +109,14 @@ public class Pipething implements VisionProcessor, CameraStreamSource {
                     GRAY,
                     2
             );
+        } else if (maxPercentCenter == purplePercentCenter) {
+            colorMiddle = ColorDetected.PURPLE;
+            Imgproc.rectangle(
+                    input,
+                    middleArea,
+                    PURPLE,
+                    2
+            );
         } else if (maxPercentCenter == greenPercentCenter) {
             colorMiddle = ColorDetected.GREEN;
             Imgproc.rectangle(
@@ -113,36 +125,28 @@ public class Pipething implements VisionProcessor, CameraStreamSource {
                     GREEN,
                     2
             );
+
+            // Calculates the highest amount of pixels being covered on each side
+
+            // Checks all percentages, will highlight bounding box in camera preview
+            // based on what color is being detected
+
+
+            return input;
         }
 
-        // Calculates the highest amount of pixels being covered on each side
-
-        // Checks all percentages, will highlight bounding box in camera preview
-        // based on what color is being detected
-
-
-
-        return input;
-    }
-    @Override
-    public void onDrawFrame(Canvas canvas, int i, int i1, float v, float v1, Object o) {
-
-
-    }
-
-    protected void finalize() throws Throwable {
-        close();
-        super.finalize();
-    }
-
-    public void close() {
 
         // Memory cleanup
 //        blurredMatLeft.release();
         blurredMatCenter.release();
         grayMat.release();
         greenMat.release();
-
+        purpleMat.release();
+        return null;
     }
 
+    @Override
+    public void onDrawFrame(Canvas canvas, int i, int i1, float v, float v1, Object o) {
+
+    }
 }

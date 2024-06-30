@@ -38,14 +38,17 @@ public class TeleV1 extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
         //The loop
-            double y = -gamepad1.right_stick_x;
+            double rx = -gamepad1.right_stick_x;
             double x = gamepad1.left_stick_x;
-            double rx = gamepad1.left_stick_y;
+            double y = gamepad1.left_stick_y;
         //Inputs
-            frontLeft.setPower(y + x + rx);
-            backLeft.setPower(y - x + rx);
-            frontRight.setPower(y - x - rx);
-            backRight.setPower(y + x - rx);
+            //x is strafe left-right
+            //y is forward-back
+            //rx is rotation
+            frontLeft.setPower(-rx + x - y);
+            backLeft.setPower(-rx - x - y);
+            frontRight.setPower(-rx - x + y);
+            backRight.setPower(-rx + x + y);
 
             if (gamepad2.a) backRight.setPower(1);
             if (gamepad2.b) backLeft.setPower(-1);

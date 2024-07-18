@@ -5,24 +5,21 @@ import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.
 import static org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline.Location.RIGHT;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.ServoDiffyWrist;
-import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.FASTMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.vision.old.PropPipeline;
@@ -35,8 +32,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
-@Autonomous(name = "Red Near 2+0")
-public class RedNearAuto extends LinearOpMode {
+@Config
+@Autonomous(name = "Blue Far Far Gate 2+0")
+public class BlueFarFarGateAuto extends LinearOpMode {
 
     private PropPipeline propPipeline;
     private VisionPortal portal;
@@ -48,13 +46,7 @@ public class RedNearAuto extends LinearOpMode {
     private DcMotor leftBackDrive    = null;
     private DcMotor rightBackDrive   = null;
 
-    private ServoDiffyWrist diffyWrist;
-    private double initWrist = -140;
-
-    public static double backdropWrist = -75;
-    public static double purpleWrist = -47.5;
-
-    private static final int DESIRED_TAG_ID = 4; // LEFT April Tag - Aligns the robot to the Center
+    private static final int DESIRED_TAG_ID = 1; // LEFT April Tag - Aligns the robot to the Center
 
     private double pX = 0.045, iX = 0.02, dX = 0.05;
     private double pY = 0.055, iY = 0, dY = 0.35;
@@ -64,6 +56,59 @@ public class RedNearAuto extends LinearOpMode {
     private double aprilTagDrive = 0;
     private double strafe = 0;
     private double turn = 0;
+
+    private double initWrist = -140;
+    private ServoDiffyWrist diffyWrist;
+    private Elbow arm2;
+    private Arm1 arm1;
+    private CRServo intake;
+    private Servo door;
+
+    public static double backdropWrist = -100;
+    public static double purpleWrist = -50;
+    public static double intakingWrist = -37;
+
+    public static double firstWrist = -60;
+
+    public static int yellowArm1Pos = -1400;
+
+    public static double yellowArm1Power = 0.35;
+
+    public static int yellowArm2Pos = -260;
+
+    public static double yellowArm2Power = 0.35;
+
+    public static double spke1x = 27;
+    public static double spke1y = -4;
+    public static double spke1hding = 90;
+
+    public static double spke2x = 52;
+    public static double spke2y = -6;
+    public static double spke2hding = 180;
+
+    public static double spke3x = 43;
+    public static double spke3y = -14;
+    public static double spke3hding = 180;
+
+    public static double boardMidX = 23.5;
+    public static double boardMidY = 130;
+    //85.5 - old value
+    //133.5
+    public static double boardLeftX = 16.9;
+    public static double boardLeftY = 130;
+    //85.5 - old value
+    //133.5
+    public static double boardRightX = 33.3;
+    public static double boardRightY = 129.5;
+    //85.5 - old value
+    //133.5
+
+    public static int intakeTime = 2000;
+    public static double stackIntakeWristPitch = -50;
+    public static double stackIntakeWristRoll = -200;
+
+    public static double stackX = 53;
+    public static double stackY = -3.8;
 
     PIDFController speedController = new PIDFController(pX, iX, dX, 0);
     PIDFController strafeController = new PIDFController(pY, iY, dY, 0);
@@ -106,44 +151,93 @@ public class RedNearAuto extends LinearOpMode {
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        imu.initialize(
-                new IMU.Parameters(
-//                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
-                        new RevHubOrientationOnRobot(
-                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
-                        )
-                )
-        );
+//        IMU imu = hardwareMap.get(IMU.class, "imu");
+//        imu.initialize(
+//                new IMU.Parameters(
+////                        new RevHubOrientationOnRobot(RevHubOrientationOnRobot.xyzOrientation(Math.toDegrees(0),Math.toDegrees(0),Math.toDegrees(-90)))
+//                        new RevHubOrientationOnRobot(
+//                                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                                RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+//                        )
+//                )
+//        );
 
 
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Arm1 arm1 = (new Arm1(hardwareMap));
-        Elbow arm2 = new Elbow(hardwareMap);
         diffyWrist = new ServoDiffyWrist(hardwareMap);
+        arm1 = (new Arm1(hardwareMap));
+        arm2 = new Elbow(hardwareMap);
 
-//        Servo wrist = hardwareMap.get(Servo.class, "wrist");
+        diffyWrist.runToProfile(initWrist, 0);
+
         DcMotor left_lift = hardwareMap.get(DcMotor.class, "left_lift");
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
         DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
-        CRServo intake = hardwareMap.get(CRServo.class, "intake");
-        Servo door = hardwareMap.get(Servo.class, "door");
+        intake = hardwareMap.get(CRServo.class, "intake");
+        door = hardwareMap.get(Servo.class, "door");
 
-        Pose2d MiddleTile = new Pose2d(15, -4, Math.toRadians(0));
-        Pose2d MiddleTileRight = new Pose2d(10, -4, Math.toRadians(0));
-        Pose2d spike3 = new Pose2d(25, -15.45, Math.toRadians(0));
-        Pose2d spike2 = new Pose2d(25.85, -5.5, Math.toRadians(0));
-        Pose2d spike1 = new Pose2d(29.5, -4.4, Math.toRadians(90));
-        Pose2d aprilTagPose = new Pose2d(25, -25, Math.toRadians(-90));
-        Pose2d boardRight = new Pose2d(20, -24.3, Math.toRadians(-90));
-        Pose2d boardMiddle = new Pose2d(30.5, -24.3, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(34.8, -24.9, Math.toRadians(-90));
-        Pose2d closePark = new Pose2d(-3, -36, Math.toRadians(-90));
-        Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
-        Pose2d park = closePark;
+        Pose2d firstTile = new Pose2d(15, -6, Math.toRadians(0));
+
+        Pose2d stackIntakingPos = new Pose2d(stackX,stackY,Math.toRadians(90));
+
+
+        Pose2d spike3Avoid = new Pose2d(52, -8,Math.toRadians(180));
+        Pose2d spike2Avoid = new Pose2d(50, -26, Math.toRadians(105));
+        Pose2d spike1Avoid = new Pose2d(30.5, -9, Math.toRadians(90));
+        Pose2d MiddleTile = new Pose2d(52,116, Math.toRadians(90));
+        //Middle tile old value y - 68
+        Pose2d spike3 = new Pose2d(spke3x, spke3y, Math.toRadians(spke3hding));
+        Pose2d spike2 = new Pose2d(spke2x, spke2y, Math.toRadians(spke2hding));
+        Pose2d spike1 = new Pose2d(spke1x, spke1y, Math.toRadians(spke1hding));
+        Pose2d boardRight = new Pose2d(boardRightX, boardRightY, Math.toRadians(90));
+        Pose2d boardMiddle = new Pose2d(boardMidX, boardMidY, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(boardLeftX, boardLeftY, Math.toRadians(90));
+        Pose2d park = new Pose2d(52, 76, Math.toRadians(90));
+        Pose2d aprilTagPose = new Pose2d(24.5, 120, Math.toRadians(90));
+        //Old Y Value - 70
+        Pose2d boardRightWhite = new Pose2d(28, 72.3, Math.toRadians(90));
+        Pose2d boardWhite = new Pose2d(33, 72.3, Math.toRadians(90));
+
+        Pose2d middleIntakePosition = new Pose2d(31.5,-5, Math.toRadians(45));
+
+        double waitTime = 3;
+
+        TrajectorySequence linetoFirstTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToLinearHeading(firstTile)
+                .build();
+        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(firstTile)
+                .lineToLinearHeading(spike1)
+                .build();
+        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(firstTile)
+                .lineToLinearHeading(spike2)
+                .build();
+        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(firstTile)
+                .lineToLinearHeading(spike3)
+                .build();
+        TrajectorySequence avoid1 = drive.trajectorySequenceBuilder(spike1)
+                .lineToLinearHeading(spike1Avoid)
+                .build();
+        TrajectorySequence avoid2 = drive.trajectorySequenceBuilder(spike2)
+                .lineToLinearHeading(spike2Avoid)
+                .build();
+        TrajectorySequence avoid3 = drive.trajectorySequenceBuilder(spike3)
+                .lineToLinearHeading(spike3Avoid)
+                .build();
+        TrajectorySequence toNextLeft = drive.trajectorySequenceBuilder(spike1Avoid)
+                .lineToLinearHeading(stackIntakingPos)
+                .build();
+        TrajectorySequence toNextCenter = drive.trajectorySequenceBuilder(spike2Avoid)
+                .lineToLinearHeading(stackIntakingPos)
+                .build();
+        TrajectorySequence toNextRight = drive.trajectorySequenceBuilder(spike3Avoid)
+                .lineToLinearHeading(stackIntakingPos)
+                .build();
+
+        TrajectorySequence middleIntake = drive.trajectorySequenceBuilder(spike1Avoid)
+                .lineToLinearHeading(middleIntakePosition)
+                .build();
 
         while (opModeInInit()) {
 
@@ -161,24 +255,21 @@ public class RedNearAuto extends LinearOpMode {
                 elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            door.setPosition(0.95);
-
-            if(gamepad2.dpad_up){
-                park = gatePark;
-            }
-            if(gamepad2.dpad_down) {
-                park = closePark;
-            }
-
-            if(park == gatePark)
-                telemetry.addData("Park Position: Gate Side ", 0);
-            else
-                telemetry.addData("Park Position: Near Side ", 0);
-
             if(gamepad2.dpad_up)
                 initWrist -= 0.1;
             if(gamepad2.dpad_down)
                 initWrist += 0.1;
+
+            diffyWrist.runToProfile(initWrist, 0);
+
+            if(gamepad2.dpad_up) {
+                waitTime += 0.5;
+                sleep(350);
+            }
+            if(gamepad2.dpad_down) {
+                waitTime -= 0.5;
+                sleep(350);
+            }
             if(gamepad2.right_bumper) {
                 door.setPosition(0.1);
             }
@@ -188,52 +279,55 @@ public class RedNearAuto extends LinearOpMode {
             if(gamepad2.dpad_right) {
                 intake.setPower(-1);
             }
+            else if(gamepad2.dpad_left) {
+                intake.setPower(1);
+            }
             else {
                 intake.setPower(0);
             }
 
-            diffyWrist.runToProfile(initWrist, 0);
+
+            if(waitTime < 0)
+                waitTime = 0;
+            if(waitTime > 6)
+                waitTime = 6;
 
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
             elbow2.setPower(gamepad2.left_stick_y);
+//            wrist.setPosition(0.63);
 
-
+//            telemetry.addData("Parallel: ", parallelEncoder.getCurrentPosition());
+//            telemetry.addData("Perpendicular: ", perpendicularEncoder.getCurrentPosition());
+            telemetry.addData("Wait", waitTime);
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
             telemetry.addData("Elbow2 Encoder", elbow2.getCurrentPosition());
             telemetry.addData("Location", propPipeline.getLocation());
-            telemetry.addData("wrist pos: ", initWrist);
-            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
+//            telemetry.addData("imu", imu.getRobotAngularVelocity(AngleUnit.DEGREES));
+
             telemetry.update();
         }
 
-        TrajectorySequence lineToMiddleTile = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+
+        TrajectorySequence toMiddle = drive.trajectorySequenceBuilder(stackIntakingPos)
+                .waitSeconds(waitTime)
                 .lineToLinearHeading(MiddleTile)
-                .build();
-        TrajectorySequence toSpike1 = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(spike1)
-                .build();
-        TrajectorySequence toSpike2 = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(spike2)
-                .build();
-        TrajectorySequence toSpike3 = drive.trajectorySequenceBuilder(MiddleTile)
-                .lineToLinearHeading(spike3)
-                .build();
-        TrajectorySequence toMiddleLeft = drive.trajectorySequenceBuilder(spike1)
-                .lineToLinearHeading(MiddleTile)
-                .build();
-        TrajectorySequence toMiddleCenter = drive.trajectorySequenceBuilder(spike2)
-                .lineToLinearHeading(MiddleTile)
-                .build();
-        TrajectorySequence toMiddleRight = drive.trajectorySequenceBuilder(spike3)
-                .lineToLinearHeading(MiddleTileRight)
                 .build();
         TrajectorySequence toAprilTag = drive.trajectorySequenceBuilder(MiddleTile)
                 .lineToLinearHeading(aprilTagPose)
                 .build();
+//        TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(MiddleTile)
+//                .lineToLinearHeading(boardLeft)
+//                .build();
+//        TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(MiddleTile)
+//                .lineToLinearHeading(boardMiddle)
+//                .build();
+//        TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(MiddleTile)
+//                .lineToLinearHeading(boardRight)
+//                .build();
         TrajectorySequence leftPark = drive.trajectorySequenceBuilder(boardLeft)
                 .lineToLinearHeading(park)
                 .build();
@@ -244,9 +338,25 @@ public class RedNearAuto extends LinearOpMode {
                 .lineToLinearHeading(park)
                 .build();
 
-//        boolean ButtonXBlock = false;
-//        double wristservoposition = 0.63;
-//        wrist.setPosition(wristservoposition);
+        TrajectorySequence rightWhite = drive.trajectorySequenceBuilder(boardRight)
+//                .lineToLinearHeading(aprilTagPose)
+                .lineToLinearHeading(boardMiddle)
+                .build();
+        TrajectorySequence leftWhite = drive.trajectorySequenceBuilder(boardLeft)
+//                .lineToLinearHeading(aprilTagPose)
+                .lineToLinearHeading(boardMiddle)
+                .build();
+        TrajectorySequence centerWhite = drive.trajectorySequenceBuilder(boardMiddle)
+//                .lineToLinearHeading(aprilTagPose)
+                .lineToLinearHeading(boardRight)
+                .build();
+
+
+        boolean ButtonXBlock = false;
+        double wristservoposition = 0.63;
+        //wrist.setPosition(wristservoposition);
+
+
 
         waitForStart();
 
@@ -254,144 +364,288 @@ public class RedNearAuto extends LinearOpMode {
 
             Location location = propPipeline.getLocation();
 
-            drive.followTrajectorySequence(lineToMiddleTile);
-
-//            wrist.setPosition(0.05);
-            door.setPosition(0.75);
-            arm1.ArmToPos(-2000, 0.5);
-            arm2.ArmToPos(140, 1);
-            diffyWrist.runToProfile(purpleWrist, 0);
-
-            portal.setProcessorEnabled(aprilTag, true);
+//            door.setPosition(0.9);
+//            arm1.ArmToPos(-2000, 0.5);
+//            arm2.ArmToPos(190, 1);
+////            diffyWrist.runToProfile(firstWrist, 0);
+            diffyWrist.runToProfile(initWrist, 0);
 
             if (location == LEFT) {
-                // Movements for left spot
                 telemetry.addData("Position", "Left");
                 telemetry.update();
 
-//                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(linetoFirstTile);
+                door.setPosition(0.75);
+                arm1.ArmToPos(-2000, 0.5);
+                arm2.ArmToPos(140, 1);
+//                diffyWrist.runToProfile(firstWrist, 0);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toSpike1);
+
                 drive.followTrajectorySequence(toSpike1);
-//                wrist.setPosition(0.18);
+//                wrist.setPosition(0.24);
                 diffyWrist.runToProfile(purpleWrist, 0);
                 sleep(500);
                 door.setPosition(0.1);
-                sleep(200);
+                sleep(300);
                 arm2.ArmToPos(0,1);
-                sleep(500);
+                sleep(300);
                 door.setPosition(0.95);
-                drive.followTrajectorySequence(toMiddleLeft);
-                sleep(500);
+
+//                door.setPosition(0.1);
+//                sleep(200);
+//                arm2.ArmToPos(0,1);
+//                door.setPosition(0.85);
+                drive.followTrajectorySequence(avoid1);
+                drive.followTrajectorySequence(toNextLeft);
+                arm1.ArmToPos(-1840,1);
+//                stackIntake();
+                sleep(300);
+                retractArms();
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(middleIntake);
+//                diffyWrist.runToProfile(-37,0);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(300);
+                drive.followTrajectorySequence(toNextLeft);
+                drive.followTrajectorySequence(toMiddle);
+                sleep(200);
+
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
+                diffyWrist.runToProfile(backdropWrist, 0);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+
                 drive.followTrajectorySequence(toAprilTag);
-//                alignToAprilTags();
+                //alignToAprilTags();
+
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardLeft)
                         .build();
                 drive.followTrajectorySequence(toBoardLeft);
-                arm1.ArmToPos(-680, 0.45);
-//                wrist.setPosition(0.8);
-                diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-820, 0.35);
+//                Original Values
+//                arm1.ArmToPos(yellowArm1Pos, 1);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, 1);
+////                arm2.updateElbow();
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+//                arm2.ArmToPos(-890, 0.6);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(1000);
+//                arm1.ArmToPos(-1000, 0.5);
+                //Blue Near
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
-                sleep(500);
+                sleep(300);
                 intake.setPower(0);
-                sleep(1000);
+                sleep(300);
                 door.setPosition(0.1);
                 sleep(100);
 //                arm2.ArmToPos(-1100, 0.5);
 //                sleep(1000);
-                arm1.ArmToPos(-1850, 0.5);
-                sleep(1000);
-                drive.followTrajectorySequence(leftPark);
-                arm2.ArmToPos(0,1);
+//                arm1.ArmToPos(-1850, 0.5);
+//                sleep(1000);
+//                drive.followTrajectorySequence(leftPark);
+//                arm2.ArmToPos(0,1);
+                drive.followTrajectorySequence(leftWhite);
+                intake.setPower(-1);
+                sleep(300);
+                intake.setPower(0);
+                sleep(300);
+                door.setPosition(0.1);
+                sleep(100);
 
             }
             if (location == CENTER) {
-                // Movements for center spot
                 telemetry.addData("Position", "Center");
                 telemetry.update();
 
-                diffyWrist.runToProfile(28,0);
-                drive.followTrajectorySequence(toSpike2);
 
-//                drive.followTrajectorySequence(lineToMiddleTile);
-                drive.followTrajectorySequence(toSpike2);
-//                wrist.setPosition(0.18);
+                drive.followTrajectorySequence(linetoFirstTile);
+                door.setPosition(0.75);
+                arm1.ArmToPos(-2000, 0.5);
+                arm2.ArmToPos(140, 1);
+//                diffyWrist.runToProfile(firstWrist, 0);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toSpike1);
 
+                drive.followTrajectorySequence(toSpike2);
+//                wrist.setPosition(0.24);
                 diffyWrist.runToProfile(purpleWrist, 0);
                 sleep(500);
                 door.setPosition(0.1);
-                sleep(200);
+                sleep(300);
                 arm2.ArmToPos(0,1);
-                sleep(500);
+                sleep(300);
                 door.setPosition(0.95);
-                drive.followTrajectorySequence(toMiddleCenter);
+
+                drive.followTrajectorySequence(avoid2);
+                drive.followTrajectorySequence(toNextCenter);
+                arm1.ArmToPos(-1840,1);
+//                stackIntake();
                 sleep(500);
-                drive.followTrajectorySequence(toAprilTag);
-//                alignToAprilTags();
-                drive.setPoseEstimate(aprilTagPose);
-                TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
-                        .lineToLinearHeading(boardMiddle)
-                        .build();
-                drive.followTrajectorySequence(toBoardCenter);
-                arm1.ArmToPos(-680, 0.45);
+                retractArms();
+                diffyWrist.runToProfile(purpleWrist, 0);
+                drive.followTrajectorySequence(toMiddle);
+                sleep(300);
+
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
 //                wrist.setPosition(0.8);
                 diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-820, 0.35);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+
+                drive.followTrajectorySequence(toAprilTag);
+                //alignToAprilTags();
+
+                drive.setPoseEstimate(aprilTagPose);
+                TrajectorySequence toBoardMiddle = drive.trajectorySequenceBuilder(aprilTagPose)
+                        .lineToLinearHeading(boardMiddle)
+                        .build();
+                drive.followTrajectorySequence(toBoardMiddle);
+//              Original Values
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+////                arm2.updateElbow();
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+//                arm2.ArmToPos(-890, 0.6);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(1000);
+//                arm1.ArmToPos(-1000, 0.5);
+                //Blue Near
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
-                sleep(500);
+                sleep(300);
                 intake.setPower(0);
-                sleep(1000);
+                sleep(300);
                 door.setPosition(0.1);
                 sleep(100);
 //                arm2.ArmToPos(-1100, 0.5);
 //                sleep(1000);
-                arm1.ArmToPos(-1850, 0.5);
-                sleep(1000);
-                drive.followTrajectorySequence(centerPark);
-                arm2.ArmToPos(0,1);
+//                arm1.ArmToPos(-1850, 0.5);
+//                sleep(1000);
+//                drive.followTrajectorySequence(centerPark);
+//                arm2.ArmToPos(0,1);
+                drive.followTrajectorySequence(centerWhite);
+                intake.setPower(-1);
+                sleep(300);
+                intake.setPower(0);
+                sleep(300);
+                door.setPosition(0.1);
+                sleep(100);
 
             }
             if (location == RIGHT) {
-                // Movements for right spot
                 telemetry.addData("Position", "Right");
                 telemetry.update();
 
-//                drive.followTrajectorySequence(lineToMiddleTile);
+                drive.followTrajectorySequence(linetoFirstTile);
+                door.setPosition(0.75);
+                arm1.ArmToPos(-2000, 0.5);
+                arm2.ArmToPos(140, 1);
+//                diffyWrist.runToProfile(firstWrist, 0);
+//                diffyWrist.runToProfile(purpleWrist, 0);
+//                drive.followTrajectorySequence(toSpike1);
+
                 drive.followTrajectorySequence(toSpike3);
-//                wrist.setPosition(0.18);
+//                wrist.setPosition(0.24);
                 diffyWrist.runToProfile(purpleWrist, 0);
                 sleep(500);
                 door.setPosition(0.1);
-                sleep(200);
+                sleep(300);
                 arm2.ArmToPos(0,1);
-                sleep(500);
+                sleep(300);
                 door.setPosition(0.95);
-                drive.followTrajectorySequence(toMiddleRight);
-                sleep(500);
+
+                drive.followTrajectorySequence(avoid3);
+                drive.followTrajectorySequence(toNextRight);
+                arm1.ArmToPos(-1840,1);
+//                stackIntake();
+                sleep(300);
+                retractArms();
+                diffyWrist.runToProfile(purpleWrist, 0);
+                drive.followTrajectorySequence(toMiddle);
+                sleep(300);
+
+                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                wrist.setPosition(0.8);
+                diffyWrist.runToProfile(backdropWrist, 0);
+                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+
                 drive.followTrajectorySequence(toAprilTag);
 //                alignToAprilTags();
+
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardRight)
                         .build();
                 drive.followTrajectorySequence(toBoardRight);
-                arm1.ArmToPos(-680, 0.45);
-//                wrist.setPosition(0.8);
-                diffyWrist.runToProfile(backdropWrist, 0);
-                arm2.ArmToPos(-820, 0.35);
+//               Original
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
+////                arm2.updateElbow();
+//                intake.setPower(-1);
+//                sleep(1000);
+//                intake.setPower(0);
+//                sleep(1000);
+//                door.setPosition(0.1);
+//                sleep(100);
+//                arm2.ArmToPos(-890, 0.6);
+//                intake.setPower(-1);
+//                sleep(500);
+//                intake.setPower(0);
+//                sleep(1000);
+//                arm1.ArmToPos(-1000, 0.5);
+//
+//               Blue Near Values
+//                arm1.ArmToPos(yellowArm1Pos, yellowArm1Power);
+////                wrist.setPosition(0.8);
+//                diffyWrist.runToProfile(backdropWrist, 0);
+//                arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
                 intake.setPower(-1);
-                sleep(500);
+                sleep(300);
                 intake.setPower(0);
-                sleep(1000);
+                sleep(300);
                 door.setPosition(0.1);
                 sleep(100);
 //                arm2.ArmToPos(-1100, 0.5);
 //                sleep(1000);
-                arm1.ArmToPos(-1850, 0.5);
-                sleep(1000);
-                drive.followTrajectorySequence(rightPark);
-                arm2.ArmToPos(0,1);
+//                arm1.ArmToPos(-1850, 0.5);
+//                sleep(1000);
+//                drive.followTrajectorySequence(centerPark);
+//                arm2.ArmToPos(0,1);
+
+                drive.followTrajectorySequence(rightWhite);
+                intake.setPower(-1);
+                sleep(300);
+                intake.setPower(0);
+                sleep(300);
+                door.setPosition(0.1);
+                sleep(100);
             }
             door.setPosition(0.95);
             sleep(30000);
@@ -464,7 +718,7 @@ public class RedNearAuto extends LinearOpMode {
                 // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                 turn = turnController.calculate(0, desiredTag.ftcPose.pitch);
                 strafe = (strafeController.calculate(0, desiredTag.ftcPose.elevation));
-                aprilTagDrive = speedController.calculate(18.5, desiredTag.ftcPose.range);
+                aprilTagDrive = speedController.calculate(30, desiredTag.ftcPose.range);
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", aprilTagDrive, strafe, turn);
                 telemetry.addData("\n>", "HOLD Left-Bumper to Drive to Target\n");
@@ -549,6 +803,23 @@ public class RedNearAuto extends LinearOpMode {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    public void stackIntake() {
+        intake.setPower(-1);
+        arm2.ArmToPos(-1000, 1);
+        diffyWrist.runToProfile(15, -250);
+        arm2.ArmToPos(-2130, 1);
+        diffyWrist.runToProfile(stackIntakeWristPitch, stackIntakeWristRoll);
+        sleep(intakeTime);
+        intake.setPower(0);
+    }
+
+    public void retractArms() {
+        door.setPosition(0.85);
+        arm1.ArmToPos(-2000, 0.7);
+        arm2.ArmToPos(128, 1);
+        diffyWrist.runToProfile(purpleWrist, 0);
     }
 
 }

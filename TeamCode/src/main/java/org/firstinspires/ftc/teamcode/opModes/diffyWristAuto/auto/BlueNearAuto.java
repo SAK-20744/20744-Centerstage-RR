@@ -35,6 +35,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 //@Disabled
+
+//THIS IS FOR TURTLE
+
+
 @Config
 @Autonomous(name = "Blue Near 2+0")
 public class BlueNearAuto extends LinearOpMode {

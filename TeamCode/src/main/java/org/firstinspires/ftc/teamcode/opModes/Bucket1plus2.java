@@ -22,7 +22,7 @@ public class Bucket1plus2 extends LinearOpMode {
     public static int arm1Intake = -2000;
     public static int arm2Intake = 145;
 
-    public static int arm1Bucket = -680;
+    public static int arm1Bucket = -1000;
     private static int arm2Bucket = -900;
     public static int basketWrist = -50;
 

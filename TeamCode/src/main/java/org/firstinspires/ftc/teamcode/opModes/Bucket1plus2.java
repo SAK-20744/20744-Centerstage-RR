@@ -42,8 +42,6 @@ public class Bucket1plus2 extends LinearOpMode {
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
         DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
-        CRServo intake = hardwareMap.get(CRServo.class, "intake");
-        Servo door = hardwareMap.get(Servo.class, "door");
 
         Pose2d StartPos = new Pose2d(-36.00, -63.00, Math.toRadians(90.00));
         Pose2d BasketPos = new Pose2d(-60.00, -60.00, Math.toRadians(-135.00));
@@ -67,26 +65,10 @@ public class Bucket1plus2 extends LinearOpMode {
                 elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
 
-            door.setPosition(0.95);
-
-            if(gamepad2.right_bumper) {
-                door.setPosition(0.1);
-            }
-            if(gamepad2.left_bumper) {
-                door.setPosition(0.85);
-            }
-            if(gamepad2.dpad_right) {
-                intake.setPower(-1);
-            }
-            else {
-                intake.setPower(0);
-            }
-
             left_lift.setPower(-gamepad2.right_stick_y);
             right_lift.setPower(-gamepad2.right_stick_y);
             elbow.setPower(gamepad2.left_stick_y);
             elbow2.setPower(gamepad2.left_stick_y);
-//            wrist.setPosition(0.63);
 
             if(gamepad2.dpad_up)
                 initWrist -= 0.1;

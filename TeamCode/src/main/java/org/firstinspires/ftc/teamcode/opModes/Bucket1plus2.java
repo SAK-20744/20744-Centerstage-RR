@@ -18,13 +18,14 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.traject
 @Autonomous(name = "1+2")
 public class Bucket1plus2 extends LinearOpMode {
 
-    public static int intakeWrist = -85;
+    public static int intakeWrist = 100;
     public static int arm1Intake = -2000;
-    public static int arm2Intake = 145;
+    public static int arm2Intake = 175;
 
     public static int arm1Bucket = -1000;
-    private static int arm2Bucket = -900;
-    public static int basketWrist = -50;
+    private static int arm2Bucket = -1800;
+    public static int basketWrist = 50;
+    public static int intakeRoll = 90;
 
     public static int initWrist = -140;
 
@@ -42,6 +43,7 @@ public class Bucket1plus2 extends LinearOpMode {
         DcMotor right_lift = hardwareMap.get(DcMotor.class, "right_lift");
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
         DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
+        CRServo intake = hardwareMap.get(CRServo.class, "intake");
 
         Pose2d StartPos = new Pose2d(-39.00, -63.00, Math.toRadians(90.00));
         Pose2d BasketPos = new Pose2d(-60.00, -60.00, Math.toRadians(-135.00));
@@ -111,35 +113,56 @@ public class Bucket1plus2 extends LinearOpMode {
 
             drive.setPoseEstimate(StartPos);
 
+            arm1.ArmToPos(arm1Bucket, 0.5);
+            arm2.ArmToPos(arm2Bucket, 1);
+            diffyWrist.runToProfile(basketWrist, 0);
+            sleep(1000);
             drive.followTrajectorySequence(toPreload);
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
-            diffyWrist.runToProfile(basketWrist, 0);
 
+            intake.setPower(1);
+            sleep(500);
+            intake.setPower(0);
+
+            arm1.ArmToPos(arm1Intake, 0.45);
+            arm2.ArmToPos(arm2Intake, 0.35);
+            diffyWrist.runToProfile(intakeWrist,intakeRoll);
             drive.followTrajectorySequence(intakeSample3);
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,0);
 
+            intake.setPower(-1);
+            sleep(500);
+            intake.setPower(0);
+
+            arm1.ArmToPos(arm1Bucket, 0.5);
+            arm2.ArmToPos(arm2Bucket, 1);
+            diffyWrist.runToProfile(basketWrist, 0);
             drive.followTrajectorySequence(dropSample3);
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
-            diffyWrist.runToProfile(basketWrist, 0);
 
+            intake.setPower(1);
+            sleep(500);
+            intake.setPower(0);
+
+            arm1.ArmToPos(arm1Intake, 0.45);
+            arm2.ArmToPos(arm2Intake, 0.35);
+            diffyWrist.runToProfile(intakeWrist,intakeRoll);
             drive.followTrajectorySequence(intakeSample2);
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,0);
 
-            drive.followTrajectorySequence(dropSample2);
+            intake.setPower(-1);
+            sleep(500);
+            intake.setPower(0);
+
             arm1.ArmToPos(arm1Bucket, 0.5);
             arm2.ArmToPos(arm2Bucket, 1);
             diffyWrist.runToProfile(basketWrist, 0);
+            drive.followTrajectorySequence(dropSample2);
 
-            drive.followTrajectorySequence(toPark);
+            intake.setPower(1);
+            sleep(500);
+            intake.setPower(0);
+
             arm1.ArmToPos(arm1Intake, 0.45);
             arm2.ArmToPos(arm2Intake, 0.35);
             diffyWrist.runToProfile(intakeWrist,0);
+            drive.followTrajectorySequence(toPark);
 
             sleep(30000);
         }

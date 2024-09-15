@@ -43,41 +43,14 @@ public class NIKETeleop extends LinearOpMode {
     private boolean rotated = false;
     private double rotVal = -180;
 
-    public static double h1arm1 = 120;
-    public static double h1arm2 = 20;
-    public static double h1wrist = -100;
+    public static double h1arm1 = 135;
+    public static double h1arm2 = 70;
+    public static double h1wrist = 0;
 
-    public static double h2arm1 = 120;
-    public static double h2arm2 = 25;
-    public static double h2wrist = -88;
+    public static double h2arm1 = 85;
+    public static double h2arm2 = 177;
+    public static double h2wrist = 56;
 
-    public static double h3arm1 = 120;
-    public static double h3arm2 = 35;
-    public static double h3wrist = -85;
-
-    public static double h4arm1 = 118;
-    public static double h4arm2 = 45;
-    public static double h4wrist = -75;
-
-    public static double h5arm1 = 117;
-    public static double h5arm2 = 55;
-    public static double h5wrist = -65;
-
-    public static double h6arm1 = 110;
-    public static double h6arm2 = 67;
-    public static double h6wrist = -55;
-
-    public static double h7arm1 = 106;
-    public static double h7arm2 = 85;
-    public static double h7wrist = -50;
-
-    public static double h8arm1 = 100;
-    public static double h8arm2 = 98;
-    public static double h8wrist = -45;
-
-    public static double h9arm1 = 95;
-    public static double h9arm2 = 106;
-    public static double h9wrist = -32;
     private ServoDiffyWrist diffyWrist;
 
     public static double phangarm1 = 75;
@@ -92,7 +65,6 @@ public class NIKETeleop extends LinearOpMode {
 
     public static double extIntarm1 = 180;
     public static double extIntarm2 = 182;
-
 
     private double boardIMU = 0;
     private double pixelLevel = 1;
@@ -296,9 +268,9 @@ public class NIKETeleop extends LinearOpMode {
             drive.update();
 
             if (gamepad1.left_bumper)
-                door.setPosition(0);
+                door.setPosition(0.2);
             else
-                door.setPosition(0.95);
+                door.setPosition(0.69);
 
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 plane.setPosition(0.6);
@@ -333,8 +305,8 @@ public class NIKETeleop extends LinearOpMode {
             
             if(pixelLevel < 0)
                 pixelLevel = 0;
-            if(pixelLevel > 9)
-                pixelLevel = 9;
+            if(pixelLevel > 2)
+                pixelLevel = 2;
             
             if(gamepad1.a){
                 //Intaking
@@ -363,8 +335,8 @@ public class NIKETeleop extends LinearOpMode {
                 extendoMode = false;
                 if(pixelLevel < 1)
                     pixelLevel = 1;
-                if(pixelLevel > 9)
-                    pixelLevel = 9;
+                if(pixelLevel > 2)
+                    pixelLevel = 2;
                 rotated = false;
             }
 
@@ -424,8 +396,8 @@ public class NIKETeleop extends LinearOpMode {
 
                 if(pixelLevel < 1)
                     pixelLevel = 1;
-                if(pixelLevel > 9)
-                    pixelLevel = 9;
+                if(pixelLevel > 2)
+                    pixelLevel = 2;
 
                 if (gamepad1.left_bumper)
                     door.setPosition(0);
@@ -443,48 +415,6 @@ public class NIKETeleop extends LinearOpMode {
                     arm2Position=h2arm2;
                     wristPosition=h2wrist;
                     armSpeed = 0.75;
-                }
-                else if(pixelLevel == 3){
-                    arm1Position=h3arm1;
-                    arm2Position=h3arm2;
-                    wristPosition=h3wrist;
-                    armSpeed = 0.85;
-                }
-                else if(pixelLevel == 4){
-                    arm1Position=h4arm1;
-                    arm2Position=h4arm2;
-                    wristPosition=h4wrist;
-                    armSpeed = 0.9;
-                }
-                else if(pixelLevel == 5){
-                    arm1Position=h5arm1;
-                    arm2Position=h5arm2;
-                    wristPosition=h5wrist;
-                    armSpeed = 1;
-                }
-                else if(pixelLevel == 6){
-                    arm1Position=h6arm1;
-                    arm2Position=h6arm2;
-                    wristPosition=h6wrist;
-                    armSpeed = 1;
-                }
-                else if(pixelLevel == 7){
-                    arm1Position=h7arm1;
-                    arm2Position=h7arm2;
-                    wristPosition=h7wrist;
-                    armSpeed = 1;
-                }
-                else if(pixelLevel == 8){
-                    arm1Position=h8arm1;
-                    arm2Position=h8arm2;
-                    wristPosition=h8wrist;
-                    armSpeed = 1;
-                }
-                else if(pixelLevel == 9){
-                    arm1Position=h9arm1;
-                    arm2Position=h9arm2;
-                    wristPosition=h9wrist;
-                    armSpeed = 1;
                 }
 
             }

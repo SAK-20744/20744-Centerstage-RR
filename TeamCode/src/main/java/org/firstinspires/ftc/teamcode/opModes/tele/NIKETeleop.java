@@ -64,7 +64,7 @@ public class NIKETeleop extends LinearOpMode {
     public static double hangwrist = 30;
 
     public static double extIntarm1 = 180;
-    public static double extIntarm2 = 182;
+    public static double extIntarm2 = 165;
 
     private double boardIMU = 0;
     private double pixelLevel = 1;
@@ -279,14 +279,14 @@ public class NIKETeleop extends LinearOpMode {
             }
 
             if(gamepad1.right_bumper || gamepad2.right_bumper) {
-                intake.setPower(-1);
+                intake.setPower(1);
                 intaking = true;
             }
             else if(gamepad1.y) {
-                intake.setPower(1);
+                intake.setPower(-1);
             }
             else if(gamepad1.x) {
-                intake.setPower(1);
+                intake.setPower(-1);
                 intaking = true;
             }
             else {
@@ -314,7 +314,7 @@ public class NIKETeleop extends LinearOpMode {
                 backdrop = false;
                 extendoMode = false;
                 arm1Position=177;
-                arm2Position=-17;
+                arm2Position=-7;
                 armSpeed = 0.7;
                 rotated = false;
             }

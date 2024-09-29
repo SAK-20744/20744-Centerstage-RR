@@ -268,9 +268,9 @@ public class NIKETeleop extends LinearOpMode {
             drive.update();
 
             if (gamepad1.left_bumper)
-                door.setPosition(0.2);
+                door.setPosition(0.1);
             else
-                door.setPosition(0.69);
+                door.setPosition(0.60);
 
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 plane.setPosition(0.6);

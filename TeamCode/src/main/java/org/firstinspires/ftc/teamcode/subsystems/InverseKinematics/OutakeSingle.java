@@ -17,6 +17,9 @@ public class OutakeSingle {
     private double MotorArmDeg;
     private double wristDeg;
 
+    public static double extendedSitting = 95;
+    public static double extendedIntaking = 0;
+
     private double ServoArmPos;
     private double MotorArmPos;
     private double wristPos;
@@ -32,8 +35,8 @@ public class OutakeSingle {
     private double offset6Max = 30.095;
     private double offset10Max = 27.361;
 
-    public static double extIntWristPos = -110;
-    public static double extIntRot = -235;
+    public static double extIntWristPos = -125;
+    public static double extIntRot = -192;
     public static double elseExtIntWristPos = 48;
     public static double elseExtIntRot = -250;
 

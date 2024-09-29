@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems.InverseKinematics;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Config
 public class OutakeSinglePreDiffy {
 
     private Arm1 arm1;
@@ -13,6 +15,9 @@ public class OutakeSinglePreDiffy {
     private double ServoArmDeg;
     private double MotorArmDeg;
     private double wristDeg;
+
+    public static double extendedSitting = 95;
+    public static double extendedIntaking = 0;
 
     private double ServoArmPos;
     private double MotorArmPos;
@@ -103,10 +108,10 @@ public class OutakeSinglePreDiffy {
 
         if(useWrist) {
             if (intaking) {
-                wristDeg = 0;
+                wristDeg = extendedIntaking;
                 wristPos = (wristDeg / 190);
             } else {
-                wristDeg = 95;
+                wristDeg = extendedSitting;
                 wristPos = (wristDeg / 190);
             }
         }

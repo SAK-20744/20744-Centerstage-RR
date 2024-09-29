@@ -44,12 +44,12 @@ public class NIKETeleop extends LinearOpMode {
     private double rotVal = -180;
 
     public static double h1arm1 = 135;
-    public static double h1arm2 = 70;
-    public static double h1wrist = 0;
+    public static double h1arm2 = 75;
+    public static double h1wrist = -35;
 
-    public static double h2arm1 = 85;
+    public static double h2arm1 = 88;
     public static double h2arm2 = 177;
-    public static double h2wrist = 56;
+    public static double h2wrist = -5;
 
     private ServoDiffyWrist diffyWrist;
 

@@ -17,16 +17,16 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.traject
 @Autonomous(name = "1+3")
 public class left1plus3 extends LinearOpMode {
 
-    public static int initWrist = -160;
+    public static int initWrist = -140;
 
     public static int intakeWrist = 100;
     public static int arm1Intake = -2000;
     public static int arm2Intake = 175;
 
-    public static int arm1Bucket = -1050;
+    public static int arm1Bucket = -1000;
     private static int arm2Bucket = -1800;
-    public static int basketWrist = 52;
-    
+    public static int basketWrist = -5;
+
     public static int intakeRoll = 90;
     public static int lastSampleWristRoll;
 

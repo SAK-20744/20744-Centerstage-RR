@@ -16,7 +16,7 @@ public class ServoDiffyWrist {
 
     private double leftPos, rightPos, leftServoPos, rightServoPos;
 
-    public static double pitchOffset = 270, rollOffset = 95;
+    public static double pitchOffset = 270, rollOffset = 70;
 
     public ServoDiffyWrist(HardwareMap hardwareMap) {
 

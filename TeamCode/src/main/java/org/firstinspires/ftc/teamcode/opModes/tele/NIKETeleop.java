@@ -283,7 +283,7 @@ public class NIKETeleop extends LinearOpMode {
                 intaking = true;
             }
             else if(gamepad1.y) {
-                intake.setPower(-0.3);
+                intake.setPower(-0.15);
             }
             else if(gamepad1.x) {
                 intake.setPower(-0.3);

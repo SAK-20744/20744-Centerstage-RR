@@ -98,11 +98,11 @@ public class RedFarGateAuto extends LinearOpMode {
 //
 //    public static double yellowArm2Power = 0.35;
 
-    public static double boardLeftX = 34.8;
+    public static double boardLeftX = 36.8;
     public static double boardLeftY = -90.5;
     public static double boardMidX = 32;
     public static double boardMidY = -90.5;
-    public static double boardRightX = 19.8;
+    public static double boardRightX = 17.8;
     public static double boardRightY = -90.5;
 
     public static double stackIntX = 55;
@@ -386,7 +386,7 @@ public class RedFarGateAuto extends LinearOpMode {
                 arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
 
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
 
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
@@ -467,7 +467,7 @@ public class RedFarGateAuto extends LinearOpMode {
                 arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
 
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
 
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardMiddle = drive.trajectorySequenceBuilder(aprilTagPose)
@@ -547,7 +547,7 @@ public class RedFarGateAuto extends LinearOpMode {
                 arm2.ArmToPos(yellowArm2Pos, yellowArm2Power);
 
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
 
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)

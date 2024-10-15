@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Arm1;
 import org.firstinspires.ftc.teamcode.subsystems.InverseKinematics.Elbow;
@@ -19,7 +20,7 @@ public class left1plus3 extends LinearOpMode {
 
     public static int initWrist = -140;
 
-    public static int intakeWrist = 100;
+    public static int intakeWrist = -5;
     public static int arm1Intake = -2000;
     public static int arm2Intake = 175;
 
@@ -27,7 +28,7 @@ public class left1plus3 extends LinearOpMode {
     private static int arm2Bucket = -1800;
     public static int basketWrist = -5;
 
-    public static int intakeRoll = 90;
+    public static int intakeRoll = 0;
     public static int lastSampleWristRoll;
 
     private ServoDiffyWrist diffyWrist;
@@ -44,12 +45,13 @@ public class left1plus3 extends LinearOpMode {
         DcMotor elbow = hardwareMap.get(DcMotor.class, "elbow");
         DcMotor elbow2 = hardwareMap.get(DcMotor.class, "elbow2");
         CRServo intake = hardwareMap.get(CRServo.class, "intake");
+        Servo plane = hardwareMap.get(Servo.class, "plane");
 
         Pose2d StartPos = new Pose2d(-39.00, -63.00, Math.toRadians(90.00));
-        Pose2d BasketPos = new Pose2d(-58.00, -62.00, Math.toRadians(-135.00));
-        Pose2d Sample3Pos = new Pose2d(-48.00, -37.00, Math.toRadians(90.00));
-        Pose2d Sample2Pos = new Pose2d(-60.00, -37.00, Math.toRadians(90.00));
-        Pose2d Sample1Pos = new Pose2d(-63.00, -27.00, Math.toRadians(180.00));
+        Pose2d BasketPos = new Pose2d(-46.00, -47.00, Math.toRadians(-135.00));
+        Pose2d Sample3Pos = new Pose2d(-48.00, -32.00, Math.toRadians(90.00));
+        Pose2d Sample2Pos = new Pose2d(-57.00, -32.00, Math.toRadians(90.00));
+        Pose2d Sample1Pos = new Pose2d(-56.00, -23.00, Math.toRadians(180.00));
         Pose2d ParkPos = new Pose2d(-24.00, -12.00, Math.toRadians(180.00));
 
         while (opModeInInit()) {
@@ -77,6 +79,19 @@ public class left1plus3 extends LinearOpMode {
                 initWrist -= 0.1;
             if(gamepad2.dpad_down)
                 initWrist += 0.1;
+
+            if (gamepad2.right_bumper) {
+                intake.setPower(-1);
+                plane.setPosition(-1);
+            }
+            else {
+                intake.setPower(0);
+                plane.setPosition(0);
+            }
+            if (gamepad2.left_bumper)
+                intake.setPower(1);
+            else
+                intake.setPower(0);
 
             diffyWrist.runToProfile(initWrist, 0);
 
@@ -126,63 +141,80 @@ public class left1plus3 extends LinearOpMode {
             sleep(1000);
             drive.followTrajectorySequence(toPreload);
 
-            intake.setPower(1);
+            intake.setPower(-.5);
+            plane.setPosition(-.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
 
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,intakeRoll);
+            arm1.ArmToPos(arm1Intake, 1);
+            arm2.ArmToPos(arm2Intake, 0.5);
+            diffyWrist.runToProfile(intakeWrist,0);
             drive.followTrajectorySequence(intakeSample3);
 
-            intake.setPower(-1);
+            intake.setPower(.5);
+            plane.setPosition(.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
 
             arm1.ArmToPos(arm1Bucket, 0.5);
             arm2.ArmToPos(arm2Bucket, 1);
             diffyWrist.runToProfile(basketWrist, 0);
             drive.followTrajectorySequence(dropSample3);
 
-            intake.setPower(1);
+            intake.setPower(-.5);
+            plane.setPosition(-.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
 
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,intakeRoll);
+
+            arm1.ArmToPos(arm1Intake, 1);
+            arm2.ArmToPos(arm2Intake, 0.5);
+            diffyWrist.runToProfile(intakeWrist,0);
             drive.followTrajectorySequence(intakeSample2);
 
-            intake.setPower(-1);
+            intake.setPower(.5);
+            plane.setPosition(.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
 
             arm1.ArmToPos(arm1Bucket, 0.5);
             arm2.ArmToPos(arm2Bucket, 1);
             diffyWrist.runToProfile(basketWrist, 0);
             drive.followTrajectorySequence(dropSample2);
 
-            intake.setPower(1);
+            intake.setPower(-.5);
+            plane.setPosition(-.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
 
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,intakeRoll);
+
+            arm1.ArmToPos(arm1Intake, 1);
+            arm2.ArmToPos(arm2Intake, 0.5);
+            diffyWrist.runToProfile(intakeWrist,0);
             drive.followTrajectorySequence(intakeSample1);
 
-            intake.setPower(-1);
+            intake.setPower(.5);
+            plane.setPosition(.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
 
             arm1.ArmToPos(arm1Bucket, 0.5);
             arm2.ArmToPos(arm2Bucket, 1);
             diffyWrist.runToProfile(basketWrist, 0);
             drive.followTrajectorySequence(dropSample1);
 
-            intake.setPower(1);
+            intake.setPower(-.5);
+            plane.setPosition(-.5);
             sleep(500);
             intake.setPower(0);
+            plane.setPosition(0);
+
 
             arm1.ArmToPos(arm1Intake, 0.45);
             arm2.ArmToPos(arm2Intake, 0.35);

@@ -144,7 +144,7 @@ public class BlueNearAuto extends LinearOpMode {
         Pose2d spike2 = new Pose2d(27.5, -1, Math.toRadians(0));
         Pose2d spike3 = new Pose2d(30.7, 2, Math.toRadians(-90));
         Pose2d aprilPose = new Pose2d(25, 24, Math.toRadians(90));
-        Pose2d boardLeft = new Pose2d(17, 21, Math.toRadians(90));
+        Pose2d boardLeft = new Pose2d(15, 21  , Math.toRadians(90));
         Pose2d boardMiddle = new Pose2d(23, 21, Math.toRadians(90));
         Pose2d boardRight = new Pose2d(34, 21.4, Math.toRadians(90));
         Pose2d closePark = new Pose2d(0, 32,Math.toRadians(90));
@@ -288,7 +288,7 @@ public class BlueNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddleLeft);
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
                 drive.setPoseEstimate(aprilPose);
                 TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardLeft)
@@ -331,7 +331,7 @@ public class BlueNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddleCenter);
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
                 drive.setPoseEstimate(aprilPose);
                 TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardMiddle)
@@ -373,7 +373,7 @@ public class BlueNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddleRight);
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
                 drive.setPoseEstimate(aprilPose);
                 TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilPose)
                         .lineToLinearHeading(boardRight)

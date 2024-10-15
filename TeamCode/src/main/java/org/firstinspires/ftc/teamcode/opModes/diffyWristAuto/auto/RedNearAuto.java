@@ -140,7 +140,7 @@ public class RedNearAuto extends LinearOpMode {
         Pose2d aprilTagPose = new Pose2d(25, -25, Math.toRadians(-90));
         Pose2d boardRight = new Pose2d(20, -24.3, Math.toRadians(-90));
         Pose2d boardMiddle = new Pose2d(30.5, -24.3, Math.toRadians(-90));
-        Pose2d boardLeft = new Pose2d(34.8, -24.9, Math.toRadians(-90));
+        Pose2d boardLeft = new Pose2d(36.8, -24.9, Math.toRadians(-90));
         Pose2d closePark = new Pose2d(-3, -36, Math.toRadians(-90));
         Pose2d gatePark = new Pose2d(50, -36, Math.toRadians(-90));
         Pose2d park = closePark;
@@ -282,7 +282,7 @@ public class RedNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddleLeft);
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardLeft = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardLeft)
@@ -328,7 +328,7 @@ public class RedNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddleCenter);
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardCenter = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardMiddle)
@@ -370,7 +370,7 @@ public class RedNearAuto extends LinearOpMode {
                 drive.followTrajectorySequence(toMiddleRight);
                 sleep(500);
                 drive.followTrajectorySequence(toAprilTag);
-                alignToAprilTags();
+//                alignToAprilTags();
                 drive.setPoseEstimate(aprilTagPose);
                 TrajectorySequence toBoardRight = drive.trajectorySequenceBuilder(aprilTagPose)
                         .lineToLinearHeading(boardRight)

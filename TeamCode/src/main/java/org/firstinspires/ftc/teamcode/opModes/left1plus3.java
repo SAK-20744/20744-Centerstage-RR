@@ -48,9 +48,9 @@ public class left1plus3 extends LinearOpMode {
         Servo plane = hardwareMap.get(Servo.class, "plane");
 
         Pose2d StartPos = new Pose2d(-39.00, -63.00, Math.toRadians(90.00));
-        Pose2d BasketPos = new Pose2d(-46.00, -47.00, Math.toRadians(-135.00));
+        Pose2d BasketPos = new Pose2d(-47.00, -46.00, Math.toRadians(-135.00));
         Pose2d Sample3Pos = new Pose2d(-48.00, -32.00, Math.toRadians(90.00));
-        Pose2d Sample2Pos = new Pose2d(-57.00, -32.00, Math.toRadians(90.00));
+        Pose2d Sample2Pos = new Pose2d(-56.00, -31.00, Math.toRadians(90.00));
         Pose2d Sample1Pos = new Pose2d(-56.00, -23.00, Math.toRadians(180.00));
         Pose2d ParkPos = new Pose2d(-24.00, -12.00, Math.toRadians(180.00));
 

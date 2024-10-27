@@ -15,14 +15,14 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.SampleMecanumD
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous(name = "1+3")
-public class left1plus3 extends LinearOpMode {
+@Autonomous(name = "park")
+public class parkAuto extends LinearOpMode {
 
     public static int initWrist = 165;
 
     public static int intakeWrist = -5;
     public static int arm1Intake = -2000;
-    public static int arm2Intake = 175;
+    public static int arm2Intake = 0;
 
     public static int arm1Bucket = -1000;
     private static int arm2Bucket = -1800;
@@ -48,11 +48,8 @@ public class left1plus3 extends LinearOpMode {
         Servo plane = hardwareMap.get(Servo.class, "plane");
 
         Pose2d StartPos = new Pose2d(-39.00, -63.00, Math.toRadians(90.00));
-        Pose2d BasketPos = new Pose2d(-47.00, -46.00, Math.toRadians(-135.00));
-        Pose2d Sample3Pos = new Pose2d(-48.00, -32.00, Math.toRadians(90.00));
-        Pose2d Sample2Pos = new Pose2d(-56.00, -31.00, Math.toRadians(90.00));
-        Pose2d Sample1Pos = new Pose2d(-56.00, -23.00, Math.toRadians(180.00));
-        Pose2d ParkPos = new Pose2d(-24.00, -12.00, Math.toRadians(180.00));
+        Pose2d ParkPos = new Pose2d(-39.00, -12.00, Math.toRadians(180.00));
+        Pose2d FinalPos = new Pose2d(-20.00, -12.00, Math.toRadians(180.00));
 
         while (opModeInInit()) {
 
@@ -103,29 +100,9 @@ public class left1plus3 extends LinearOpMode {
             telemetry.update();
         }
 
-        TrajectorySequence toPreload = drive.trajectorySequenceBuilder(StartPos)
-                .lineToLinearHeading(BasketPos)
-                .build();
-        TrajectorySequence intakeSample3 = drive.trajectorySequenceBuilder(BasketPos)
-                .lineToLinearHeading(Sample3Pos)
-                .build();
-        TrajectorySequence dropSample3 = drive.trajectorySequenceBuilder(Sample3Pos)
-                .lineToLinearHeading(BasketPos)
-                .build();
-        TrajectorySequence intakeSample2 = drive.trajectorySequenceBuilder(BasketPos)
-                .lineToLinearHeading(Sample2Pos)
-                .build();
-        TrajectorySequence dropSample2 = drive.trajectorySequenceBuilder(Sample2Pos)
-                .lineToLinearHeading(BasketPos)
-                .build();
-        TrajectorySequence intakeSample1 = drive.trajectorySequenceBuilder(BasketPos)
-                .lineToLinearHeading(Sample1Pos)
-                .build();
-        TrajectorySequence dropSample1 = drive.trajectorySequenceBuilder(Sample1Pos)
-                .lineToLinearHeading(BasketPos)
-                .build();
-        TrajectorySequence toPark = drive.trajectorySequenceBuilder(BasketPos)
+        TrajectorySequence toPark = drive.trajectorySequenceBuilder(StartPos)
                 .lineToLinearHeading(ParkPos)
+                .lineToLinearHeading(FinalPos)
                 .build();
 
 
@@ -134,87 +111,6 @@ public class left1plus3 extends LinearOpMode {
         if (!isStopRequested()) {
 
             drive.setPoseEstimate(StartPos);
-
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
-            diffyWrist.runToProfile(basketWrist, 0);
-            sleep(1000);
-            drive.followTrajectorySequence(toPreload);
-
-            intake.setPower(-.5);
-            plane.setPosition(-.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
-            arm1.ArmToPos(arm1Intake, 1);
-            arm2.ArmToPos(arm2Intake, 0.5);
-            diffyWrist.runToProfile(intakeWrist,0);
-            drive.followTrajectorySequence(intakeSample3);
-
-            intake.setPower(.5);
-            plane.setPosition(.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
-            diffyWrist.runToProfile(basketWrist, 0);
-            drive.followTrajectorySequence(dropSample3);
-
-            intake.setPower(-.5);
-            plane.setPosition(-.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
-
-            arm1.ArmToPos(arm1Intake, 1);
-            arm2.ArmToPos(arm2Intake, 0.5);
-            diffyWrist.runToProfile(intakeWrist,0);
-            drive.followTrajectorySequence(intakeSample2);
-
-            intake.setPower(.5);
-            plane.setPosition(.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
-            diffyWrist.runToProfile(basketWrist, 0);
-            drive.followTrajectorySequence(dropSample2);
-
-            intake.setPower(-.5);
-            plane.setPosition(-.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
-
-            arm1.ArmToPos(arm1Intake, 1);
-            arm2.ArmToPos(arm2Intake, 0.5);
-            diffyWrist.runToProfile(intakeWrist,0);
-            drive.followTrajectorySequence(intakeSample1);
-
-            intake.setPower(.5);
-            plane.setPosition(.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
-            diffyWrist.runToProfile(basketWrist, 0);
-            drive.followTrajectorySequence(dropSample1);
-
-            intake.setPower(-.5);
-            plane.setPosition(-.5);
-            sleep(500);
-            intake.setPower(0);
-            plane.setPosition(0);
-
 
             arm1.ArmToPos(arm1Intake, 0.45);
             arm2.ArmToPos(arm2Intake, 0.35);

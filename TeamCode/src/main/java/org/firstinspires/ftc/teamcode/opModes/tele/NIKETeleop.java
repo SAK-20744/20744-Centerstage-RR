@@ -63,8 +63,8 @@ public class NIKETeleop extends LinearOpMode {
     public static double hangRotVal = 0;
     public static double hangwrist = 30;
 
-    public static double extIntarm1 = 180;
-    public static double extIntarm2 = 165;
+    public static double extIntarm1 = 135;
+    public static double extIntarm2 = 247;
 
     private double boardIMU = 0;
     private double pixelLevel = 1;

@@ -16,7 +16,8 @@ import org.firstinspires.ftc.teamcode.subsystems.drivetrain.drive.opmode.traject
 
 @Config
 @Autonomous(name = "Preload and Park")
-public class preloadpark extends LinearOpMode {
+public class
+preloadpark extends LinearOpMode {
 
     public static int initWrist = -140;
 
@@ -30,6 +31,8 @@ public class preloadpark extends LinearOpMode {
 
     public static int intakeRoll = 0;
     public static int lastSampleWristRoll;
+
+    double waitTime = 3;
 
     private ServoDiffyWrist diffyWrist;
 
@@ -48,12 +51,12 @@ public class preloadpark extends LinearOpMode {
         Servo plane = hardwareMap.get(Servo.class, "plane");
 
         Pose2d StartPos = new Pose2d(-39.00, -63.00, Math.toRadians(90.00));
-        Pose2d BasketPos = new Pose2d(-47.00, -46.00, Math.toRadians(-135.00));
+        Pose2d BasketPos = new Pose2d(-55.50, -48.50, Math.toRadians(-135.00));
         Pose2d Sample3Pos = new Pose2d(-48.00, -32.00, Math.toRadians(90.00));
         Pose2d Sample2Pos = new Pose2d(-56.00, -31.00, Math.toRadians(90.00));
         Pose2d Sample1Pos = new Pose2d(-56.00, -23.00, Math.toRadians(180.00));
-        Pose2d ParkPos = new Pose2d(-24.00, -12.00, Math.toRadians(180.00));
-        Pose2d preParkPos = new Pose2d((-27.00), -12.00, Math.toRadians(180.00));
+        Pose2d ParkPos = new Pose2d(45.00, -60.00, Math.toRadians(180.00));
+//        Pose2d preParkPos = new Pose2d((-35.00), -14.50, Math.toRadians(180.00));
 
         while (opModeInInit()) {
 
@@ -69,6 +72,14 @@ public class preloadpark extends LinearOpMode {
                 elbow.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 elbow2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 elbow2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+            if(gamepad2.dpad_up) {
+                waitTime += 0.5;
+                sleep(350);
+            }
+            if(gamepad2.dpad_down) {
+                waitTime -= 0.5;
+                sleep(350);
             }
 
             left_lift.setPower(-gamepad2.right_stick_y);
@@ -94,8 +105,14 @@ public class preloadpark extends LinearOpMode {
             else
                 intake.setPower(0);
 
+            if(waitTime < 0)
+                waitTime = 0;
+            if(waitTime > 6)
+                waitTime = 6;
+
             diffyWrist.runToProfile(initWrist, 0);
 
+            telemetry.addData("Wait", waitTime);
             telemetry.addData("Left Lift Encoder", left_lift.getCurrentPosition());
             telemetry.addData("Right Lift Encoder", right_lift.getCurrentPosition());
             telemetry.addData("Elbow Encoder", elbow.getCurrentPosition());
@@ -126,11 +143,12 @@ public class preloadpark extends LinearOpMode {
                 .lineToLinearHeading(BasketPos)
                 .build();
         TrajectorySequence toPark = drive.trajectorySequenceBuilder(BasketPos)
+                .waitSeconds(waitTime)
                 .lineToLinearHeading(ParkPos)
                 .build();
-        TrajectorySequence prePark = drive.trajectorySequenceBuilder(BasketPos)
-                .lineToLinearHeading(preParkPos)
-                .build();
+//        TrajectorySequence prePark = drive.trajectorySequenceBuilder(BasketPos)
+//                .lineToLinearHeading(preParkPos)
+//                .build();
 
 
         waitForStart();
@@ -139,8 +157,8 @@ public class preloadpark extends LinearOpMode {
 
             drive.setPoseEstimate(StartPos);
 
-            arm1.ArmToPos(arm1Bucket, 0.5);
-            arm2.ArmToPos(arm2Bucket, 1);
+            arm1.ArmToPos(arm1Bucket, 0.2);
+            arm2.ArmToPos(arm2Bucket, 0.4);
             diffyWrist.runToProfile(basketWrist, 0);
             sleep(1000);
             drive.followTrajectorySequence(toPreload);
@@ -219,14 +237,14 @@ public class preloadpark extends LinearOpMode {
 //            intake.setPower(0);
 //            plane.setPosition(0);
 
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,0);
-            drive.followTrajectorySequence(prePark);
+//            arm1.ArmToPos(arm1Intake, 0.45);
+//            arm2.ArmToPos(arm2Intake, 0.35);
+//            diffyWrist.runToProfile(intakeWrist,0);
+//            drive.followTrajectorySequence(p);
 
-            arm1.ArmToPos(arm1Intake, 0.45);
-            arm2.ArmToPos(arm2Intake, 0.35);
-            diffyWrist.runToProfile(intakeWrist,0);
+            arm1.ArmToPos(arm1Intake, 0.25);
+            arm2.ArmToPos(arm2Intake, 0.25);
+            diffyWrist.runToProfile(basketWrist,0);
             drive.followTrajectorySequence(toPark);
 
             sleep(30000);

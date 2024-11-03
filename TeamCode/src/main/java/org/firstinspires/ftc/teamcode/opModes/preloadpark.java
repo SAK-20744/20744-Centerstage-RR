@@ -51,7 +51,7 @@ preloadpark extends LinearOpMode {
         Servo plane = hardwareMap.get(Servo.class, "plane");
 
         Pose2d StartPos = new Pose2d(-39.00, -63.00, Math.toRadians(90.00));
-        Pose2d BasketPos = new Pose2d(-55.60, -48.50, Math.toRadians(-135.00));
+        Pose2d BasketPos = new Pose2d(-55.50, -48.50, Math.toRadians(-135.00));
         Pose2d Sample3Pos = new Pose2d(-48.00, -32.00, Math.toRadians(90.00));
         Pose2d Sample2Pos = new Pose2d(-56.00, -31.00, Math.toRadians(90.00));
         Pose2d Sample1Pos = new Pose2d(-56.00, -23.00, Math.toRadians(180.00));
